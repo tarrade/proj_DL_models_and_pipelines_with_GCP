@@ -1,0 +1,79 @@
+channels:
+- defaults
+- conda-forge
+- districtdatalabs
+dependencies:
+- python=3.6.6
+- numpy=1.14.5
+- scipy=1.1.0
+- scikit-learn=0.20.1
+- scikit-image=0.14.0
+- tornado=4.5.3
+- jupyter=1.0.0
+- jupyterlab=0.34.9
+- jupyter_contrib_nbextensions=0.5.0
+- jupyter_nbextensions_configurator=0.4.0
+- requests=2.18.4
+- pandas=0.23.4
+- pandas-profiling=1.4.0
+- graphviz=2.38.0
+- gensim=3.4.0
+- seaborn=0.9.0
+- openpyxl=2.5.3
+- terminado=0.8.1
+- cython=0.28.3
+- nltk=3.3.0
+- sqlalchemy=1.2.8
+- dash=0.21.1
+- dash-renderer=0.13.0
+- dash-html-components=0.11.0
+- dash-core-components=0.23.0
+- plotly=3.2.1
+- watermark
+- pytest=3.6.2
+- autopep8
+- pylint
+- pep8=1.7.1
+- tqdm=4.23.4
+- cx_oracle=6.3.1
+- pylama=7.4.3
+- langdetect=1.0.7
+- notebook=5.6.0
+- ipykernel=4.10.0
+- ipywidgets=7.4.1
+- nbconvert=5.4.0
+- spacy=2.0.16
+- pyhamcrest=1.9.0
+- regex=2018.01.10
+- statsmodels=0.8.0
+- wordcloud=1.5.0
+- pydot
+- catboost=0.10.2
+- lightgbm
+- lime
+- yellowbrick
+- tpot
+- scikit-mdr
+- skrebate
+- scikit-plot
+- scikit-optimize
+- bz2file=0.98
+- pathlib
+- keras=2.2.4
+- tensorflow=1.12
+- pyodbc=4.0.24
+- pip=18.0
+- pillow=5.3.0
+- lime
+- joblib=0.13.0
+- lxml=4.2.5
+- pip:
+  - xgboost
+  - bayesian-optimization==0.6.0
+  - pycryptodome==3.6.1
+  - "git+https://github.axa.com/AXACH-CCDA/CCDA_Standard_Functions.git#egg=CCDA_Standard_Functions"
+  - "git+https://github.com/tarrade/cutter-ng.git#egg=cutter-ng"
+  - "https://github.com/explosion/spacy-models/releases/download/de_core_news_sm-2.0.0/de_core_news_sm-2.0.0.tar.gz"
+  - "https://github.com/explosion/spacy-models/releases/download/fr_core_news_sm-2.0.0/fr_core_news_sm-2.0.0.tar.gz"
+  - "https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-2.0.0/en_core_web_sm-2.0.0.tar.gz"
+  - "https://github.com/explosion/spacy-models/releases/download/it_core_news_sm-2.0.0/it_core_news_sm-2.0.0.tar.gz"
