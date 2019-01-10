@@ -21,4 +21,10 @@ dependencies:
 - nbconvert=5.4.0
 - keras=2.2.4
 - tensorflow=1.12
+- watermark
+- pytest=3.6.2
+- autopep8
+- pylint
+- pep8=1.7.1
+- pylama=7.4.3
 - pip=18.0
