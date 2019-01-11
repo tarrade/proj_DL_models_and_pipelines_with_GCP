@@ -45,5 +45,5 @@ This will provide you a unique list of python packages needed to run the code
 - open a web browser (Firefox):    
   ```http://C054093:6006```
   
+ ![alt text](./doc/img/plot1.PNG)  
  ![alt text](./doc/img/plot2.PNG)
- ![alt text](plot1.png)
