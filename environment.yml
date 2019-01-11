@@ -27,4 +27,5 @@ dependencies:
 - pylint
 - pep8=1.7.1
 - pylama=7.4.3
+- nbdime
 - pip=18.0
