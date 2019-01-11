@@ -23,7 +23,7 @@ This will provide you a unique list of python packages needed to run the code
   ```conda env create -f environment.yml -n env_gcp_dl```
   
  - activate the env  
-  ```activate env_gcp_dl```
+  ```conda activate env_gcp_dl```
   
  - in case of issue clean all the cache in conda
    ```conda clean -a -y```
@@ -35,3 +35,15 @@ This will provide you a unique list of python packages needed to run the code
 - delete the env to recreate it when too many changes are done  
   ```conda env remove -n env_gcp_dl```
 
+## TensorBoard
+- open a anaconda rompt
+- go to the directory in which you want to download the package from git  
+- activate the env:   
+  ```conda activate env_gcp_dl```
+- execute TensorBoard:   
+  ```tensorboard --logdir ./results```
+- open a web browser (Firefox):    
+  ```http://C054093:6006```
+  
+ ![alt text](./doc/img/plot2.PNG)
+ ![alt text](plot1.png)
