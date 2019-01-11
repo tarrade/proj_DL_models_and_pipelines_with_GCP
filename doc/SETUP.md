@@ -17,9 +17,9 @@
 - ```conda install -c conda-forge jupyter_contrib_nbextensions```
 - ```jupyter contrib nbextension install --user```
 - ```jupyter nbextensions_configurator enable --user```
-- `conda install autopep8`
-- `conda install pep8=1.7.1`
-
+- ```conda install autopep8```
+- ```conda install pep8=1.7.1```
+- ```conda install nbdime```
 ## Now you can create your python env
 
 ## Starting Jupyter notebbok
