@@ -43,7 +43,8 @@ This will provide you a unique list of python packages needed to run the code
 - execute TensorBoard:   
   ```tensorboard --logdir ./results```
 - open a web browser (Firefox):    
-  ```http://C054093:6006```
+  ```http://C<something>:6006```
+ 
   
  ![alt text](./doc/img/plot1.PNG)  
  ![alt text](./doc/img/plot2.PNG)
