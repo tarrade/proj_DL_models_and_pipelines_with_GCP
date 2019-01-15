@@ -17,7 +17,8 @@
   ```your_dir/proj_DL_models_and_pipelines_with_GCP/```
 
 ## Create the python conda env  
-This will provide you a unique list of python packages needed to run the code
+This will provide you a unique list of python packages needed to run the code.
+It seems 1.12 is causing trouble on  a Mac, use 1.11 instead
 
 - create a python env based on a list of packages from environment.yml    
   ```conda env create -f environment.yml -n env_gcp_dl```
@@ -36,14 +37,14 @@ This will provide you a unique list of python packages needed to run the code
   ```conda env remove -n env_gcp_dl```
 
 ## TensorBoard
-- open a anaconda rompt
+- open a anaconda prompt
 - go to the directory in which you want to download the package from git  
 - activate the env:   
   ```conda activate env_gcp_dl```
 - execute TensorBoard:   
   ```tensorboard --logdir ./results```
-- open a web browser (Firefox):    
-  ```http://C<something>:6006```
+- open a web browser (Firefox) and copy the link that appear in the prompt above:    
+  ```http://<something>:6006```
  
   
  ![alt text](./doc/img/plot1.PNG)  
