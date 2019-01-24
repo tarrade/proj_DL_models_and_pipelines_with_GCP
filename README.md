@@ -1,7 +1,17 @@
 # Develop DL models using Tensorflow and pipelines for industrialization and model serving
 
+# TensorFlow and Google Cloud Platform (GCP) documentation and instruction
+- TensorFlow notes
+  [Notes](doc/notes_h.md)
+- Google Cloud Platform Fundamentals
+  [Lectures](doc/gcp_fundamentals_lectures.md)
+- Google Cloud Platform Instruction
+  - Google Cloud Datalab
+    [Instructions](doc/gcp_datalab.md)
+  
 # General presentation and results of this project:
 [Documentation](doc/DOC.md)
+
 
 # Check if your Anaconda/python installation is configured "properly"
 [Configuration](doc/SETUP.md)
