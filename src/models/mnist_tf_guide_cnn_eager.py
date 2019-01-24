@@ -37,6 +37,7 @@ mnist_model = tf.keras.Sequential([
 
 for images,labels in dataset.take(1):
   print("Logits: ", mnist_model(images[0:1]).numpy())
+  
 optimizer = tf.train.AdamOptimizer()
 
 loss_history = []

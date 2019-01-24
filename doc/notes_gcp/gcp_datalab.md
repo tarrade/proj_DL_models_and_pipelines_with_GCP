@@ -24,21 +24,46 @@
   - option of `--no-create-repository` flag
   - list all created datalab instances, including their zones
   ```
-
+  datalab list
   ```
 ## [Starting and Stopping an Datalab Instance](https://cloud.google.com/datalab/docs/how-to/lifecycle)
-- create your default instance (here)
+1. create your default instance
 ```
 datalab create --machine-type n1-standard-2 instance-name --zone europe-west1-d
 ```
 - see  `gcloud compute machine-types list` for all instances types in all zones
-
-
+2. Stop you instance
+  ```
+  datalab stop instance-name
+  ```
+3. Reconnect (and restart) your instance
+  ```
+  datalab connect instance-name
+  ```
+> See API Reference: cloud.google.com/datalab/docs/reference-api
 ## Updating the VM type
+If you have an instance running, you have to delete it before a more performant can be started. You will again be asked to specify you zone. Notebooks are stored separately in each zone.
+
 ```
 datalab stop instance-name
 datalab delete --keep-disk instance-name
-datalab create --machine-type n1-standard-2 instance-name
+```
+`--keep-disk` is the default and can be omitted (you will be asked always if you want to proceed and if you keep or delete your persistent disk by proceeding)
+
+Check where your persistent disk is located:
+
+![Persistent Disk of Compute Engines](Figures/gcp_datalab_disks.png)
+
+Then restart with more resources, e.g.:
+
+```
+datalab create --machine-type n1-standard-2 instance-name --zone zone-name
+```
+
+GPUs are only supported in beta-phase:
+
+```
+datalab beta create-gpu datalab-instance-name
 ```
 
 > Datalab's persistent disk is strictly linked to a zone. Changing the zone recreates the persistent disk in the new zone without automatic file transfer
@@ -59,3 +84,14 @@ pip install lib-name
 
 ## [Accessing Data](https://cloud.google.com/datalab/docs/how-to/working-with-notebooks#working_with_data)
 
+## Delete your datalab instance 
+- you need owner rights to do this
+- you will always be asked if you want to proceed
+  - without deleting the persistent disk
+    ```
+    datalab delete --keep-disk instance-name
+    ```
+  - deleting the persistent disk (make your notebooks are saved to repository!)
+    ```
+    datalab delete --delete-disk instance-name
+    ```    
