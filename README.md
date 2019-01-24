@@ -4,10 +4,10 @@
 - TensorFlow notes
   [Notes](doc/notes_h.md)
 - Google Cloud Platform Fundamentals
-  [Lectures](doc/gcp_fundamentals_lectures.md)
+  [Lectures](doc/notes_gcp/gcp_fundamentals_lectures.md)
 - Google Cloud Platform Instruction
   - Google Cloud Datalab
-    [Instructions](doc/gcp_datalab.md)
+    [Instructions](doc/notes_gc/gcp_datalab.md)
   
 # General presentation and results of this project:
 [Documentation](doc/DOC.md)
