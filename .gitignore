@@ -3,4 +3,5 @@ notebook/.ipynb_checkpoints/
 results/
 conda
 .vscode
+doc/notes_gcp/figures/*
 doc/notes_gcp/*
