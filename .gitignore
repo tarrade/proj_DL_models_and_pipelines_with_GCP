@@ -4,3 +4,5 @@ results/
 conda
 .vscode
 .DS_Store
+doc/notes_gcp/figures/*
+doc/notes_gcp/*
