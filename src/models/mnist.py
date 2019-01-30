@@ -5,14 +5,11 @@ Basic ideas frm https://github.com/aymericdamien/TensorFlow-Examples/blob/master
 """
 import tensorflow as tf
 import numpy as np
+from src.constants import NUM_EPOCHS, BATCH_SIZE, LEARNING_RATE
 
-NUM_EPOCHS = 12
-BATCH_SIZE = 64
-LEARNING_RATE = 0.001
 ###############################################################################
 #Load Data
 try:
-    raise Exception
     from tensorflow.keras.datasets import mnist
     (x_train, y_train), (X_test, y_test) = mnist.load_data()
 except Exception:
