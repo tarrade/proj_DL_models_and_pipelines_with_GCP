@@ -29,5 +29,7 @@ dependencies:
 - nbdime
 - pip=18.0
 - pip:
-  - tf-nightly-2.0-preview
+  #- tf-nightly-2.0-preview
+  - tensorflow==1.13.0rc0
+  - tensorflow-estimator==1.13.0rc0
   #- tensorflow==1.13-rc0
