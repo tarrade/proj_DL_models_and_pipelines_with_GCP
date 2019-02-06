@@ -2,12 +2,12 @@
 
 # TensorFlow and Google Cloud Platform (GCP) documentations and instructions
 - TensorFlow notes
-  [Notes](doc/notes_h.md)
+  [Notes](https://github.axa.com/henry-webel/gcp_course_notes/)
 - Google Cloud Platform Fundamentals
-  [Lectures](doc/notes_gcp/gcp_fundamentals_lectures.md)
+  [Lectures](https://github.axa.com/henry-webel/gcp_course_notes/gcp_fundamentals_lectures.md)
 - Google Cloud Platform Instructions
   - Google Cloud Datalab
-    [Instructions](doc/notes_gcp/gcp_datalab.md)
+    [Instructions](https://github.axa.com/henry-webel/gcp_course_notes/gcp_datalab.md)
   
 # General presentation and results of this project:
 [Documentation](doc/DOC.md)
