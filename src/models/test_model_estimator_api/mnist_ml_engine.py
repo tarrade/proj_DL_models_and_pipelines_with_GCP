@@ -13,7 +13,6 @@ import os
 import argparse
 import json
 
-from matplotlib import pyplot
 import tensorflow as tf
 import numpy as np
 import shutil
