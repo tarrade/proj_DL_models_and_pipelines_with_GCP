@@ -1,9 +1,13 @@
 .idea/
-notebook/.ipynb_checkpoints/
-results/
-conda
 .vscode
 .DS_Store
+conda
+
+notebook/.ipynb_checkpoints/
+notebook/TF_2.0/.ipynb_checkpoints/
+
+results/
+
 doc/notes_gcp/figures/*
 doc/notes_gcp/*
 
