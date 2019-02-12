@@ -2,6 +2,7 @@
 .vscode
 .DS_Store
 conda
+datalab
 
 notebook/.ipynb_checkpoints/
 notebook/TF_2.0/.ipynb_checkpoints/
