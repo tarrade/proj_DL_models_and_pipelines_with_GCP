@@ -14,5 +14,8 @@ doc/notes_gcp/*
 src/__pycache__
 src/models/test_model_estimator_api/__pycache__
 src/models/test_model_estimator_api/trained/
+notebook/package_ml_engine/trained/*
+notebook/package_ml_engine/__pycache__
 
 config.yaml
+
