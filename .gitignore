@@ -4,6 +4,7 @@
 conda
 datalab
 
+notebook/data
 notebook/.ipynb_checkpoints/
 notebook/TF_2.0/.ipynb_checkpoints/
 
@@ -17,6 +18,9 @@ src/models/test_model_estimator_api/__pycache__
 src/models/test_model_estimator_api/trained/
 notebook/package_ml_engine/trained/*
 notebook/package_ml_engine/__pycache__
+notebook/ML-productive-pipeline-53122-64d3c31786e7.json
 
+# exclude config-files
 config.yaml
+ML-productive-pipeline-53122-64d3c31786e7.json
 
