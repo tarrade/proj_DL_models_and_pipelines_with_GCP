@@ -16,9 +16,9 @@ doc/notes_gcp/*
 src/__pycache__
 src/models/test_model_estimator_api/__pycache__
 src/models/test_model_estimator_api/trained/
-notebook/package_ml_engine/trained/*
-notebook/package_ml_engine/__pycache__
-notebook/ML-productive-pipeline-53122-64d3c31786e7.json
+src/package_ml_engine/trained/*
+src/package_ml_engine/__pycache__
+ML-productive-pipeline-53122-64d3c31786e7.json
 
 # exclude config-files
 config.yaml

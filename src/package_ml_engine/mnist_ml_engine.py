@@ -17,7 +17,7 @@ import tensorflow as tf
 import numpy as np
 import shutil
 
-from src.utils import load_data
+from utils import load_data
 
 ###############################################################################
 #Factor into config:
