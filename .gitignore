@@ -8,6 +8,8 @@ notebook/.ipynb_checkpoints/
 notebook/TF_2.0/.ipynb_checkpoints/
 
 results/
+data/images_test/
+data/images_train/
 
 doc/notes_gcp/figures/*
 doc/notes_gcp/*

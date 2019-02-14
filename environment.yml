@@ -12,7 +12,7 @@ dependencies:
 - jupyter_contrib_nbextensions=0.5.0
 - jupyter_nbextensions_configurator=0.4.0
 - pandas=0.23.4
-- matplotlib=3.0.2
+- matplotlib
 #- nomkl # Only for Mac user
 - notebook=5.6.0
 - ipykernel=4.10.0
@@ -29,3 +29,4 @@ dependencies:
 - nbdime
 - pip=18.0
 - google-auth
+- pillow
