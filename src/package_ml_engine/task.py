@@ -5,8 +5,8 @@ import os
 import argparse
 import shutil
 
-from package_ml_engine.utils import load_data
-from package_ml_engine.utils import train_and_evaluate
+from .utils import load_data
+from .model_mnist import train_and_evaluate
 
 
 if __name__ == '__main__':
