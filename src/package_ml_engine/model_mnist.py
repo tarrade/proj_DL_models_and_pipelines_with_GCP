@@ -9,15 +9,9 @@ MNIST-Estimator-Example:
 
 ipython -i -m src.models.test_model_estimator_api.mnist_ml_engine -- --data_path=data --output_dir=src\models\test_model_estimator_api\trained --train_steps=100
 """
-import os
-import argparse
-import json
 
 import tensorflow as tf
 import numpy as np
-import shutil
-
-from package_ml_engine.utils import load_data
 
 ###############################################################################
 #Factor into config:
@@ -118,85 +112,13 @@ def train_and_evaluate(args):
     print((model.get_variable_names()))
 
 
-if __name__ == '__main__':
-    parser = argparse.ArgumentParser()
-    parser.add_argument(
-        '--data_path',
-        help='GCS or local path to training data',
-        required=True
-    )
-    parser.add_argument(
-        '--output_dir',
-        help='GCS location to write checkpoints and export models',
-        required=True
-    )
-    parser.add_argument(
-        '--train_batch_size',
-        help='Batch size for training steps',
-        type=int,
-        default='128'
-    )
-    parser.add_argument(
-        '--train_steps',
-        help='Steps to run the training job for',
-        type=int,
-        default='200'
-    )
-    parser.add_argument(
-        '--hidden_units',
-        help='List of hidden layer sizes to use for DNN feature columns',
-        nargs='+',
-        type=int,
-        default=[128, 64, 32]
-    )
-    parser.add_argument(
-        '--job_dir',
-        help='this model ignores this field, but it is required by gcloud',
-        default='junk'
-    )
-    # Eval arguments
-    parser.add_argument(
-        '--eval_delay_secs',
-        help='How long to wait before running first evaluation',
-        default='10',
-        type=int
-    )
-    parser.add_argument(
-        '--min_eval_frequency',
-        help='Seconds between evaluations',
-        default=300,
-        type=int
-    )
-
-    args = parser.parse_args().__dict__
-
-    OUTDIR = args['output_dir']
-    ##########################################
-    # Load Data in Memoery
-
-    #ToDo: Connect bucket:
-    (x_train, y_train), (x_test, y_test) = load_data(
-        rel_path=args['data_path'])
-    # #ToDo: replace numpy-arrays
-
-    x_train = parse_images(x_train)
-    x_test = parse_images(x_test)
-
-    y_train = parse_labels(y_train)
-    y_test = parse_labels(y_test)
-
-    # Define model
-
-    # #######################################
-    # # Train
-    shutil.rmtree(OUTDIR, ignore_errors=True)  # start fresh each time
-    
-    train_and_evaluate(args)
 
 
     # model.train(input_fn=numpy_input_fn(
     #     x_train, y_train, mode=tf.estimator.ModeKeys.TRAIN))
     # # #######################################
+
+# How to evaluate in the cloud over a whole evaluation set?
     # # # Evaluate
     # metrics_train = model.evaluate(
     #     input_fn=numpy_input_fn(x_train, y_train, mode=tf.estimator.ModeKeys.EVAL))
