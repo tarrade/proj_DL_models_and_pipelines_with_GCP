@@ -13,12 +13,13 @@ ipython -i -m src.models.test_model_estimator_api.mnist_ml_engine -- --data_path
 import tensorflow as tf
 import numpy as np
 
+from .utils import load_data
 ###############################################################################
 #Factor into config:
 N_PIXEL = 784
 OUTDIR = 'trained'
 USE_TPU = False
-EPOCHS = 10
+EPOCHS = 5
 
 if USE_TPU:
     _device_update = 'tpu'
@@ -79,6 +80,19 @@ def train_and_evaluate(args):
     Utility function for distributed training on ML-Engine
     https://www.tensorflow.org/api_docs/python/tf/estimator/train_and_evaluate 
     """
+    ##########################################
+    # Load Data in Memoery
+
+  # #ToDo: replace numpy-arrays
+    (x_train, y_train), (x_test, y_test) = load_data(
+        rel_path=args['data_path'])
+  
+    x_train = parse_images(x_train)
+    x_test = parse_images(x_test)
+
+    y_train = parse_labels(y_train)
+    y_test = parse_labels(y_test)
+
     model = tf.estimator.DNNClassifier(
         hidden_units=[256, 128, 64],
         feature_columns=[tf.feature_column.numeric_column(
