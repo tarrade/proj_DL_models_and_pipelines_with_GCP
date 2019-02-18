@@ -5,9 +5,7 @@ import os
 import argparse
 import shutil
 
-from .utils import load_data
-from .model_mnist import train_and_evaluate
-
+from .model import train_and_evaluate
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
@@ -62,19 +60,6 @@ if __name__ == '__main__':
     args = parser.parse_args().__dict__
 
     OUTDIR = args['output_dir']
-    ##########################################
-    # Load Data in Memoery
-
-  # #ToDo: replace numpy-arrays
-    (x_train, y_train), (x_test, y_test) = load_data(
-        rel_path=args['data_path'])
-  
-    x_train = parse_images(x_train)
-    x_test = parse_images(x_test)
-
-    y_train = parse_labels(y_train)
-    y_test = parse_labels(y_test)
-
     # #######################################
     # # Train
     # ToDo execute outside from skript
