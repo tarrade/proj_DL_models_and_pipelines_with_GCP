@@ -12,6 +12,16 @@
     
 ## Instruction
 ### train_local
+
+gcloud ml-engine local train \
+ --module-name trainer.task \
+ --package-path trainer \
+ --  \
+ --model_dir "./results2/Models/Mnist/tf_1_12/estimator/ckpt/"
+
+gcloud ml-engine local train  --module-name trainer.task --package-path trainer/
+
+
 MODEL_DIR=./output
 TRAIN_DATA=./train
 EVAL_DATA=./eval
