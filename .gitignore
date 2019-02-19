@@ -13,6 +13,8 @@ results/
 data/images_test/
 data/images_train/
 
+trained/
+
 doc/notes_gcp/figures/*
 doc/notes_gcp/*
 

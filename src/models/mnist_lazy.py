@@ -11,14 +11,15 @@ from src.constants import NUM_EPOCHS, BATCH_SIZE, LEARNING_RATE
 #Load Data
 try:
     from tensorflow.keras.datasets import mnist
-    (x_train, y_train), (X_test, y_test) = mnist.load_data()
+    (x_train, y_train), (x_test, y_test) = mnist.load_data()
 except Exception:
-  print("download manually to ./data/ from {}".format(
+    print("download manually to ./data/ from {}".format(
       "https://storage.googleapis.com/tensorflow/tf-keras-datasets/mnist.npz"
-  ))
-  with np.load("./data/mnist.npz") as f:
-    x_train, y_train = f['x_train'], f['y_train']
-    x_test, y_test = f['x_test'], f['y_test']
+    ))
+    with np.load("./data/mnist.npz") as f:
+        x_train, y_train = f['x_train'], f['y_train']
+        x_test, y_test = f['x_test'], f['y_test']
+
 
 # classic numpy approach using reshape and
 # reshape and save image dimensions
@@ -209,10 +210,4 @@ with tf.Session() as sess:
           sess.run(accuracy, feed_dict={X: x_test,
                                         Y: y_test}))
 
-
-    # print("Optimization Finished!")
-
-    # # Calculate accuracy for MNIST test images
-    # print("Validation Accuracy:",
-    #       sess.run(accuracy, feed_dict={X: x_test,
-    #                                     Y: y_test}))
+    print("Optimization Finished!")
