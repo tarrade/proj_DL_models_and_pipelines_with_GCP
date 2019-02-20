@@ -40,7 +40,16 @@ def parse_labels(y):
     return y.astype('int32')
 
 
-def numpy_input_fn(images: np.ndarray, labels: np.ndarray, mode=tf.estimator.ModeKeys.EVAL):
+def numpy_input_fn(images: np.ndarray,
+                   labels: np.ndarray,
+                   mode=tf.estimator.ModeKeys.EVAL):
+    """
+    Return depending on the `mode`-key an Interator which can be use to feed into
+    the Estimator-Model. 
+
+    Alternative if a `tf.data.Dataset` named `dataset` would be created:
+    `dataset.make_one_shot_iterator().get_next()`
+    """
     if mode == tf.estimator.ModeKeys.TRAIN:
         _epochs = EPOCHS
         _shuffle = True
@@ -82,8 +91,7 @@ def train_and_evaluate(args):
     """
     ##########################################
     # Load Data in Memoery
-
-  # #ToDo: replace numpy-arrays
+    # ToDo: replace numpy-arrays
     (x_train, y_train), (x_test, y_test) = load_data(
         rel_path=args['data_path'])
   
@@ -104,13 +112,15 @@ def train_and_evaluate(args):
         dropout=0.2,
         batch_norm=False,
         loss_reduction='weighted_sum',
-        warm_start_from=None
+        warm_start_from=None,
+        config = None
     )
    
     train_spec = tf.estimator.TrainSpec(
         input_fn=numpy_input_fn(
             x_train, y_train, mode=tf.estimator.ModeKeys.TRAIN),
-        max_steps=args['train_steps']
+        max_steps=args['train_steps'],
+        hooks = None
     )
     exporter = tf.estimator.LatestExporter('exporter', serving_input_fn)
     eval_spec = tf.estimator.EvalSpec(
