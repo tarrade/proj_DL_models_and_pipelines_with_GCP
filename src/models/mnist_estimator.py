@@ -15,6 +15,13 @@ IMAGE_SIZE = 28 * 28
 NUM_LABELS = 10
 OUTDIR = 'trained/mnist_estimator/'
 lr_inital = 0.001
+
+BATCH_SIZE = 128
+EPOCHS = 5
+
+import shutil
+shutil.rmtree(OUTDIR, ignore_errors=True)  # start fresh each time
+
 #######################################
 # Load Data
 try:
@@ -41,30 +48,6 @@ x_test = parse_images(x_test)
 y_train = parse_labels(y_train)
 y_test = parse_labels(y_test)
 
-def numpy_input_train():
- return tf.estimator.inputs.numpy_input_fn(
-    {'x' : x_train}, 
-    y=y_train, 
-    batch_size=128,
-    num_epochs=15, 
-    shuffle=True, 
-    queue_capacity=2000, 
-    num_threads=2
-)
-
-# Settings have to be different for predictions:
-numpy_input_test = tf.estimator.inputs.numpy_input_fn(
-    x=x_test, 
-    y=y_test, 
-    batch_size=128,
-    num_epochs=1, 
-    shuffle=False, 
-    queue_capacity=2000, 
-    num_threads=1
-)
-
-BATCH_SIZE = 128
-EPOCHS = 5
 def numpy_input_fn(images: np.ndarray, 
                    labels: np.ndarray, 
                    mode=tf.estimator.ModeKeys.EVAL):
@@ -130,37 +113,28 @@ estimator = tf.estimator.DNNClassifier(
     # feature_columns: An iterable containing all the feature columns used by
     # the model. All items in the set should be instances of classes derived
     # from `_FeatureColumn`.
-    hidden_units=[1024, 512, 256],
+    hidden_units=[256, 128, 64],
     model_dir = OUTDIR, 
     n_classes = NUM_LABELS, 
-    optimizer=lambda: tf.train.AdamOptimizer(
+    optimizer= tf.train.AdamOptimizer(), 
+    # lambda: tf.train.AdamOptimizer(
         # learning_rate=tf.train.exponential_decay(
         #     learning_rate=0.001,
         #     global_step=tf.train.get_global_step(),
         #     decay_steps=10000,
         #     decay_rate=0.96
-        # )
-    ),
+        # )),
     config = None,
     dropout= None
 )
 
 # Set up logging for predictions
-print('Variable Names:')
-print(estimator.get_variable_names())
+# print('Variable Names:')
+# print(estimator.get_variable_names())
 tensors_to_log = {"probabilities": "dnn/logits/kernel/"}
 
 logging_hook = tf.train.LoggingTensorHook(
     tensors=tensors_to_log, every_n_iter=50)
-
-
-#ToDo: Look at estimator.train function -> takes numpy input fct as one argument
-
-# estimator.train(
-#     input_fn=numpy_input_train(),
-#     steps=2000,
-#     hooks=None #[logging_hook]
-#     )
 
 
 # def serving_input_fn():
@@ -175,8 +149,11 @@ logging_hook = tf.train.LoggingTensorHook(
 #     features = feature_placeholders
 #     return tf.estimator.export.ServingInputReceiver(features, feature_placeholders)
 
-estimator.train(input_fn=numpy_input_fn(
-    x_train, y_train, mode=tf.estimator.ModeKeys.TRAIN))
+estimator.train(input_fn=numpy_input_fn(x_train, y_train, 
+                                        mode=tf.estimator.ModeKeys.TRAIN),
+                # steps = 1000, 
+                hooks = None
+                )
 # # #######################################
 
 # How to evaluate in the cloud over a whole evaluation set?
