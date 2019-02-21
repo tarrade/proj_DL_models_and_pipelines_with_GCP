@@ -47,13 +47,13 @@ if __name__ == '__main__':
     parser.add_argument(
         '--eval_delay_secs',
         help='How long to wait before running first evaluation',
-        default='10',
+        default='1',
         type=int
     )
     parser.add_argument(
         '--min_eval_frequency',
         help='Seconds between evaluations',
-        default=300,
+        default=10,
         type=int
     )
 
@@ -61,7 +61,5 @@ if __name__ == '__main__':
 
     OUTDIR = args['output_dir']
     # #######################################
-    # # Train
-    # ToDo execute outside from skript
-    shutil.rmtree(OUTDIR, ignore_errors=True)  # start fresh each time
+    # # Train and Evaluate (use TensorBoard to visualize)
     train_and_evaluate(args)
