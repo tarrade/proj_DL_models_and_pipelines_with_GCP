@@ -10,8 +10,10 @@ notebook/.ipynb_checkpoints/
 notebook/TF_2.0/.ipynb_checkpoints/
 
 results/
-data/
-data/
+data/mnist_images_test/
+data/mnist_images_train/
+data/mnist_numpy_train/
+data/mnist_numpy_test/
 
 trained/
 
