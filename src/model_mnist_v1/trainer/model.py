@@ -19,17 +19,17 @@ import requests
 import google.auth
 import tensorflow.contrib.rnn as rnn
 
-print(tf.__version__)
-print(tf.keras.__version__)
+#print(tf.__version__)
+#print(tf.keras.__version__)
 
 tf.logging.set_verbosity(tf.logging.INFO)
 
 # learning rate
-learning_rate = 0.5
+#learning_rate = 0.5
 
 
 # hidden layer 1
-n1=300
+#n1=300
 
 
 
@@ -47,27 +47,80 @@ def load_data(path):
     f.close()
     return data
 
-(x_train, y_train), (x_test, y_test) = load_data(path='../../data/mnist.pkl.gz')
+#(x_train, y_train), (x_test, y_test) = load_data(path='../../data/mnist.pkl.gz')
 
 # cast uint8 -> float32
-x_train = x_train.astype('float32')
-x_test = x_test.astype('float32')
+#x_train = x_train.astype('float32')
+#x_test = x_test.astype('float32')
 
 # renormalize the data 255 grey variation
-x_train /= 255
-x_test /= 255
+#x_train /= 255
+#x_test /= 255
 
 # reshape the data 28 x 28 -> 784
-x_train = x_train.reshape(len(x_train), x_train.shape[1]*x_train.shape[2])
-x_test = x_test.reshape(len(x_test), x_test.shape[1]*x_test.shape[2])
+#x_train = x_train.reshape(len(x_train), x_train.shape[1]*x_train.shape[2])
+#x_test = x_test.reshape(len(x_test), x_test.shape[1]*x_test.shape[2])
 
-num_classes = len(np.unique(y_train))
+#num_classes = len(np.unique(y_train))
 
 # convert class vectors to binary class matrices
-y_train = tf.keras.utils.to_categorical(y_train, num_classes)
-y_test = tf.keras.utils.to_categorical(y_test, num_classes)
+#y_train = tf.keras.utils.to_categorical(y_train, num_classes)
+#y_test = tf.keras.utils.to_categorical(y_test, num_classes)
 
-dim_input=x_train.shape[1]
+#dim_input=x_train.shape[1]
+
+
+def mnist_preprocessing_fn(image, label, FLAGS):
+    # reshape the images from 28 x 28 to 784
+    image = tf.reshape(image, [FLAGS.dim_input])
+
+    # cast images from uint8 to float32
+    image = tf.cast(image, tf.float32)
+
+    # renormalize images 255 grey variation
+    image /= 255
+
+    # convert class vectors to binary class matrices
+    label = tf.one_hot(label, FLAGS.num_classes)
+
+    return image, label
+
+
+def input_mnist_array_dataset_fn(x_data, y_data, FLAGS, batch_size=128, mode=tf.estimator.ModeKeys.TRAIN):
+    if mode == tf.estimator.ModeKeys.PREDICT:
+        tf.logging.info("input_dataset_fn: PREDICT, {}".format(mode))
+    elif mode == tf.estimator.ModeKeys.EVAL:
+        tf.logging.info("input_dataset_fn: EVAL, {}".format(mode))
+    elif mode == tf.estimator.ModeKeys.TRAIN:
+        tf.logging.info("input_dataset_fn: TRAIN, {}".format(mode))
+
+
+    # 1) convert the inputs to a Dataset.
+    dataset = tf.data.Dataset.from_tensor_slices((x_data, y_data))
+
+    # 2) shuffle (with a big enough buffer size)    :
+    if mode == tf.estimator.ModeKeys.TRAIN:
+        # num_epochs = None # loop indefinitely
+        num_epochs = FLAGS.epoch
+        dataset = dataset.shuffle(buffer_size=FLAGS.shuffle_buffer_size, seed=2)  # depends on sample size
+    else:
+        # num_epochs = 1 # end-of-input after this -> bug in keras or feature? https://github.com/tensorflow/tensorflow/issues/25254#issuecomment-459824771
+        num_epochs = FLAGS.epoch
+
+    # 3) automatically refill the data queue when empty
+    dataset = dataset.repeat(num_epochs)
+
+    # 4) map
+    dataset = dataset.map(lambda x, y: mnist_preprocessing_fn(x, y, FLAGS), num_parallel_calls=FLAGS.num_parallel_calls)
+
+    # 5) create batches of data
+    dataset = dataset.batch(batch_size=batch_size, drop_remainder=True)
+
+    # 6) prefetch data for faster consumption, based on your system and environment, allows the tf.data runtime to automatically tune the prefetch buffer sizes
+    dataset = dataset.prefetch(FLAGS.prefetch_buffer_size)
+
+    return dataset
+
 
 
 def input_dataset_fn(FLAGS, x_data, y_data, batch_size=128, mode=tf.estimator.ModeKeys.TRAIN):
