@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import gzip
 import _pickle as cPickle
 import sys
+import numpy as np
 
 def plot_mnist_images(images, cls_true, cls_pred=None):
     assert len(images) == len(cls_true) == 25
@@ -30,6 +31,36 @@ def plot_mnist_images(images, cls_true, cls_pred=None):
 
     # ensure the plot is shown correctly with multiple plots in a single Notebook cell.
     plt.show()
+
+
+def plot_acc_loss(history, epochs):
+
+    # plot the training loss and accuracy
+    fig = plt.figure(figsize=(9, 3), dpi=100)
+    plt.subplots_adjust(wspace=0.6)
+    ax1 = plt.subplot(121)
+    ax2 = plt.subplot(122)
+    ax1.plot(np.arange(0, epochs), history.history['acc'], 'b', label='training accuracy')
+    ax1.plot(np.arange(0, epochs), history.history['val_acc'], 'r', label='validation accuracy');
+    ax1.set_title('Accuracy')
+    ax1.set_xlabel("Number of epoch ")
+    ax1.set_ylabel("Accuracy")
+    ax1.legend(loc="best")
+
+    ax2.plot(np.arange(0, epochs), history.history["loss"], label="training loss")
+    ax2.plot(np.arange(0, epochs), history.history["val_loss"], label="validation loss")
+    ax2.set_title("Loss")
+    ax2.set_xlabel("Number of epoch ")
+    ax2.set_ylabel("Loss")
+    ax2.legend(loc="best");
+
+    print('Loss:')
+    print('  - loss [training dataset]: {0:.3f}'.format(history.history['loss'][-1]))
+    print('  - loss [validation dataset: {0:.3f}'.format(history.history['val_loss'][-1]))
+    print('')
+    print('Accuracy:')
+    print('  - accuracy [training dataset]: {:.2f}%'.format(100 * history.history['acc'][-1]))
+    print('  - accuracy [validation dataset: {:.2f}%'.format(100 * history.history['val_acc'][-1]))
 
 
 def load_data(path):
