@@ -133,36 +133,3 @@ def train_and_evaluate(args):
     )
     tf.estimator.train_and_evaluate(
         estimator=model, train_spec=train_spec, eval_spec=eval_spec)
-    print((model.get_variable_names()))
-
-
-
-
-    # model.train(input_fn=numpy_input_fn(
-    #     x_train, y_train, mode=tf.estimator.ModeKeys.TRAIN))
-    # # #######################################
-
-# How to evaluate in the cloud over a whole evaluation set?
-    # # # Evaluate
-    # metrics_train = model.evaluate(
-    #     input_fn=numpy_input_fn(x_train, y_train, mode=tf.estimator.ModeKeys.EVAL))
-    # metrics_test = model.evaluate(
-    #     input_fn=numpy_input_fn(
-    #         x_test, y_test, mode=tf.estimator.ModeKeys.EVAL)
-    # )
-    # import pandas as pd
-    # metrics = pd.DataFrame(
-    #     {'Train': metrics_train, 'Test': metrics_test}).transpose()
-    # print("## Metrics DF\n", metrics)
-    # # #######################################
-    # # # get individual predictions:
-    # predictions_iterator = model.predict(input_fn=numpy_input_fn(
-    #     x_test, y_test, mode=tf.estimator.ModeKeys.EVAL))
-    # for i, pred in enumerate(predictions_iterator):
-    #     if i % 999 == 0:
-    #         print('Image: {}'.format(i))
-    #         print(pred)
-    # #ToDo: 10000 Test-Images yield 20000 predictions?!
-    # predictions_iterator = model.predict(input_fn=numpy_input_fn(
-    #     x_test, y_test, mode=tf.estimator.ModeKeys.EVAL))
-    # assert len(list(predictions_iterator)) == len(x_test)
