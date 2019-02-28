@@ -72,3 +72,32 @@ def load_data(path):
         data = cPickle.load(f, encoding='bytes')
     f.close()
     return data
+
+
+
+
+from matplotlib import pyplot as plt
+import numpy as np
+import json
+
+def plot_mnist_testdata(): 
+    with open("data/test.json", "r") as f:
+        images = f.readlines()
+    plt.figure(figsize=(20,4))
+    for i, image in enumerate(images):
+        if i < 4:
+            image = json.loads(image)
+            image = np.array(image['x'])   
+            plt.subplot(1, 5, i+1)
+            plt.imshow(np.reshape(image, (28,28)), cmap=plt.cm.gray)
+
+import os
+def setwd():
+    WORKINGDIR = os.getcwd()
+    folders = WORKINGDIR.split('/')
+    if folders.pop() == 'notebook':  # or a list: in ['notebook', 'src', etc.]
+      WORKINGDIR = '/'.join(folders)
+      print("Changed to New working directory:\t{}".format(WORKINGDIR))
+    else:
+      print("Current Working direcotory is kept:\t{}".format(WORKINGDIR))
+    os.chdir(WORKINGDIR)
