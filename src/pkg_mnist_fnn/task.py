@@ -47,7 +47,7 @@ if __name__ == '__main__':
     parser.add_argument(
         '--eval_delay_secs',
         help='How long to wait before running first evaluation',
-        default='1',
+        default=1,
         type=int
     )
     parser.add_argument(
