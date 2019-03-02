@@ -1,37 +1,17 @@
-"""
-First try to start Cloud ML
-
-References:
-Basic reference for packaging the model so that ml-engine can use it:
-- https://github.com/GoogleCloudPlatform/training-data-analyst/tree/master/courses/machine_learning/cloudmle/taxifare
-MNIST-Estimator-Example:
-- https://codeburst.io/use-tensorflow-dnnclassifier-estimator-to-classify-mnist-dataset-a7222bf9f940
-
-ipython -i -m src.models.test_model_estimator_api.mnist_ml_engine -- --data_path=data --output_dir=src\models\test_model_estimator_api\trained --train_steps=100
-"""
-
+# First try to start Cloud ML uing MNIST example.
 import tensorflow as tf
 import numpy as np
 
 from .utils import load_data
-###############################################################################
+##########################################################################
 #Factor into config:
-N_PIXEL = 784
-OUTDIR = 'trained'
-USE_TPU = False
-EPOCHS = 5
-
-if USE_TPU:
-    _device_update = 'tpu'
-else:
-    _device_update = 'cpu'
-
-IMAGE_SIZE = 28 * 28
+IMAGE_SHAPE = (28,28)
+N_PIXEL = 28 * 28
 NUM_LABELS = 10
+
 BATCH_SIZE = 128
-###############################################################################
-
-
+EPOCHS = 5
+##########################################################################
 def parse_images(x):
     return x.reshape(len(x), -1).astype('float32')
 
@@ -44,8 +24,8 @@ def numpy_input_fn(images: np.ndarray,
                    labels: np.ndarray,
                    mode=tf.estimator.ModeKeys.EVAL):
     """
-    Return depending on the `mode`-key an Interator which can be use to feed into
-    the Estimator-Model. 
+    Return depending on the `mode`-key an Interator which can be use to
+    feed into the Estimator-Model. 
 
     Alternative if a `tf.data.Dataset` named `dataset` would be created:
     `dataset.make_one_shot_iterator().get_next()`
@@ -53,7 +33,7 @@ def numpy_input_fn(images: np.ndarray,
     if mode == tf.estimator.ModeKeys.TRAIN:
         _epochs = EPOCHS
         _shuffle = True
-        _num_threads = 2
+        _num_threads = 2 # This leads to doubling the number of epochs
     else:
         _epochs = 1
         _shuffle = False
@@ -63,11 +43,12 @@ def numpy_input_fn(images: np.ndarray,
         {'x': images},
         y=labels,
         batch_size=BATCH_SIZE,
-        num_epochs=_epochs,
-        # Boolean, if True shuffles the queue. Avoid shuffle at prediction time.
+        num_epochs=_epochs, # Boolean, if True shuffles the queue.
+                            # Avoid shuffle at prediction time.
         shuffle=_shuffle,
-        queue_capacity=1000,
-        # Integer, number of threads used for reading and enqueueing. In order to have predicted and repeatable order of reading and enqueueing, such as in prediction and evaluation mode, num_threads should be 1.
+        queue_capacity=1000, # Integer, number of threads used for reading 
+        # and enqueueing. To have predicted order of reading and enqueueing,
+        # such as in prediction and evaluation mode, num_threads should be 1.
         num_threads=_num_threads
     )
 
@@ -87,14 +68,15 @@ def serving_input_fn():
 def train_and_evaluate(args):
     """
     Utility function for distributed training on ML-Engine
-    https://www.tensorflow.org/api_docs/python/tf/estimator/train_and_evaluate 
+    www.tensorflow.org/api_docs/python/tf/estimator/train_and_evaluate 
     """
     ##########################################
     # Load Data in Memoery
     # ToDo: replace numpy-arrays
+    print('## load data')
     (x_train, y_train), (x_test, y_test) = load_data(
-        rel_path=args['data_path'])
-  
+        path=args['data_path'])
+    
     x_train = parse_images(x_train)
     x_test = parse_images(x_test)
 
@@ -131,5 +113,6 @@ def train_and_evaluate(args):
         throttle_secs=args['min_eval_frequency'],
         exporters=exporter
     )
+    print("## start training and evaluation")
     tf.estimator.train_and_evaluate(
         estimator=model, train_spec=train_spec, eval_spec=eval_spec)

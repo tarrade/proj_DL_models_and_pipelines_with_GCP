@@ -1,6 +1,4 @@
-"""
-Parse arguments and call main function
-"""
+# Parse arguments and call main function
 import os
 import argparse
 import shutil
@@ -53,7 +51,7 @@ if __name__ == '__main__':
     parser.add_argument(
         '--min_eval_frequency',
         help='Seconds between evaluations',
-        default=10,
+        default=5,
         type=int
     )
 
