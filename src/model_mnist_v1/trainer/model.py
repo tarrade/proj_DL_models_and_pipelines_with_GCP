@@ -122,7 +122,151 @@ def input_mnist_array_dataset_fn(x_data, y_data, FLAGS, batch_size=128, mode=tf.
     return dataset
 
 
+def _int64_feature(value: int) -> tf.train.Features.FeatureEntry:
+    """Create a Int64List Feature
 
+    Args:
+        value: The value to store in the feature
+
+    Returns:
+        The FeatureEntry
+    """
+
+    return tf.train.Feature(int64_list=tf.train.Int64List(value=[value]))
+
+
+def _bytes_feature(value: str) -> tf.train.Features.FeatureEntry:
+    """Create a BytesList Feature
+
+    Args:
+        value: The value to store in the feature
+
+    Returns:
+        The FeatureEntry
+    """
+    return tf.train.Feature(bytes_list=tf.train.BytesList(value=[value]))
+
+
+def _data_path(data_directory: str, name: str) -> str:
+    """Construct a full path to a TFRecord file to be stored in the
+    data_directory. Will also ensure the data directory exists
+
+    Args:
+        data_directory: The directory where the records will be stored
+        name:           The name of the TFRecord
+
+    Returns:
+        The full path to the TFRecord file
+    """
+    if not os.path.isdir(data_directory):
+        os.makedirs(data_directory)
+
+    return os.path.join(data_directory, f'{name}.tfrecords')
+
+def _numpy_to_tfrecords(example_dataset, filename:str):
+    print(f'Processing {filename} data')
+    dataset_length = len(example_dataset)
+    with tf.python_io.TFRecordWriter(filename) as writer:
+        for index, (image, label) in enumerate(example_dataset):
+            sys.stdout.write(f"\rProcessing sample {index+1} of {dataset_length}")
+            sys.stdout.flush()
+            image_raw = image.tostring()
+            example = tf.train.Example(features=tf.train.Features(feature={
+                'label': _int64_feature(int(label)),
+                'image_raw': _bytes_feature(image_raw)
+            }))
+            writer.write(example.SerializeToString())
+        print()
+
+
+def convert_numpy_to_tfrecords(x_data, y_data, name: str, data_directory: str, num_shards: int = 1):
+    """Convert the dataset into TFRecords on disk
+
+    Args:
+        x_data:         The MNIST data set to convert: data
+        y_data:         The MNIST data set to convert: label
+        name:           The name of the data set
+        data_directory: The directory where records will be stored
+        num_shards:     The number of files on disk to separate records into
+    """
+
+    data_set = list(zip(x_data, y_data))
+    data_directory = os.path.abspath(data_directory)
+
+    if num_shards == 1:
+        _numpy_to_tfrecords(data_set, _data_path(data_directory, name))
+    else:
+        sharded_dataset = np.array_split(data_set, num_shards)
+        for shard, dataset in enumerate(sharded_dataset):
+            _numpy_to_tfrecords(dataset, _data_path(data_directory, f'{name}-{shard + 1}'))
+
+
+def input_mnist_tfrecord_array_dataset_fn(filenames, FLAGS, batch_size=128, mode=tf.estimator.ModeKeys.TRAIN):
+    if mode == tf.estimator.ModeKeys.PREDICT:
+        tf.logging.info("input_dataset_fn: PREDICT, {}".format(mode))
+    elif mode == tf.estimator.ModeKeys.EVAL:
+        tf.logging.info("input_dataset_fn: EVAL, {}".format(mode))
+    elif mode == tf.estimator.ModeKeys.TRAIN:
+        tf.logging.info("input_dataset_fn: TRAIN, {}".format(mode))
+
+    def _parser(record):
+
+        # 1. define a parser
+        features = {
+            # the label are parsed as int
+            'label': tf.FixedLenFeature(shape=[], dtype=tf.int64),
+            # the bytes_list data is parsed into tf.string.
+            'image_raw': tf.FixedLenFeature(shape=[], dtype=tf.string)
+        }
+        parsed_record = tf.parse_single_example(record, features)
+
+        # 2. Convert the data
+        label = parsed_record['label']
+        image = tf.cast(tf.decode_raw(parsed_record['image_raw'], out_type=tf.uint8), tf.float64)
+
+        # 3. reshape
+        # tf.reshape(image, [1,784])
+        # print('---',image.shape())
+
+        # 4. hot emcoding
+        # num_classes=10
+        # label = tf.keras.utils.to_categorical( label, num_classes)
+        # label=tf.one_hot(label, num_classes)
+
+        return image, label
+
+    def _input_fn():
+
+        # 1) read data from TFRecordDataset
+        dataset = (tf.data.TFRecordDataset(filenames).map(_parser))
+
+        # 2) shuffle (with a big enough buffer size)    :
+        if mode == tf.estimator.ModeKeys.TRAIN:
+            num_epochs = FLAGS.epoch  # loop indefinitely
+            dataset = dataset.shuffle(buffer_size=FLAGS.shuffle_buffer_size, seed=2)  # depends on sample size
+        else:
+            # num_epochs = 1 # end-of-input after this -> bug in keras or feature? https://github.com/tensorflow/tensorflow/issues/25254#issuecomment-459824771
+            num_epochs = FLAGS.epoch
+
+        # 3) automatically refill the data queue when empty
+        dataset = dataset.repeat(num_epochs)
+
+        # 4) map
+        dataset = dataset.map(lambda x, y: mnist_preprocessing_fn(x, y, FLAGS),
+                              num_parallel_calls=FLAGS.num_parallel_calls)
+
+        # 5) create batches of data
+        dataset = dataset.batch(batch_size=batch_size, drop_remainder=True)
+
+        # 6) prefetch data for faster consumption, based on your system and environment, allows the tf.data runtime to automatically tune the prefetch buffer sizes
+        dataset = dataset.prefetch(FLAGS.prefetch_buffer_size)
+
+        return dataset
+
+    return _input_fn()
+
+
+# old to be drop when all the rest is working
 def input_dataset_fn(FLAGS, x_data, y_data, batch_size=128, mode=tf.estimator.ModeKeys.TRAIN):
     if mode == tf.estimator.ModeKeys.PREDICT:
         tf.logging.info("input_dataset_fn: PREDICT, {}".format(mode))
