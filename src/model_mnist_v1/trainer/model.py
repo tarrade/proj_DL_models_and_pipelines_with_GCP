@@ -3,6 +3,7 @@
 
 import tensorflow as tf
 import numpy as np
+from scipy.misc import imread
 import matplotlib.pyplot as plt
 import time
 import gzip
@@ -199,6 +200,48 @@ def convert_numpy_to_tfrecords(x_data, y_data, name: str, data_directory: str, n
         sharded_dataset = np.array_split(data_set, num_shards)
         for shard, dataset in enumerate(sharded_dataset):
             _numpy_to_tfrecords(dataset, _data_path(data_directory, f'{name}-{shard + 1}'))
+
+def _image_to_tfrecords(image_paths, filename:str):
+    print(f'Processing {filename} data')
+    length = len(image_paths)
+    #print(image_paths.split('_')[-1])
+    #labels=int(image_paths.split('_')[-1])
+    with tf.python_io.TFRecordWriter(filename) as writer:
+        for index, image_path in enumerate(image_paths):
+            label = int(''.join([n for n in image_path.split('_')[-1] if n.isdigit()]))
+            sys.stdout.write(f"\rProcessing sample {index+1} of {length}")
+            sys.stdout.flush()
+
+            # Load the image-file using matplotlib's imread function.
+            image = imread(image_path)
+
+            # Convert the image to raw bytes
+            image_raw = image.tostring()
+            example = tf.train.Example(features=tf.train.Features(feature={
+                'label': _int64_feature(int(label)),
+                'image_raw': _bytes_feature(image_raw)
+            }))
+            writer.write(example.SerializeToString())
+        print()
+
+def convert_image_to_tfrecords(input_images, name: str, data_directory: str, num_shards: int = 1):
+    """Convert the dataset into TFRecords on disk
+
+    Args:
+        path:           The MNIST data set location
+        name:           The name of the data set
+        data_directory: The directory where records will be stored
+        num_shards:     The number of files on disk to separate records into
+    """
+
+    data_directory = os.path.abspath(data_directory)
+
+    if num_shards == 1:
+        _image_to_tfrecords(input_images, _data_path(data_directory, name))
+    else:
+        sharded_dataset = np.array_split(input_images, num_shards)
+        for shard, dataset in enumerate(sharded_dataset):
+            _image_to_tfrecords(dataset, _data_path(data_directory, f'{name}-{shard + 1}'))
 
 
 def input_mnist_tfrecord_array_dataset_fn(filenames, FLAGS, batch_size=128, mode=tf.estimator.ModeKeys.TRAIN):

@@ -16,6 +16,8 @@ data/mnist/numpy_test/
 data/mnist/numpy_train/
 data/mnist/tfrecord_numpy_test/
 data/mnist/tfrecord_numpy_train/
+data/mnist/tfrecord_image_test/
+data/mnist/tfrecord_image_train/
 
 trained/
 
