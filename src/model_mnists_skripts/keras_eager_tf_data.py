@@ -14,6 +14,7 @@ BATCH_SIZE = 64
 LEARNING_RATE = 0.001
 ###############################################################################
 # Load Data
+# data is in memory
 try:
     with np.load("./data/mnist.npz") as f:
         x_train, y_train = f['x_train'], f['y_train']
@@ -31,31 +32,33 @@ except Exception:
 # reshape and save image dimensions
 dim_img = x_train.shape[1:]
 
-# #######################################
-# # parser function for input data
-# def image_parser(array:np.array):
-#     "Return `tf.Tensor` with parsed images."
-#     array = tf.cast(array, dtype="float")
-#     array = tf.reshape(array, [array.shape[0].value, -1])
-#     return array
+# processing data is done using tf.data
+"""
+#######################################
+# parser function for input data
+def image_parser(array:np.array):
+    "Return `tf.Tensor` with parsed images."
+    array = tf.cast(array, dtype="float")
+    array = tf.reshape(array, [array.shape[0].value, -1])
+    return array
 
-# x_train = image_parser(x_train)
-# x_test  = image_parser(x_test)
+x_train = image_parser(x_train)
+x_test  = image_parser(x_test)
 
-# print("Data Loaded in Memory")
+print("Data Loaded in Memory")
 
-# def oneHotEncode(array):
-#     n = len(array)
-#     dense_array = np.zeros((n, len(set(array))))
-#     dense_array[np.arange(n), array] = 1
-#     return dense_array
+def oneHotEncode(array):
+    n = len(array)
+    dense_array = np.zeros((n, len(set(array))))
+    dense_array[np.arange(n), array] = 1
+    return dense_array
 
-# assert set(y_train) == set(
-#     y_test), "Classes in train and test set are different. which is correct?"
+assert set(y_train) == set(
+    y_test), "Classes in train and test set are different. which is correct?"
 
-# y_train = oneHotEncode(y_train)
-# y_test = oneHotEncode(y_test)
-
+y_train = oneHotEncode(y_train)
+y_test = oneHotEncode(y_test)
+"""
 ###############################################################################
 # Build Model
 classes = set(y_train)  # 0-9 digits
@@ -134,7 +137,7 @@ trainslices = trainslices.map(map_func=_parse_fct, num_parallel_calls=3)
 
 #trainslices = trainslices.repeat(count=1)
 
-trainslices = trainslices.batch(batch_size=BATCH_SIZE,
+trainslices = trainslices.batch(batch_size=BATCH_SIZE,Berlin
                                 drop_remainder=True)  # if False -> breaks assert in training loop
 
 testslices = tf.data.Dataset.from_tensor_slices((x_test, y_test))
@@ -158,7 +161,7 @@ for i in range(1, NUM_EPOCHS + 1):
     for (batch, (images, labels)) in enumerate(trainslices.take(-1)):
         if batch % step == 0:
             print('#', end='')
-        # optimizer.minimize has two steps in eager mode:  
+        # optimizer.minimize has two steps in eager mode:Berlin  
         grads = grad(model, images, labels) #ToDo: add tf.cast to parser fct
         optimizer.apply_gradients(zip(grads, model.weights),
                                     global_step=tf.train.get_or_create_global_step())

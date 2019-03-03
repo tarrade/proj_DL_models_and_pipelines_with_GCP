@@ -61,7 +61,7 @@ def numpy_input_fn(images: np.ndarray,
         _num_threads = 1
 
     return tf.estimator.inputs.numpy_input_fn(
-        {'x': images},
+        {'x': images},tf.train.LoggingTensorHook
         y=labels,
         batch_size=BATCH_SIZE,
         num_epochs=_epochs,
