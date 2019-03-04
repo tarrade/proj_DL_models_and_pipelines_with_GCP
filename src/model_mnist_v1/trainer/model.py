@@ -244,7 +244,7 @@ def convert_image_to_tfrecords(input_images, name: str, data_directory: str, num
             _image_to_tfrecords(dataset, _data_path(data_directory, f'{name}-{shard + 1}'))
 
 
-def input_mnist_tfrecord_array_dataset_fn(filenames, FLAGS, batch_size=128, mode=tf.estimator.ModeKeys.TRAIN):
+def input_mnist_tfrecord_dataset_fn(filenames, FLAGS, batch_size=128, mode=tf.estimator.ModeKeys.TRAIN):
     if mode == tf.estimator.ModeKeys.PREDICT:
         tf.logging.info("input_dataset_fn: PREDICT, {}".format(mode))
     elif mode == tf.estimator.ModeKeys.EVAL:
@@ -307,7 +307,6 @@ def input_mnist_tfrecord_array_dataset_fn(filenames, FLAGS, batch_size=128, mode
         return dataset
 
     return _input_fn()
-
 
 # old to be drop when all the rest is working
 def input_dataset_fn(FLAGS, x_data, y_data, batch_size=128, mode=tf.estimator.ModeKeys.TRAIN):
