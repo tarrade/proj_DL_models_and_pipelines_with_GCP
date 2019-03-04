@@ -351,7 +351,56 @@ def input_dataset_fn(FLAGS, x_data, y_data, batch_size=128, mode=tf.estimator.Mo
 # the tf.distribute.Strategy API is an easy way to distribute your training across multiple devices/machines
 
 
+def keras_baseline_model(FLAGS, opt='tf'):
+    # create model
+    model = tf.keras.Sequential()
 
+    # hidden layer
+    model.add(tf.keras.layers.Dense(512,
+                                    input_dim=FLAGS.dim_input,
+                                    kernel_initializer=tf.keras.initializers.he_normal(),
+                                    bias_initializer=tf.keras.initializers.Zeros(),
+                                    activation='relu'))
+    model.add(tf.keras.layers.Dropout(0.2))
+
+    model.add(tf.keras.layers.Dense(512,
+                                    kernel_initializer=tf.keras.initializers.he_normal(),
+                                    bias_initializer=tf.keras.initializers.Zeros(),
+                                    activation='relu'))
+    model.add(tf.keras.layers.Dropout(0.2))
+
+    # last layer
+    model.add(tf.keras.layers.Dense(FLAGS.num_classes,
+                                    kernel_initializer=tf.keras.initializers.he_normal(),
+                                    bias_initializer=tf.keras.initializers.Zeros(),
+                                    activation='softmax'))
+
+    # weight initialisation
+    # He: keras.initializers.he_normal(seed=None)
+    # Xavier: keras.initializers.glorot_uniform(seed=None)
+    # Radom Normal: keras.initializers.RandomNormal(mean=0.0, stddev=0.05, seed=None)
+    # Truncated Normal: keras.initializers.TruncatedNormal(mean=0.0, stddev=0.05, seed=None)
+
+    if opt == 'keras':
+        optimiser = tf.keras.optimizers.Adam(lr=0.01, beta_1=0.9)
+        # GD/SGC:   keras.optimizers.SGD(lr=0.01, momentum=0.0, decay=0.0, nesterov=False)
+        # Adam:     keras.optimizers.Adam(lr=0.001, beta_1=0.9, beta_2=0.999, epsilon=None, decay=0.0, amsgrad=False)
+        # RMSProp:  keras.optimizers.RMSprop(lr=0.001, rho=0.9, epsilon=None, decay=0.0)
+        # Momentum: keras.optimizers.SGD(lr=0.01, momentum=0.9, decay=0.0, nesterov=False)
+    else:
+        # optimiser (use tf.train and not tf.keras to use MirrorStrategy)
+        # https://www.tensorflow.org/api_docs/python/tf/train/Optimizer
+        optimiser = tf.train.AdamOptimizer(learning_rate=0.001, beta1=0.9)
+        # GD/SGC:   tf.train.GradientDescentOptimizer(learning_rate, use_locking=False, name='GradientDescent')
+        # Adam:     tf.train.AdamOptimizer(learning_rate=0.001, beta1=0.9, beta2=0.999, epsilon=1e-08, use_locking=False,name='Adam')
+        # RMSProp:  tf.train.RMSPropOptimizer(learning_rate, decay=0.9, momentum=0.0, epsilon=1e-10, use_locking=False, centered=False, name='RMSProp')
+        # Momentum: tf.train.MomentumOptimizer(learning_rate, momentum, use_locking=False, name='Momentum', use_nesterov=False)
+
+    # Compile model
+    model.compile(loss='categorical_crossentropy',
+                  optimizer=optimiser,
+                  metrics=['accuracy'])
+    return model
 
 def baseline_model(FLAGS, opt='tf'):
     # strategy=None
