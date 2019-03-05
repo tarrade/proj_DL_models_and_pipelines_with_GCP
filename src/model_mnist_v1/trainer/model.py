@@ -105,8 +105,8 @@ def input_mnist_array_dataset_fn(x_data, y_data, FLAGS, batch_size=128, mode=tf.
         num_epochs = FLAGS.epoch
         dataset = dataset.shuffle(buffer_size=FLAGS.shuffle_buffer_size, seed=2)  # depends on sample size
     else:
-        # num_epochs = 1 # end-of-input after this -> bug in keras or feature? https://github.com/tensorflow/tensorflow/issues/25254#issuecomment-459824771
-        num_epochs = FLAGS.epoch
+        num_epochs = 1 # end-of-input after this -> bug in keras or feature? https://github.com/tensorflow/tensorflow/issues/25254#issuecomment-459824771
+        #num_epochs = FLAGS.epoch
 
     # 3) automatically refill the data queue when empty
     dataset = dataset.repeat(num_epochs)
@@ -267,9 +267,10 @@ def input_mnist_tfrecord_dataset_fn(filenames, FLAGS, batch_size=128, mode=tf.es
         label = parsed_record['label']
         image = tf.cast(tf.decode_raw(parsed_record['image_raw'], out_type=tf.uint8), tf.float64)
 
+
         # 3. reshape
         # tf.reshape(image, [1,784])
-        # print('---',image.shape())
+        #print('---',image.shape())
 
         # 4. hot emcoding
         # num_classes=10
@@ -280,29 +281,37 @@ def input_mnist_tfrecord_dataset_fn(filenames, FLAGS, batch_size=128, mode=tf.es
 
     def _input_fn():
 
+        drop_remainder = True
+
         # 1) read data from TFRecordDataset
         dataset = (tf.data.TFRecordDataset(filenames).map(_parser))
-
         # 2) shuffle (with a big enough buffer size)    :
         if mode == tf.estimator.ModeKeys.TRAIN:
             num_epochs = FLAGS.epoch  # loop indefinitely
             dataset = dataset.shuffle(buffer_size=FLAGS.shuffle_buffer_size, seed=2)  # depends on sample size
+            print('doing training')
         else:
-            # num_epochs = 1 # end-of-input after this -> bug in keras or feature? https://github.com/tensorflow/tensorflow/issues/25254#issuecomment-459824771
-            num_epochs = FLAGS.epoch
+            num_epochs = 1 # end-of-input after this -> bug in keras or feature? https://github.com/tensorflow/tensorflow/issues/25254#issuecomment-459824771
+            #num_epochs = FLAGS.epoch
+            drop_remainder = False
+            print('not training', num_epochs, FLAGS.epoch)
 
         # 3) automatically refill the data queue when empty
-        dataset = dataset.repeat(num_epochs)
+        #dataset = dataset.repeat(num_epochs)
 
         # 4) map
         dataset = dataset.map(lambda x, y: mnist_preprocessing_fn(x, y, FLAGS),
                               num_parallel_calls=FLAGS.num_parallel_calls)
 
         # 5) create batches of data
-        dataset = dataset.batch(batch_size=batch_size, drop_remainder=True)
+        dataset = dataset.batch(batch_size=batch_size, drop_remainder=drop_remainder)
 
         # 6) prefetch data for faster consumption, based on your system and environment, allows the tf.data runtime to automatically tune the prefetch buffer sizes
+        #if mode == tf.estimator.ModeKeys.TRAIN:
         dataset = dataset.prefetch(FLAGS.prefetch_buffer_size)
+        #else:
+        #    dataset = dataset.prefetch(1)
+        print(FLAGS.num_parallel_calls)
 
         return dataset
 
