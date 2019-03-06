@@ -1,4 +1,6 @@
 # pip installl --upgrade google-cloud-bigquery
+from google.cloud import bigquery
+
 client = bigquery.Client()
 sql = """
     SELECT name
