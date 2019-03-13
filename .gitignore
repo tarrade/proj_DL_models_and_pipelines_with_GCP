@@ -10,6 +10,8 @@ notebook/.ipynb_checkpoints/
 notebook/TF_2.0/.ipynb_checkpoints/
 
 results/
+script/__pycache__
+
 data/mnist/images_test/
 data/mnist/images_train/
 data/mnist/numpy_test/
@@ -37,6 +39,6 @@ src/package_ml_engine/trained/*
 src/*/*/__pycache__
 ML-productive-pipeline-53122-64d3c31786e7.json
 
-config.yaml
-ML-productive-pipeline-53122-64d3c31786e7.json
+*.yaml
+*.json
 
