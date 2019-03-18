@@ -11,6 +11,7 @@ notebook/TF_2.0/.ipynb_checkpoints/
 
 results/
 script/__pycache__
+script/config_client*
 
 data/mnist/images_test/
 data/mnist/images_train/
