@@ -506,8 +506,9 @@ def train_and_evaluate(FLAGS, use_keras=True):
                                                                                                FLAGS,
                                                                                                mode=tf.estimator.ModeKeys.EVAL,
                                                                                                batch_size=FLAGS.batch_size),
+                                      steps=None,
                                       start_delay_secs=0,
-                                      throttle_secs=0,
+                                      throttle_secs=10,
                                       exporters=exporter)
 
     tf.estimator.train_and_evaluate(estimator, train_spec, eval_spec)
