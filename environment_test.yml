@@ -33,6 +33,7 @@ dependencies:
   - tfds-nightly
   #- tf-nightly-2.0-preview==2.0.0.dev20190207
   #- tf-nightly-2.0-preview==2.0.0.dev20190208
-  - tf-nightly-2.0-preview==2.0.0.dev20190212
+  #- tf-nightly-2.0-preview==2.0.0.dev20190212
+  - tf-nightly-2.0-preview
   #- tensorflow==1.13.0rc0
   #- tensorflow-estimator==1.13.0rc0
