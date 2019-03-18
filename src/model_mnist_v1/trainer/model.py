@@ -105,8 +105,8 @@ def input_mnist_array_dataset_fn(x_data, y_data, FLAGS, batch_size=128, mode=tf.
         num_epochs = FLAGS.epoch
         dataset = dataset.shuffle(buffer_size=FLAGS.shuffle_buffer_size, seed=2)  # depends on sample size
     else:
-        num_epochs = 1 # end-of-input after this -> bug in keras or feature? https://github.com/tensorflow/tensorflow/issues/25254#issuecomment-459824771
-        #num_epochs = FLAGS.epoch
+        #num_epochs = 1 # end-of-input after this -> bug in keras or feature? https://github.com/tensorflow/tensorflow/issues/25254#issuecomment-459824771
+        num_epochs = FLAGS.epoch
 
     # 3) automatically refill the data queue when empty
     dataset = dataset.repeat(num_epochs)
@@ -267,16 +267,6 @@ def input_mnist_tfrecord_dataset_fn(filenames, FLAGS, batch_size=128, mode=tf.es
         label = parsed_record['label']
         image = tf.cast(tf.decode_raw(parsed_record['image_raw'], out_type=tf.uint8), tf.float64)
 
-
-        # 3. reshape
-        # tf.reshape(image, [1,784])
-        #print('---',image.shape())
-
-        # 4. hot emcoding
-        # num_classes=10
-        # label = tf.keras.utils.to_categorical( label, num_classes)
-        # label=tf.one_hot(label, num_classes)
-
         return image, label
 
     def _input_fn():
@@ -285,11 +275,11 @@ def input_mnist_tfrecord_dataset_fn(filenames, FLAGS, batch_size=128, mode=tf.es
 
         # 1) read data from TFRecordDataset
         dataset = (tf.data.TFRecordDataset(filenames).map(_parser))
-        # 2) shuffle (with a big enough buffer size)    :
+
+        # 2) shuffle (with a big enough buffer size)
         if mode == tf.estimator.ModeKeys.TRAIN:
             num_epochs = FLAGS.epoch  # loop indefinitely
             dataset = dataset.shuffle(buffer_size=FLAGS.shuffle_buffer_size, seed=2)  # depends on sample size
-            print('doing training')
         else:
             num_epochs = 1 # end-of-input after this -> bug in keras or feature? https://github.com/tensorflow/tensorflow/issues/25254#issuecomment-459824771
             #num_epochs = FLAGS.epoch
@@ -297,7 +287,7 @@ def input_mnist_tfrecord_dataset_fn(filenames, FLAGS, batch_size=128, mode=tf.es
             print('not training', num_epochs, FLAGS.epoch)
 
         # 3) automatically refill the data queue when empty
-        #dataset = dataset.repeat(num_epochs)
+        dataset = dataset.repeat(num_epochs)
 
         # 4) map
         dataset = dataset.map(lambda x, y: mnist_preprocessing_fn(x, y, FLAGS),
@@ -307,11 +297,8 @@ def input_mnist_tfrecord_dataset_fn(filenames, FLAGS, batch_size=128, mode=tf.es
         dataset = dataset.batch(batch_size=batch_size, drop_remainder=drop_remainder)
 
         # 6) prefetch data for faster consumption, based on your system and environment, allows the tf.data runtime to automatically tune the prefetch buffer sizes
-        #if mode == tf.estimator.ModeKeys.TRAIN:
         dataset = dataset.prefetch(FLAGS.prefetch_buffer_size)
-        #else:
-        #    dataset = dataset.prefetch(1)
-        print(FLAGS.num_parallel_calls)
+
 
         return dataset
 
@@ -426,46 +413,7 @@ def baseline_model(FLAGS, opt='tf'):
                                              save_summary_steps=20,
                                              save_checkpoints_steps=20)
 
-    # create model
-    model = tf.keras.Sequential()
-
-    # hidden layer
-    model.add(tf.keras.layers.Dense(dim_input,
-                                    input_dim=dim_input,
-                                    kernel_initializer=tf.keras.initializers.he_normal(),
-                                    bias_initializer=tf.keras.initializers.Zeros(),
-                                    activation='relu'))
-    # last layer
-    model.add(tf.keras.layers.Dense(num_classes,
-                                    kernel_initializer=tf.keras.initializers.he_normal(),
-                                    bias_initializer=tf.keras.initializers.Zeros(),
-                                    activation='softmax'))
-
-    # weight initialisation
-    # He: keras.initializers.he_normal(seed=None)
-    # Xavier: keras.initializers.glorot_uniform(seed=None)
-    # Radom Normal: keras.initializers.RandomNormal(mean=0.0, stddev=0.05, seed=None)
-    # Truncated Normal: keras.initializers.TruncatedNormal(mean=0.0, stddev=0.05, seed=None)
-
-    if opt == 'keras':
-        optimiser = tf.keras.optimizers.Adam(lr=0.01, beta_1=0.9)
-        # GD/SGC:   keras.optimizers.SGD(lr=0.01, momentum=0.0, decay=0.0, nesterov=False)
-        # Adam:     keras.optimizers.Adam(lr=0.001, beta_1=0.9, beta_2=0.999, epsilon=None, decay=0.0, amsgrad=False)
-        # RMSProp:  keras.optimizers.RMSprop(lr=0.001, rho=0.9, epsilon=None, decay=0.0)
-        # Momentum: keras.optimizers.SGD(lr=0.01, momentum=0.9, decay=0.0, nesterov=False)
-    else:
-        # optimiser (use tf.train and not tf.keras to use MirrorStrategy)
-        # https://www.tensorflow.org/api_docs/python/tf/train/Optimizer
-        optimiser = tf.train.AdamOptimizer(learning_rate=0.001, beta1=0.9)
-        # GD/SGC:   tf.train.GradientDescentOptimizer(learning_rate, use_locking=False, name='GradientDescent')
-        # Adam:     tf.train.AdamOptimizer(learning_rate=0.001, beta1=0.9, beta2=0.999, epsilon=1e-08, use_locking=False,name='Adam')
-        # RMSProp:  tf.train.RMSPropOptimizer(learning_rate, decay=0.9, momentum=0.0, epsilon=1e-10, use_locking=False, centered=False, name='RMSProp')
-        # Momentum: tf.train.MomentumOptimizer(learning_rate, momentum, use_locking=False, name='Momentum', use_nesterov=False)
-
-    # Compile model
-    model.compile(loss='categorical_crossentropy',
-                  optimizer=optimiser,
-                  metrics=['accuracy'])
+    model = keras_baseline_model(FLAGS, opt='tf')
 
     return tf.keras.estimator.model_to_estimator(keras_model=model, config=training_config)
 
@@ -535,7 +483,36 @@ def serving_input_receiver_fn():
     return tf.estimator.export.ServingInputReceiver(features, receiver_tensors)
 
 # Create custom estimator's train and evaluate function
-def train_and_evaluate(FLAGS, use_keras):
+def train_and_evaluate(FLAGS, use_keras=True):
+    print('flags',FLAGS)
+    if use_keras:
+        estimator = baseline_model(FLAGS)
+    else:
+        estimator = tf.estimator.Estimator(model_fn=simple_rnn,
+                                           model_dir=output_dir)
+    # to give as an argument
+    path_test_tfrecords = 'data/mnist/tfrecords_image_test'
+    path_train_tfrecords = 'data/mnist/tfrecords_image_train'
+
+    train_spec = tf.estimator.TrainSpec(input_fn=lambda:input_mnist_tfrecord_dataset_fn(glob.glob(path_train_tfrecords+'/train*.tfrecords'),
+                                                                                                 FLAGS,
+                                                                                                 mode=tf.estimator.ModeKeys.TRAIN,
+                                                                                                 batch_size=FLAGS.batch_size),
+                                        max_steps=1000)
+
+    exporter = tf.estimator.LatestExporter('exporter', serving_input_receiver_fn = serving_input_receiver_fn)
+
+    eval_spec = tf.estimator.EvalSpec(input_fn=lambda:input_mnist_tfrecord_dataset_fn(glob.glob(path_test_tfrecords+'/test*.tfrecords'),
+                                                                                               FLAGS,
+                                                                                               mode=tf.estimator.ModeKeys.EVAL,
+                                                                                               batch_size=FLAGS.batch_size),
+                                      start_delay_secs=0,
+                                      throttle_secs=0,
+                                      exporters=exporter)
+
+    tf.estimator.train_and_evaluate(estimator, train_spec, eval_spec)
+
+def train_and_evaluate_old(FLAGS, use_keras):
     print('flags',FLAGS)
     if use_keras:
         estimator = baseline_model(FLAGS)
