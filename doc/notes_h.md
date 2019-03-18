@@ -7,3 +7,9 @@ Where [`tf.keras.Model`](https://github.com/tensorflow/tensorflow/blob/a6d8ffae0
 - `object`
 
 Saving the model as an object already solves the intital issue of optimization.
+
+
+# Possible to look at
+
+- [Kubeflow](https://www.kubeflow.org/), [Blog-Post](https://opensource.com/article/18/12/introduction-kubeflow)
+- TFX, [TF Data Validation](https://github.com/tensorflow/data-validation), 
