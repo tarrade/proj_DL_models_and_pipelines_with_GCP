@@ -24,7 +24,7 @@ import tensorflow.contrib.rnn as rnn
 #print(tf.__version__)
 #print(tf.keras.__version__)
 
-tf.logging.set_verbosity(tf.logging.INFO)
+tf.logging.set_verbosity(tf.logging.DEBUG)
 
 # learning rate
 #learning_rate = 0.5
@@ -503,11 +503,12 @@ def baseline_estimator_model(features, labels, mode, params):
         acc=tf.metrics.accuracy(labels=tf.argmax(labels, 1), predictions=classes, name='accuracy')
         evalmetrics = {'accuracy': acc}
 
-        tf.summary.scalar('accuarcy', acc[1])
+        tf.summary.scalar('acc_train', acc[1])
 
         train_op = optimizer.minimize(loss, tf.train.get_or_create_global_step())
 
-        return tf.estimator.EstimatorSpec(mode=mode, predictions=predictions, loss=loss, train_op=train_op, eval_metric_ops=evalmetrics, export_outputs=predictions_output)
+        #return tf.estimator.EstimatorSpec(mode=mode, predictions=predictions, loss=loss, train_op=train_op, eval_metric_ops=evalmetrics, export_outputs=predictions_output)
+        return tf.estimator.EstimatorSpec(mode=mode, predictions=predictions, loss=loss, train_op=train_op, export_outputs=predictions_output)
 
     if mode == tf.estimator.ModeKeys.EVAL:
 
@@ -524,13 +525,19 @@ def baseline_estimator_model(features, labels, mode, params):
             'classify': tf.estimator.export.PredictOutput(predictions)
         }
 
-        evalmetrics = {'accuracy': tf.metrics.accuracy(labels=tf.argmax(labels, 1), predictions=classes, name='accuracy')}
+        #evalmetrics = {'accuracy': tf.metrics.accuracy(labels=tf.argmax(labels, 1), predictions=classes, name='accuracy')}
+
+        acc=tf.metrics.accuracy(labels=tf.argmax(labels, 1), predictions=classes, name='accuracy')
+        evalmetrics = {'accuracy': acc}
+
 
         #loss = tf.losses.sparse_softmax_cross_entropy(labels=labels, logits=logits)
         loss = tf.losses.softmax_cross_entropy(onehot_labels=labels, logits=logits)
 
-        return tf.estimator.EstimatorSpec(mode=mode, predictions=predictions, loss=loss, eval_metric_ops=evalmetrics, export_outputs=predictions_output)
-
+        #return tf.estimator.EstimatorSpec(mode=mode, predictions=predictions, loss=loss, eval_metric_ops=evalmetrics, export_outputs=predictions_output)
+        #return tf.estimator.EstimatorSpec(mode=mode, predictions=predictions, loss=loss, eval_metric_ops=evalmetrics,
+        #                                  export_outputs=predictions_output)
+        return tf.estimator.EstimatorSpec(mode, loss=loss, eval_metric_ops=evalmetrics)
 
     ## 2. Define the loss function for training/evaluation using Tensorflow.
     ##loss = tf.losses.mean_squared_error(labels, predictions)
@@ -617,13 +624,12 @@ def serving_input_receiver_fn():
     -------
     tf.estimator.export.ServingInputReceiver
     """
-    print('--> serving start')
+
     input_images = tf.placeholder(tf.float32, [None, 784])
     features = {
         'dense_input': input_images}  # this is the dict that is then passed as "features" parameter to your model_fn
     receiver_tensors = {
         'dense_input': input_images}  # As far as I understand this is needed to map the input to a name you can retrieve later
-    print('--> serving done')
 
     return tf.estimator.export.ServingInputReceiver(features, receiver_tensors)
 
@@ -633,7 +639,7 @@ def serving_input_receiver_fn():
 def train_and_evaluate(FLAGS, use_keras=True):
 
     tf.summary.FileWriterCache.clear()  # ensure filewriter cache is clear for TensorBoard events file
-    EVAL_INTERVAL = 300  # seconds
+    EVAL_INTERVAL = 10  # seconds
 
 
 
@@ -642,8 +648,11 @@ def train_and_evaluate(FLAGS, use_keras=True):
     else:
         strategy = tf.contrib.distribute.OneDeviceStrategy('device:CPU:0')
         run_config = tf.estimator.RunConfig(train_distribute=strategy,
-                                            save_summary_steps=20,
-                                            save_checkpoints_steps=20)
+                                            model_dir=FLAGS.model_dir,
+                                            save_summary_steps=1,
+                                            save_checkpoints_steps=100,
+                                            keep_checkpoint_max=3,
+                                            log_step_count_steps=10)
 
         estimator = tf.estimator.Estimator(model_fn=baseline_estimator_model,
                                            params={'dim_input': FLAGS.dim_input, 'num_classes': FLAGS.num_classes},
@@ -666,9 +675,9 @@ def train_and_evaluate(FLAGS, use_keras=True):
     eval_spec = tf.estimator.EvalSpec(input_fn=lambda:input_mnist_tfrecord_dataset_fn(glob.glob(path_test_tfrecords+'/test*.tfrecords'),
                                                                                                FLAGS,
                                                                                                mode=tf.estimator.ModeKeys.EVAL,
-                                                                                               batch_size=FLAGS.batch_size),
-                                      steps=100,
-                                      start_delay_secs=0,
+                                                                                               batch_size=10000),
+                                      steps=1,
+                                      start_delay_secs=EVAL_INTERVAL,
                                       throttle_secs=EVAL_INTERVAL)
                                       #exporters=exporter)
 
