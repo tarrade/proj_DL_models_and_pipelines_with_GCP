@@ -73,7 +73,7 @@ def train_and_evaluate(args):
     ##########################################
     # Load Data in Memoery
     # ToDo: replace numpy-arrays
-    print('## load data')
+    print('## load data, specified path to try: {}'.format(args['data_path']))
     (x_train, y_train), (x_test, y_test) = load_data(
         path=args['data_path'])
     
@@ -95,24 +95,34 @@ def train_and_evaluate(args):
         batch_norm=False,
         loss_reduction='weighted_sum',
         warm_start_from=None,
-        config = None
+        config=tf.estimator.RunConfig(# save_summary_steps=200,
+                                      save_checkpoints_steps=400,
+                                      keep_checkpoint_max=5, 
+                                      keep_checkpoint_every_n_hours=1,
+                                      #log_step_count_steps=100,
+                                      train_distribute=None,
+                                      )
     )
-   
     train_spec = tf.estimator.TrainSpec(
         input_fn=numpy_input_fn(
             x_train, y_train, mode=tf.estimator.ModeKeys.TRAIN),
         max_steps=args['train_steps'],
-        hooks = None
+        # hooks = None
     )
     exporter = tf.estimator.LatestExporter('exporter', serving_input_fn)
     eval_spec = tf.estimator.EvalSpec(
         input_fn=numpy_input_fn(
             x_test, y_test, mode=tf.estimator.ModeKeys.EVAL),
-        steps=None,
+        # steps=100,
         start_delay_secs=args['eval_delay_secs'],
         throttle_secs=args['min_eval_frequency'],
         exporters=exporter
     )
-    print("## start training and evaluation")
+    print(
+        "## start training and evaluation\n"
+        "### save model, ckpts, etc. to: {}".format(args['output_dir'])
+    
+    )
+
     tf.estimator.train_and_evaluate(
         estimator=model, train_spec=train_spec, eval_spec=eval_spec)
