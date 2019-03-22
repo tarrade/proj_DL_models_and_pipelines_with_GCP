@@ -435,40 +435,21 @@ def baseline_estimator_model(features, labels, mode, params):
     """
     Model function for Estimator
     """
-
-
-    print('input features', features)
-    print('input labels', labels)
-    print('input mode', mode)
-    print('input params', params)
-
     # Build the model using keras layers
-
     # should we put   model(image, training=False) for predict
     # or should weset the learning phase
-    print('step 1')
-
     if mode == tf.estimator.ModeKeys.TRAIN:
         K.set_learning_phase(True)
     else:
         K.set_learning_phase(False)
-    print('step 2')
+
     # gettings the bulding blocks
     model = keras_building_blocks(params['dim_input'], params['num_classes'])
 
-    print('step 3')
-    #if mode == tf.estimator.ModeKeys.PREDICT:
-    #    image = features['dense_input2']
-    #else:
-    image = features['dense_input']
+    dense_inpout = features['dense_input']
 
-    print('step 4')
-    print(image)
     # Logits layer
-    logits = model(image)
-    print('step 5')
-
-    print('logits',logits)
+    logits = model(dense_inpout)
 
     # Compute predictions
     probabilities = tf.nn.softmax(logits)
@@ -480,10 +461,8 @@ def baseline_estimator_model(features, labels, mode, params):
         'probabilities': probabilities,
     }
 
-    # to be fixed
+    # to be tested
     predictions_output = tf.estimator.export.PredictOutput(predictions)
-    print('predictions', predictions)
-    print('predictions_output', predictions_output)
 
     #predictions_output = {
     #    'classify': tf.estimator.export.PredictOutput(predictions)
@@ -491,7 +470,6 @@ def baseline_estimator_model(features, labels, mode, params):
 
     # Provide an estimator spec for `ModeKeys.PREDICT`
     if mode == tf.estimator.ModeKeys.PREDICT:
-        print('PREDICTION')
         return tf.estimator.EstimatorSpec(mode=mode,
                                           predictions=predictions,
                                           export_outputs={tf.saved_model.signature_constants.DEFAULT_SERVING_SIGNATURE_DEF_KEY: predictions_output})
@@ -510,8 +488,6 @@ def baseline_estimator_model(features, labels, mode, params):
         return tf.estimator.EstimatorSpec(mode=mode,
                                           loss=loss,
                                           eval_metric_ops=eval_metrics)
-
-
 
     # Provide an estimator spec for `ModeKeys.TRAIN`
     if mode == tf.estimator.ModeKeys.TRAIN:
