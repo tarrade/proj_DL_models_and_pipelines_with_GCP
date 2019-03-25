@@ -163,14 +163,17 @@ def _data_path(data_directory: str, name: str) -> str:
     if not os.path.isdir(data_directory):
         os.makedirs(data_directory)
 
-    return os.path.join(data_directory, f'{name}.tfrecords')
+    #return os.path.join(data_directory, f'{name}.tfrecords')
+    os.path.join('data_directory', '{}.tfrecords'.format(name))
 
 def _numpy_to_tfrecords(example_dataset, filename:str):
-    print(f'Processing {filename} data')
+    #print(f'Processing {filename} data')
+    print('Processing {} data'.format(filename))
     dataset_length = len(example_dataset)
     with tf.python_io.TFRecordWriter(filename) as writer:
         for index, (image, label) in enumerate(example_dataset):
-            sys.stdout.write(f"\rProcessing sample {index+1} of {dataset_length}")
+            #sys.stdout.write(f"\rProcessing sample {index+1} of {dataset_length}")
+            sys.stdout.write("\rProcessing sample {} of {dataset_length}".format(index + 1, dataset_length))
             sys.stdout.flush()
             image_raw = image.tostring()
             example = tf.train.Example(features=tf.train.Features(feature={
@@ -200,17 +203,20 @@ def convert_numpy_to_tfrecords(x_data, y_data, name: str, data_directory: str, n
     else:
         sharded_dataset = np.array_split(data_set, num_shards)
         for shard, dataset in enumerate(sharded_dataset):
-            _numpy_to_tfrecords(dataset, _data_path(data_directory, f'{name}-{shard + 1}'))
+           #_numpy_to_tfrecords(dataset, _data_path(data_directory, f'{name}-{shard + 1}'))
+           _numpy_to_tfrecords(dataset, _data_path(data_directory, '{}-{}'.format(name, shard + 1)))
 
 def _image_to_tfrecords(image_paths, filename:str):
-    print(f'Processing {filename} data')
+    #print(f'Processing {filename} data')
+    print('Processing {} data'.format(filename))
     length = len(image_paths)
     #print(image_paths.split('_')[-1])
     #labels=int(image_paths.split('_')[-1])
     with tf.python_io.TFRecordWriter(filename) as writer:
         for index, image_path in enumerate(image_paths):
             label = int(''.join([n for n in image_path.split('_')[-1] if n.isdigit()]))
-            sys.stdout.write(f"\rProcessing sample {index+1} of {length}")
+            #sys.stdout.write(f"\rProcessing sample {index+1} of {length}")
+            sys.stdout.write("\rProcessing sample {} of {}".format(index + 1, length))
             sys.stdout.flush()
 
             # Load the image-file using matplotlib's imread function.
@@ -242,7 +248,8 @@ def convert_image_to_tfrecords(input_images, name: str, data_directory: str, num
     else:
         sharded_dataset = np.array_split(input_images, num_shards)
         for shard, dataset in enumerate(sharded_dataset):
-            _image_to_tfrecords(dataset, _data_path(data_directory, f'{name}-{shard + 1}'))
+            #_image_to_tfrecords(dataset, _data_path(data_directory, f'{name}-{shard + 1}'))
+            _image_to_tfrecords(dataset, _data_path(data_directory, '{}-{}'.format(name,shard + 1)))
 
 
 def input_mnist_tfrecord_dataset_fn(filenames, FLAGS, batch_size=128, mode=tf.estimator.ModeKeys.TRAIN):
