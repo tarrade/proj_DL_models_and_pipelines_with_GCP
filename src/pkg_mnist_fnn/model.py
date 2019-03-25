@@ -84,7 +84,7 @@ def train_and_evaluate(args):
     y_test = parse_labels(y_test)
 
     model = tf.estimator.DNNClassifier(
-        hidden_units=[256, 128, 64],
+        hidden_units= args['hidden_units'],  #[256, 128, 64],
         feature_columns=[tf.feature_column.numeric_column(
             'x', shape=[N_PIXEL, ])],
         model_dir=args['output_dir'],
