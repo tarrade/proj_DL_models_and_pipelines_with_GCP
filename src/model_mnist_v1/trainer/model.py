@@ -246,6 +246,7 @@ def convert_image_to_tfrecords(input_images, name: str, data_directory: str, num
 
 
 def input_mnist_tfrecord_dataset_fn(filenames, FLAGS, batch_size=128, mode=tf.estimator.ModeKeys.TRAIN):
+
     if mode == tf.estimator.ModeKeys.PREDICT:
         tf.logging.info("input_dataset_fn: PREDICT, {}".format(mode))
     elif mode == tf.estimator.ModeKeys.EVAL:
@@ -274,10 +275,13 @@ def input_mnist_tfrecord_dataset_fn(filenames, FLAGS, batch_size=128, mode=tf.es
 
         drop_remainder = True
 
-        # 1) read data from TFRecordDataset
-        dataset = (tf.data.TFRecordDataset(filenames).map(_parser))
+        # 1) creating a list of files
+        file_list = tf.gfile.Glob(filenames)
 
-        # 2) shuffle (with a big enough buffer size)
+        # 2) read data from TFRecordDataset
+        dataset = (tf.data.TFRecordDataset(file_list).map(_parser))
+
+        # 3) shuffle (with a big enough buffer size)
         if mode == tf.estimator.ModeKeys.TRAIN:
             num_epochs = FLAGS.epoch  # loop indefinitely
             dataset = dataset.shuffle(buffer_size=FLAGS.shuffle_buffer_size, seed=2)  # depends on sample size
@@ -287,17 +291,17 @@ def input_mnist_tfrecord_dataset_fn(filenames, FLAGS, batch_size=128, mode=tf.es
             drop_remainder = False
             print('not training', num_epochs, FLAGS.epoch)
 
-        # 3) automatically refill the data queue when empty
+        # 4) automatically refill the data queue when empty
         dataset = dataset.repeat(num_epochs)
 
-        # 4) map
+        # 5) map
         dataset = dataset.map(lambda x, y: mnist_preprocessing_fn(x, y, FLAGS),
                               num_parallel_calls=FLAGS.num_parallel_calls)
 
-        # 5) create batches of data
+        # 6) create batches of data
         dataset = dataset.batch(batch_size=batch_size, drop_remainder=drop_remainder)
 
-        # 6) prefetch data for faster consumption, based on your system and environment, allows the tf.data runtime to automatically tune the prefetch buffer sizes
+        # 7) prefetch data for faster consumption, based on your system and environment, allows the tf.data runtime to automatically tune the prefetch buffer sizes
         dataset = dataset.prefetch(FLAGS.prefetch_buffer_size)
 
         return dataset
@@ -595,15 +599,12 @@ def train_and_evaluate(FLAGS, use_keras=True):
                                            params={'dim_input': FLAGS.dim_input, 'num_classes': FLAGS.num_classes},
                                            config=run_config,
                                            model_dir=FLAGS.model_dir)
-    # to give as an argument
-    path_test_tfrecords = 'data/mnist/tfrecords_image_test'
-    path_train_tfrecords = 'data/mnist/tfrecords_image_train'
 
     # training
-    train_spec = tf.estimator.TrainSpec(input_fn=lambda:input_mnist_tfrecord_dataset_fn(glob.glob(path_train_tfrecords+'/train*.tfrecords'),
-                                                                                                 FLAGS,
-                                                                                                 mode=tf.estimator.ModeKeys.TRAIN,
-                                                                                                 batch_size=FLAGS.batch_size),
+    train_spec = tf.estimator.TrainSpec(input_fn=lambda:input_mnist_tfrecord_dataset_fn(FLAGS.input_train_tfrecords,
+                                                                                        FLAGS,
+                                                                                        mode=tf.estimator.ModeKeys.TRAIN,
+                                                                                        batch_size=FLAGS.batch_size),
                                         max_steps=1000)
 
     exporter = tf.estimator.LatestExporter('exporter', serving_input_receiver_fn = serving_input_receiver_fn)
@@ -611,10 +612,10 @@ def train_and_evaluate(FLAGS, use_keras=True):
     print('exporter',exporter)
 
     # evaluation
-    eval_spec = tf.estimator.EvalSpec(input_fn=lambda:input_mnist_tfrecord_dataset_fn(glob.glob(path_test_tfrecords+'/test*.tfrecords'),
-                                                                                               FLAGS,
-                                                                                               mode=tf.estimator.ModeKeys.EVAL,
-                                                                                               batch_size=10000),
+    eval_spec = tf.estimator.EvalSpec(input_fn=lambda:input_mnist_tfrecord_dataset_fn(FLAGS.input_test_tfrecords,
+                                                                                      FLAGS,
+                                                                                      mode=tf.estimator.ModeKeys.EVAL,
+                                                                                      batch_size=10000),
                                       steps=1,
                                       start_delay_secs=0,
                                       throttle_secs=0,
