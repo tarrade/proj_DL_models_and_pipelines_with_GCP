@@ -4,6 +4,7 @@ import itertools
 from itertools import cycle
 from sklearn.metrics import roc_curve, auc
 from scipy import interp
+from tensorboard.backend.event_processing import event_accumulator
 
 def plot_confusion_matrix(cm, classes,
                           normalize=False,
@@ -155,3 +156,56 @@ def roc_curves(y_test, y_score, dict_label):
     plt.title('ROC for multi-class')
     plt.legend(loc="best")
     plt.show()
+
+
+def load_data_tensorboard(path):
+    event_acc = event_accumulator.EventAccumulator(path)
+    event_acc.Reload()
+    data = {}
+
+    for tag in sorted(event_acc.Tags()["scalars"]):
+        x, y = [], []
+        for scalar_event in event_acc.Scalars(tag):
+            x.append(scalar_event.step)
+            y.append(scalar_event.value)
+        data[tag] = (np.asarray(x), np.asarray(y))
+    return data
+
+def plot_acc_loss(steps_loss_train, loss_train, steps_acc_train=None, accuracy_train=None,
+                  steps_acc_eval=None, accuracy_eval=None, steps_loss_eval=None, loss_eval=None):
+
+    # plot the training loss and accuracy
+    fig = plt.figure(figsize=(9, 3), dpi=100)
+    plt.subplots_adjust(wspace=0.6)
+    ax1 = plt.subplot(121)
+    ax2 = plt.subplot(122)
+    # accuracy
+    if accuracy_train is not None:
+        ax1.plot(steps_acc_train, accuracy_train, 'b', label='training accuracy')
+    if accuracy_eval is not None:
+        ax1.plot(steps_acc_eval, accuracy_eval, 'r', label='validation accuracy');
+    ax1.set_title('Accuracy')
+    ax1.set_xlabel("Number of epoch ")
+    ax1.set_ylabel("Accuracy")
+    ax1.legend(loc="best")
+    # loss
+    if loss_train is not None:
+        ax2.plot(steps_loss_train, loss_train, label="training loss")
+    if loss_eval is not None:
+        ax2.plot(steps_loss_eval, loss_eval, label="validation loss")
+    ax2.set_title("Loss")
+    ax2.set_xlabel("Number of epoch ")
+    ax2.set_ylabel("Loss")
+    ax2.legend(loc="best");
+
+    print('Loss:')
+    if loss_train is not None:
+        print('  - loss [training dataset]: {0:.3f}'.format(loss_train[-1]))
+    if loss_eval is not None:
+        print('  - loss [validation dataset: {0:.3f}'.format(loss_eval[-1]))
+    print('')
+    print('Accuracy:')
+    if accuracy_train is not None:
+        print('  - accuracy [training dataset]: {:.2f}%'.format(100 * accuracy_train[-1]))
+    if accuracy_eval is not None:
+        print('  - accuracy [validation dataset: {:.2f}%'.format(100 * accuracy_eval[-1]))
