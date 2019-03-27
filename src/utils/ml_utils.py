@@ -171,8 +171,10 @@ def load_data_tensorboard(path):
         data[tag] = (np.asarray(x), np.asarray(y))
     return data
 
-def plot_acc_loss(steps_loss_train, loss_train, steps_acc_train=None, accuracy_train=None,
-                  steps_acc_eval=None, accuracy_eval=None, steps_loss_eval=None, loss_eval=None):
+def plot_acc_loss(steps_loss_train, loss_train,
+                  steps_acc_train=None, accuracy_train=None,
+                  steps_loss_eval=None, loss_eval=None,
+                  steps_acc_eval=None, accuracy_eval=None):
 
     # plot the training loss and accuracy
     fig = plt.figure(figsize=(9, 3), dpi=100)

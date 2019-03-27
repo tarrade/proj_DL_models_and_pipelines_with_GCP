@@ -421,22 +421,22 @@ def keras_baseline_model(dim_input, num_classes, opt='tf'):
 
 
 # convert a keras model to an estimator model
-def baseline_model(FLAGS, opt='tf'):
+def baseline_model(FLAGS, training_config, opt='tf'):
     # strategy=None
     ## work with Keras with tf.train optimiser not tf.keras
-    strategy = tf.contrib.distribute.OneDeviceStrategy('device:CPU:0')
+    #strategy = tf.contrib.distribute.OneDeviceStrategy('device:CPU:0')
     # strategy = tf.contrib.distribute.OneDeviceStrategy('device:GPU:0')
     # NUM_GPUS = 2
     # strategy = tf.contrib.distribute.MirroredStrategy(num_gpus=NUM_GPUS)
     # strategy = tf.contrib.distribute.MirroredStrategy()
 
     # config tf.estimator to use a give strategy
-    training_config = tf.estimator.RunConfig(train_distribute=strategy,
-                                             model_dir=FLAGS.model_dir,
-                                             save_summary_steps=20,
-                                             save_checkpoints_steps=20)
+    #training_config = tf.estimator.RunConfig(train_distribute=strategy,
+    #                                         model_dir=FLAGS.model_dir,
+    #                                         save_summary_steps=20,
+    #                                         save_checkpoints_steps=20)
 
-    model = keras_baseline_model(FLAGS.dim_input, FLAGS.num_classes,opt='tf')
+    model = keras_baseline_model(FLAGS.dim_input, FLAGS.num_classes,opt=opt)
 
     return tf.keras.estimator.model_to_estimator(keras_model=model, config=training_config)
 
@@ -585,23 +585,22 @@ def serving_input_receiver_fn():
 # Create custom estimator's train and evaluate function
 def train_and_evaluate(FLAGS, use_keras=True):
 
-    tf.summary.FileWriterCache.clear()  # ensure filewriter cache is clear for TensorBoard events file
-    EVAL_INTERVAL = 10  # seconds
+    # ensure filewriter cache is clear for TensorBoard events file
+    tf.summary.FileWriterCache.clear()
+    #EVAL_INTERVAL = 10  # seconds
 
-
+    strategy = tf.contrib.distribute.OneDeviceStrategy('device:CPU:0')
+    run_config = tf.estimator.RunConfig(train_distribute=strategy,
+                                        model_dir=FLAGS.model_dir,
+                                        save_summary_steps=10,  # save summary every n steps
+                                        save_checkpoints_steps=10,  # save model every iteration (needed for eval)
+                                        # save_checkpoints_secs=10,
+                                        keep_checkpoint_max=3,  # keep last n models
+                                        log_step_count_steps=50)  # global steps in log and summary
 
     if use_keras:
-        estimator = baseline_model(FLAGS)
+        estimator = baseline_model(FLAGS,  run_config)
     else:
-        strategy = tf.contrib.distribute.OneDeviceStrategy('device:CPU:0')
-        run_config = tf.estimator.RunConfig(train_distribute=strategy,
-                                            model_dir=FLAGS.model_dir,
-                                            save_summary_steps=10,      # save summary every n steps
-                                            save_checkpoints_steps=10,  # save model every iteration (needed for eval)
-                                            #save_checkpoints_secs=10,
-                                            keep_checkpoint_max=3,      # keep last n models
-                                            log_step_count_steps=50)    # global steps in log and summary
-
         estimator = tf.estimator.Estimator(model_fn=baseline_estimator_model,
                                            params={'dim_input': FLAGS.dim_input, 'num_classes': FLAGS.num_classes},
                                            config=run_config,

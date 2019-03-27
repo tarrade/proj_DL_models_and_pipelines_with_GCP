@@ -1,23 +1,14 @@
-"""Example implementation of code to run on the Cloud ML service.
+"""
+    Example implementation of code to run on the Cloud ML service.
 """
 
 import traceback
-import argparse
-import json
-import os
-
-from . import model
-
 import shutil
 import tensorflow as tf
+from . import model
+
 flags = tf.app.flags
 FLAGS = flags.FLAGS
-from absl import app
-#from absl import flags
-
-#def main(_):
-#  with logger.benchmark_context(flags.FLAGS):
-#    run_cifar(flags.FLAGS)
 
 # number of classes
 NUM_CLASSES =10
@@ -40,11 +31,9 @@ PREFETCH_BUFFER_SIZE = tf.contrib.data.AUTOTUNE
 # number of paralell calls
 NUM_PARALELL_CALL = 4
 
-
 # path to input data
 flags.DEFINE_string('input_train_tfrecords', '', 'input folder of tfrecords training data')
 flags.DEFINE_string('input_test_tfrecords', '', 'input folder of tfrecords testing data')
-
 
 # path to store the model and input for Tensorboard and SavedModel
 flags.DEFINE_string('model_dir', 'results/Models/Mnist/tf_1_12/estimator/ckpt/', 'Dir to save a model and checkpoints')
@@ -63,22 +52,23 @@ flags.DEFINE_integer('num_classes', NUM_CLASSES, 'number of classes in our model
 flags.DEFINE_integer('dim_input', DIM_INPUT, 'dimension of the input data for our model')
 
 
-
 def main(args):
 
-    # Run the training job
+    # run the training job
     try:
-        shutil.rmtree(FLAGS.model_dir, ignore_errors=True)  # start fresh each time
-        model.train_and_evaluate(FLAGS, True)
+        # clean the directory before retraining the model
+        # start fresh each time
+        shutil.rmtree(FLAGS.model_dir, ignore_errors=True)
+        shutil.rmtree(FLAGS.saved_dir, ignore_errors=True)
+
+        # reset Keras
+        tf.keras.backend.clear_session()
+
+        # use the estimator model with keras layer per default
+        model.train_and_evaluate(FLAGS, False)
     except:
         traceback.print_exc()
 
 
 if __name__ == '__main__':
-    #tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.INFO)
-    #define_cifar_flags()
-    #app.run(main)
-    #traceback.print_exc()
-    #with logger.benchmark_context(flags.FLAGS):
-
     tf.app.run()
