@@ -17,7 +17,10 @@ NUM_CLASSES =10
 DIM_INPUT = 784
 
 # number of epoch to train our model
-EPOCHS = 100
+EPOCHS = 1
+
+# number of steo to train our model
+STEPS = 1
 
 # size of our mini batch
 BATCH_SIZE = 128
@@ -41,6 +44,7 @@ flags.DEFINE_string('saved_dir', 'results/Models/Mnist/tf_1_12/estimator/pt/', '
 
 # parameters for the input dataset and train the model
 flags.DEFINE_integer('epoch', EPOCHS, 'number of epoch')
+flags.DEFINE_integer('step', STEPS, 'number of step')
 flags.DEFINE_integer('step_per_epoch', 1, 'number of step per epoch')
 flags.DEFINE_integer('batch_size', BATCH_SIZE, 'Batch size')
 flags.DEFINE_integer('shuffle_buffer_size', SHUFFLE_BUFFER_SIZE , 'Shuffle buffer size')

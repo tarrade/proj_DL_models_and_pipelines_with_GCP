@@ -449,10 +449,10 @@ def baseline_estimator_model(features, labels, mode, params):
     # Build the model using keras layers
     # should we put   model(image, training=False) for predict
     # or should weset the learning phase
-    if mode == tf.estimator.ModeKeys.TRAIN:
-        K.set_learning_phase(True)
-    else:
-        K.set_learning_phase(False)
+    #if mode == tf.estimator.ModeKeys.TRAIN:
+    #    K.set_learning_phase(True)
+    #else:
+    #    K.set_learning_phase(False)
 
     # gettings the bulding blocks
     model = keras_building_blocks(params['dim_input'], params['num_classes'])
@@ -611,7 +611,7 @@ def train_and_evaluate(FLAGS, use_keras=True):
                                                                                         FLAGS,
                                                                                         mode=tf.estimator.ModeKeys.TRAIN,
                                                                                         batch_size=FLAGS.batch_size),
-                                        max_steps=1000)
+                                        max_steps=FLAGS.step)
 
     exporter = tf.estimator.LatestExporter('exporter', serving_input_receiver_fn = serving_input_receiver_fn)
 
