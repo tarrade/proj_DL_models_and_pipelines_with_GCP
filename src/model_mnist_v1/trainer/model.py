@@ -399,7 +399,9 @@ def keras_baseline_model(dim_input, num_classes, opt='tf'):
     # Truncated Normal: keras.initializers.TruncatedNormal(mean=0.0, stddev=0.05, seed=None)
 
     if opt == 'keras':
-        optimiser = tf.keras.optimizers.Adam(lr=0.01, beta_1=0.9)
+        print('tf.train adam optimizer')
+        optimiser = tf.train.AdamOptimizer(learning_rate=0.01, beta1=0.9, epsilon=1e-07)
+        #optimiser = tf.keras.optimizers.Adam(lr=0.01, beta_1=0.9, epsilon=1e-07)
         # GD/SGC:   keras.optimizers.SGD(lr=0.01, momentum=0.0, decay=0.0, nesterov=False)
         # Adam:     keras.optimizers.Adam(lr=0.001, beta_1=0.9, beta_2=0.999, epsilon=None, decay=0.0, amsgrad=False)
         # RMSProp:  keras.optimizers.RMSprop(lr=0.001, rho=0.9, epsilon=None, decay=0.0)
@@ -407,7 +409,7 @@ def keras_baseline_model(dim_input, num_classes, opt='tf'):
     else:
         # optimiser (use tf.train and not tf.keras to use MirrorStrategy)
         # https://www.tensorflow.org/api_docs/python/tf/train/Optimizer
-        optimiser = tf.train.AdamOptimizer(learning_rate=0.01, beta1=0.9)
+        optimiser = tf.train.AdamOptimizer(learning_rate=0.01, beta1=0.9, epsilon=1e-07)
         # GD/SGC:   tf.train.GradientDescentOptimizer(learning_rate, use_locking=False, name='GradientDescent')
         # Adam:     tf.train.AdamOptimizer(learning_rate=0.001, beta1=0.9, beta2=0.999, epsilon=1e-08, use_locking=False,name='Adam')
         # RMSProp:  tf.train.RMSPropOptimizer(learning_rate, decay=0.9, momentum=0.0, epsilon=1e-10, use_locking=False, centered=False, name='RMSProp')
@@ -449,10 +451,10 @@ def baseline_estimator_model(features, labels, mode, params):
     # Build the model using keras layers
     # should we put   model(image, training=False) for predict
     # or should weset the learning phase
-    #if mode == tf.estimator.ModeKeys.TRAIN:
-    #    K.set_learning_phase(True)
-    #else:
-    #    K.set_learning_phase(False)
+    if mode == tf.estimator.ModeKeys.TRAIN:
+        K.set_learning_phase(True)
+    else:
+        K.set_learning_phase(False)
 
     # gettings the bulding blocks
     model = keras_building_blocks(params['dim_input'], params['num_classes'])
