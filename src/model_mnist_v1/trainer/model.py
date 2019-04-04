@@ -388,6 +388,7 @@ def keras_building_blocks(dim_input, num_classes):
 
 # building a full keras model
 def keras_baseline_model(dim_input, num_classes, opt='tf'):
+    print('keras_baseline_model')
 
     # gettings the bulding blocks
     model = keras_building_blocks(dim_input, num_classes)
@@ -399,9 +400,7 @@ def keras_baseline_model(dim_input, num_classes, opt='tf'):
     # Truncated Normal: keras.initializers.TruncatedNormal(mean=0.0, stddev=0.05, seed=None)
 
     if opt == 'keras':
-        print('tf.train adam optimizer')
-        optimiser = tf.train.AdamOptimizer(learning_rate=0.01, beta1=0.9, epsilon=1e-07)
-        #optimiser = tf.keras.optimizers.Adam(lr=0.01, beta_1=0.9, epsilon=1e-07)
+        optimiser = tf.keras.optimizers.Adam(lr=0.01, beta_1=0.9, epsilon=1e-07)
         # GD/SGC:   keras.optimizers.SGD(lr=0.01, momentum=0.0, decay=0.0, nesterov=False)
         # Adam:     keras.optimizers.Adam(lr=0.001, beta_1=0.9, beta_2=0.999, epsilon=None, decay=0.0, amsgrad=False)
         # RMSProp:  keras.optimizers.RMSprop(lr=0.001, rho=0.9, epsilon=None, decay=0.0)
@@ -505,7 +504,7 @@ def baseline_estimator_model(features, labels, mode, params):
     # Provide an estimator spec for `ModeKeys.TRAIN`
     if mode == tf.estimator.ModeKeys.TRAIN:
 
-        optimizer = tf.train.AdamOptimizer(learning_rate=0.001, beta1=0.9)
+        optimizer = tf.train.AdamOptimizer(learning_rate=0.01, beta1=0.9,  epsilon=1e-07)
         train_op = optimizer.minimize(loss=loss,
                                       global_step=tf.train.get_or_create_global_step())
 
@@ -601,8 +600,11 @@ def train_and_evaluate(FLAGS, use_keras=True):
                                         log_step_count_steps=50)  # global steps in log and summary
 
     if use_keras:
-        estimator = baseline_model(FLAGS,  run_config)
+        print('using keras model in estimator')
+        # need to use tensorflow optimiser with keras model
+        estimator = baseline_model(FLAGS,  run_config, opt='tf')
     else:
+        print('using keras layer and estimator')
         estimator = tf.estimator.Estimator(model_fn=baseline_estimator_model,
                                            params={'dim_input': FLAGS.dim_input, 'num_classes': FLAGS.num_classes},
                                            config=run_config,
