@@ -1,5 +1,4 @@
 
-
 def del_all_flags(FLAGS):
     flags_dict = FLAGS._flags()
     keys_list = [keys for keys in flags_dict]
