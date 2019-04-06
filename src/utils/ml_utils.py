@@ -181,11 +181,17 @@ def plot_acc_loss(steps_loss_train, loss_train,
     plt.subplots_adjust(wspace=0.6)
     ax1 = plt.subplot(121)
     ax2 = plt.subplot(122)
+
     # accuracy
     if accuracy_train is not None:
         ax1.plot(steps_acc_train, accuracy_train, 'b', label='training accuracy')
     if accuracy_eval is not None:
         ax1.plot(steps_acc_eval, accuracy_eval, 'r', label='validation accuracy');
+    #if accuracy_train is not None and accuracy_eval is not None:
+    #    delta=0.05
+    #    y_min = min([min(x_list) for x_list in [accuracy_train, accuracy_eval]]) - delta
+    #    y_max = max([max(x_list) for x_list in [accuracy_train, accuracy_eval]]) + delta
+    #    ax1.set_ylim(y_min, y_max)
     ax1.set_title('Accuracy')
     ax1.set_xlabel("Number of epoch ")
     ax1.set_ylabel("Accuracy")
