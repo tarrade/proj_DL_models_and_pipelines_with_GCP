@@ -21,24 +21,8 @@ import requests
 import google.auth
 import tensorflow.contrib.rnn as rnn
 
-#print(tf.__version__)
-#print(tf.keras.__version__)
-
 tf.logging.set_verbosity(tf.logging.DEBUG)
 
-# learning rate
-#learning_rate = 0.5
-
-
-# hidden layer 1
-#n1=300
-
-
-
-# get mnist data, split between train and test sets
-# on GCP
-#(x_train, y_train), (x_test, y_test) = tf.keras.datasets.mnist.load_data()
-# with AXA network
 
 def load_data(path):
     f = gzip.open(path, 'rb')
@@ -48,28 +32,6 @@ def load_data(path):
         data = cPickle.load(f, encoding='bytes')
     f.close()
     return data
-
-#(x_train, y_train), (x_test, y_test) = load_data(path='../../data/mnist.pkl.gz')
-
-# cast uint8 -> float32
-#x_train = x_train.astype('float32')
-#x_test = x_test.astype('float32')
-
-# renormalize the data 255 grey variation
-#x_train /= 255
-#x_test /= 255
-
-# reshape the data 28 x 28 -> 784
-#x_train = x_train.reshape(len(x_train), x_train.shape[1]*x_train.shape[2])
-#x_test = x_test.reshape(len(x_test), x_test.shape[1]*x_test.shape[2])
-
-#num_classes = len(np.unique(y_train))
-
-# convert class vectors to binary class matrices
-#y_train = tf.keras.utils.to_categorical(y_train, num_classes)
-#y_test = tf.keras.utils.to_categorical(y_test, num_classes)
-
-#dim_input=x_train.shape[1]
 
 
 def mnist_preprocessing_fn(image, label, FLAGS):
@@ -164,7 +126,7 @@ def _data_path(data_directory: str, name: str) -> str:
         os.makedirs(data_directory)
 
     #return os.path.join(data_directory, f'{name}.tfrecords')
-    return os.path.join('data_directory', '{}.tfrecords'.format(name))
+    return os.path.join(data_directory, '{}.tfrecords'.format(name))
 
 def _numpy_to_tfrecords(example_dataset, filename:str):
     #print(f'Processing {filename} data')

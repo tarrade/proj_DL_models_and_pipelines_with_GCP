@@ -246,7 +246,6 @@ def input_mnist_tfrecord_dataset_fn(filenames, FLAGS, batch_size=128, mode=tf.es
             num_epochs = 1 # end-of-input after this -> bug in keras or feature? https://github.com/tensorflow/tensorflow/issues/25254#issuecomment-459824771
             #num_epochs = FLAGS.epoch
             drop_remainder = False
-            print('not training', num_epochs, FLAGS.epoch)
 
         # 4) automatically refill the data queue when empty
         dataset = dataset.repeat(num_epochs)
@@ -262,7 +261,6 @@ def input_mnist_tfrecord_dataset_fn(filenames, FLAGS, batch_size=128, mode=tf.es
         dataset = dataset.prefetch(FLAGS.prefetch_buffer_size)
 
         return dataset
-
 
     return _input_fn()
 
@@ -286,8 +284,6 @@ def input_dataset_fn(FLAGS, x_data, y_data, batch_size=128, mode=tf.estimator.Mo
     else:
         # num_epochs = 1 # end-of-input after this
         num_epochs = FLAGS.epoch
-
-    print('the number of epoch: num_epoch =', num_epochs)
 
     # caching data
     # dataset = dataset.cache()
