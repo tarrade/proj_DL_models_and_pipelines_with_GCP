@@ -164,7 +164,7 @@ def _data_path(data_directory: str, name: str) -> str:
         os.makedirs(data_directory)
 
     #return os.path.join(data_directory, f'{name}.tfrecords')
-    os.path.join('data_directory', '{}.tfrecords'.format(name))
+    return os.path.join('data_directory', '{}.tfrecords'.format(name))
 
 def _numpy_to_tfrecords(example_dataset, filename:str):
     #print(f'Processing {filename} data')
@@ -173,7 +173,7 @@ def _numpy_to_tfrecords(example_dataset, filename:str):
     with tf.python_io.TFRecordWriter(filename) as writer:
         for index, (image, label) in enumerate(example_dataset):
             #sys.stdout.write(f"\rProcessing sample {index+1} of {dataset_length}")
-            sys.stdout.write("\rProcessing sample {} of {dataset_length}".format(index + 1, dataset_length))
+            sys.stdout.write("\rProcessing sample {} of {}".format(index + 1, dataset_length))
             sys.stdout.flush()
             image_raw = image.tostring()
             example = tf.train.Example(features=tf.train.Features(feature={
