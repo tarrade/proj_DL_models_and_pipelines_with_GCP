@@ -97,7 +97,7 @@ def setwd():
     folders = WORKINGDIR.split('/')
     if folders.pop() == 'notebook':  # or a list: in ['notebook', 'src', etc.]
       WORKINGDIR = '/'.join(folders)
-      print("Changed to New working directory:\t{}".format(WORKINGDIR))
+      print("Changed to New working directory: /n {}".format(WORKINGDIR))
     else:
-      print("Current Working direcotory is kept:\t{}".format(WORKINGDIR))
+      print("Current Working direcotory is kept: /n {}".format(WORKINGDIR))
     os.chdir(WORKINGDIR)

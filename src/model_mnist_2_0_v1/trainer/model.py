@@ -333,7 +333,7 @@ def keras_building_blocks(dim_input, num_classes):
 
 
 # building a full keras model
-def keras_baseline_model(dim_input, num_classes, opt='tf'):
+def keras_baseline_model(dim_input, num_classes):
     print('keras_baseline_model')
 
     # gettings the bulding blocks
@@ -345,20 +345,21 @@ def keras_baseline_model(dim_input, num_classes, opt='tf'):
     # Radom Normal: keras.initializers.RandomNormal(mean=0.0, stddev=0.05, seed=None)
     # Truncated Normal: keras.initializers.TruncatedNormal(mean=0.0, stddev=0.05, seed=None)
 
-    if opt == 'keras':
-        optimiser = tf.keras.optimizers.Adam(lr=0.01, beta_1=0.9, epsilon=1e-07)
-        # GD/SGC:   keras.optimizers.SGD(lr=0.01, momentum=0.0, decay=0.0, nesterov=False)
-        # Adam:     keras.optimizers.Adam(lr=0.001, beta_1=0.9, beta_2=0.999, epsilon=None, decay=0.0, amsgrad=False)
-        # RMSProp:  keras.optimizers.RMSprop(lr=0.001, rho=0.9, epsilon=None, decay=0.0)
-        # Momentum: keras.optimizers.SGD(lr=0.01, momentum=0.9, decay=0.0, nesterov=False)
-    else:
-        # optimiser (use tf.train and not tf.keras to use MirrorStrategy)
-        # https://www.tensorflow.org/api_docs/python/tf/train/Optimizer
-        optimiser = tf.compat.v1.train.AdamOptimizer(learning_rate=0.01, beta1=0.9, epsilon=1e-07)
-        # GD/SGC:   tf.train.GradientDescentOptimizer(learning_rate, use_locking=False, name='GradientDescent')
-        # Adam:     tf.train.AdamOptimizer(learning_rate=0.001, beta1=0.9, beta2=0.999, epsilon=1e-08, use_locking=False,name='Adam')
-        # RMSProp:  tf.train.RMSPropOptimizer(learning_rate, decay=0.9, momentum=0.0, epsilon=1e-10, use_locking=False, centered=False, name='RMSProp')
-        # Momentum: tf.train.MomentumOptimizer(learning_rate, momentum, use_locking=False, name='Momentum', use_nesterov=False)
+    #if opt == 'keras':
+    optimiser = tf.keras.optimizers.Adam(lr=0.01, beta_1=0.9, epsilon=1e-07)
+    #optimiser = tf.keras.optimizers.Adam(lr=0.01, beta_1=0.9, epsilon=1e-07)
+    # GD/SGC:   keras.optimizers.SGD(lr=0.01, momentum=0.0, decay=0.0, nesterov=False)
+    # Adam:     keras.optimizers.Adam(lr=0.001, beta_1=0.9, beta_2=0.999, epsilon=None, decay=0.0, amsgrad=False)
+    # RMSProp:  keras.optimizers.RMSprop(lr=0.001, rho=0.9, epsilon=None, decay=0.0)
+    # Momentum: keras.optimizers.SGD(lr=0.01, momentum=0.9, decay=0.0, nesterov=False)
+    #else:
+    # optimiser (use tf.train and not tf.keras to use MirrorStrategy)
+    # https://www.tensorflow.org/api_docs/python/tf/train/Optimizer
+    #optimiser = tf.compat.v1.train.AdamOptimizer(learning_rate=0.01, beta1=0.9, epsilon=1e-07)
+    # GD/SGC:   tf.train.GradientDescentOptimizer(learning_rate, use_locking=False, name='GradientDescent')
+     # Adam:     tf.train.AdamOptimizer(learning_rate=0.001, beta1=0.9, beta2=0.999, epsilon=1e-08, use_locking=False,name='Adam')
+     # RMSProp:  tf.train.RMSPropOptimizer(learning_rate, decay=0.9, momentum=0.0, epsilon=1e-10, use_locking=False, centered=False, name='RMSProp')
+     # Momentum: tf.train.MomentumOptimizer(learning_rate, momentum, use_locking=False, name='Momentum', use_nesterov=False)
 
     # Compile model
     model.compile(loss='categorical_crossentropy',
@@ -368,22 +369,9 @@ def keras_baseline_model(dim_input, num_classes, opt='tf'):
 
 
 # convert a keras model to an estimator model
-def baseline_model(FLAGS, training_config, opt='tf'):
-    # strategy=None
-    ## work with Keras with tf.train optimiser not tf.keras
-    #strategy = tf.contrib.distribute.OneDeviceStrategy('device:CPU:0')
-    # strategy = tf.contrib.distribute.OneDeviceStrategy('device:GPU:0')
-    # NUM_GPUS = 2
-    # strategy = tf.contrib.distribute.MirroredStrategy(num_gpus=NUM_GPUS)
-    # strategy = tf.contrib.distribute.MirroredStrategy()
+def baseline_model(FLAGS, training_config):
 
-    # config tf.estimator to use a give strategy
-    #training_config = tf.estimator.RunConfig(train_distribute=strategy,
-    #                                         model_dir=FLAGS.model_dir,
-    #                                         save_summary_steps=20,
-    #                                         save_checkpoints_steps=20)
-
-    model = keras_baseline_model(FLAGS.dim_input, FLAGS.num_classes,opt=opt)
+    model = keras_baseline_model(FLAGS.dim_input, FLAGS.num_classes)
 
     return tf.keras.estimator.model_to_estimator(keras_model=model, config=training_config)
 
@@ -393,6 +381,7 @@ def baseline_estimator_model(features, labels, mode, params):
     """
     Model function for Estimator
     """
+    print('model based on keras layer but return an estimator model')
     # Build the model using keras layers
     # should we put   model(image, training=False) for predict
     # or should weset the learning phase
@@ -450,6 +439,7 @@ def baseline_estimator_model(features, labels, mode, params):
     # Provide an estimator spec for `ModeKeys.TRAIN`
     if mode == tf.estimator.ModeKeys.TRAIN:
 
+        #optimizer = tf.keras.optimizers.Adam(lr=0.01, beta_1=0.9, epsilon=1e-07)
         optimizer = tf.compat.v1.train.AdamOptimizer(learning_rate=0.01, beta1=0.9,  epsilon=1e-07)
         train_op = optimizer.minimize(loss=loss,
                                       global_step=tf.compat.v1.train.get_or_create_global_step())
@@ -484,7 +474,7 @@ def serving_input_receiver_fn():
 def train_and_evaluate(FLAGS, use_keras=True):
 
     # ensure filewriter cache is clear for TensorBoard events file
-    tf.compat.v1.summary.FileWriterCache.clear()
+    #tf.compat.v1.summary.FileWriterCache.clear()
     #EVAL_INTERVAL = 10  # seconds
 
     strategy = tf.distribute.MirroredStrategy()
@@ -499,9 +489,9 @@ def train_and_evaluate(FLAGS, use_keras=True):
     if use_keras:
         print('using keras model in estimator')
         # need to use tensorflow optimiser with keras model
-        estimator = baseline_model(FLAGS,  run_config, opt='tf')
+        estimator = baseline_model(FLAGS,  run_config)
     else:
-        print('using keras layer and estimator')
+        print('using keras layer and estimator (recommended way)')
         estimator = tf.estimator.Estimator(model_fn=baseline_estimator_model,
                                            params={'dim_input': FLAGS.dim_input, 'num_classes': FLAGS.num_classes},
                                            config=run_config,
@@ -514,9 +504,9 @@ def train_and_evaluate(FLAGS, use_keras=True):
                                                                                         batch_size=FLAGS.batch_size),
                                         max_steps=FLAGS.step)
 
-    exporter = tf.estimator.LatestExporter('exporter', serving_input_receiver_fn = serving_input_receiver_fn)
+    #exporter = tf.estimator.LatestExporter('exporter', serving_input_receiver_fn = serving_input_receiver_fn)
 
-    print('exporter',exporter)
+    #print('exporter',exporter)
 
     # evaluation
     eval_spec = tf.estimator.EvalSpec(input_fn=lambda:input_mnist_tfrecord_dataset_fn(FLAGS.input_test_tfrecords,
@@ -525,8 +515,8 @@ def train_and_evaluate(FLAGS, use_keras=True):
                                                                                       batch_size=10000),
                                       steps=1,
                                       start_delay_secs=0,
-                                      throttle_secs=0,
-                                      exporters=exporter)
+                                      throttle_secs=0 )#,
+                                      #exporters=exporter)
 
     tf.estimator.train_and_evaluate(estimator, train_spec, eval_spec)
 
