@@ -385,10 +385,10 @@ def baseline_estimator_model(features, labels, mode, params):
     # Build the model using keras layers
     # should we put   model(image, training=False) for predict
     # or should weset the learning phase
-    if mode == tf.estimator.ModeKeys.TRAIN:
-        K.set_learning_phase(True)
-    else:
-        K.set_learning_phase(False)
+    #if mode == tf.estimator.ModeKeys.TRAIN:
+    #    K.set_learning_phase(True)
+    #else:
+    #    K.set_learning_phase(False)
 
     # gettings the bulding blocks
     model = keras_building_blocks(params['dim_input'], params['num_classes'])
@@ -396,7 +396,8 @@ def baseline_estimator_model(features, labels, mode, params):
     dense_inpout = features['dense_input']
 
     # Logits layer
-    logits = model(dense_inpout)
+    #logits = model(dense_inpout)
+    logits = model(dense_inpout, training=False)
 
     # Compute predictions
     probabilities = tf.nn.softmax(logits)
@@ -422,13 +423,15 @@ def baseline_estimator_model(features, labels, mode, params):
                                           export_outputs={tf.saved_model.DEFAULT_SERVING_SIGNATURE_DEF_KEY: predictions_output})
 
     # Compute loss for both TRAIN and EVAL modes
-    loss = tf.compat.v1.losses.softmax_cross_entropy(onehot_labels=labels, logits=logits)
+    #loss = tf.compat.v1.losses.softmax_cross_entropy(onehot_labels=labels, logits=logits)
+    loss = tf.keras.losses.CategoricalCrossentropy(from_logits=True)(labels, logits)
 
     # Generate necessary evaluation metrics
     accuracy = tf.compat.v1.metrics.accuracy(labels=tf.argmax(input=labels, axis=1), predictions=classes, name='accuracy')
     eval_metrics = {'accuracy': accuracy}
 
-    tf.compat.v1.summary.scalar('accuracy', accuracy[1])
+    #tf.compat.v1.summary.scalar('accuracy', accuracy[1])
+    tf.summary.scalar('accuracy', accuracy[1])
 
     # Provide an estimator spec for `ModeKeys.EVAL`
     if mode == tf.estimator.ModeKeys.EVAL:
@@ -440,7 +443,11 @@ def baseline_estimator_model(features, labels, mode, params):
     if mode == tf.estimator.ModeKeys.TRAIN:
 
         #optimizer = tf.keras.optimizers.Adam(lr=0.01, beta_1=0.9, epsilon=1e-07)
-        optimizer = tf.compat.v1.train.AdamOptimizer(learning_rate=0.01, beta1=0.9,  epsilon=1e-07)
+        # same parameter than for the same keras optimizer but doesn't converge !
+        #optimizer = tf.train.AdamOptimizer(learning_rate=0.01, beta1=0.9,  epsilon=1e-07)
+        # converge for tf optimizer
+        optimizer = tf.compat.v1.train.AdamOptimizer(learning_rate=0.001, beta1=0.9)
+        #optimizer = tf.compat.v1.train.AdamOptimizer(learning_rate=0.01, beta1=0.9,  epsilon=1e-07)
         train_op = optimizer.minimize(loss=loss,
                                       global_step=tf.compat.v1.train.get_or_create_global_step())
 

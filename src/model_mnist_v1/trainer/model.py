@@ -463,7 +463,10 @@ def baseline_estimator_model(features, labels, mode, params):
     # Provide an estimator spec for `ModeKeys.TRAIN`
     if mode == tf.estimator.ModeKeys.TRAIN:
 
-        optimizer = tf.train.AdamOptimizer(learning_rate=0.01, beta1=0.9,  epsilon=1e-07)
+        # same parameter than for the same keras optimizer but doesn't converge !
+        #optimizer = tf.train.AdamOptimizer(learning_rate=0.01, beta1=0.9,  epsilon=1e-07)
+        # converge for tf optimizer
+        optimizer = tf.train.AdamOptimizer(learning_rate=0.001, beta1=0.9)
         train_op = optimizer.minimize(loss=loss,
                                       global_step=tf.train.get_or_create_global_step())
 
