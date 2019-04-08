@@ -367,7 +367,7 @@ def keras_baseline_model(dim_input, num_classes, opt='tf'):
     else:
         # optimiser (use tf.train and not tf.keras to use MirrorStrategy)
         # https://www.tensorflow.org/api_docs/python/tf/train/Optimizer
-        optimiser = tf.train.AdamOptimizer(learning_rate=0.01, beta1=0.9, epsilon=1e-07)
+        optimiser = tf.train.AdamOptimizer(learning_rate=0.001, beta1=0.9, epsilon=1e-07)
         # GD/SGC:   tf.train.GradientDescentOptimizer(learning_rate, use_locking=False, name='GradientDescent')
         # Adam:     tf.train.AdamOptimizer(learning_rate=0.001, beta1=0.9, beta2=0.999, epsilon=1e-08, use_locking=False,name='Adam')
         # RMSProp:  tf.train.RMSPropOptimizer(learning_rate, decay=0.9, momentum=0.0, epsilon=1e-10, use_locking=False, centered=False, name='RMSProp')
