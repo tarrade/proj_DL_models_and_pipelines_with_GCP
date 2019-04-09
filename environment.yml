@@ -35,3 +35,5 @@ dependencies:
 - lime
 - google-cloud-storage
 - google-cloud-bigquery
+- pip:
+  - apache-beam[gcp]
