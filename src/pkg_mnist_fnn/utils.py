@@ -50,3 +50,5 @@ def load_data(path='./data/'):
                 raise Exception("Not Connection to Server: Download manually to ./data/ from {}".format(
                     "https://storage.googleapis.com/tensorflow/tf-keras-datasets/mnist.npz"
                 ))
+
+
