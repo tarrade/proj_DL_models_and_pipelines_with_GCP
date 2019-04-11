@@ -18,8 +18,7 @@ service = googleapiclient.discovery.build(
 # Call the Cloud IAM Roles API
 # If using pylint, disable weak-typing warnings
 # pylint: disable=no-member
-body = "projects/{project_id}/serviceAccounts/".format(project_id=PROJECT_ID, key_id=SERVICE_ACCOUNT_ID)
-#body = 'projects/{PROJECT_ID}/serviceAccounts/{ACCOUNT_UNIQUE_ID}'
+body = "projects/{project_id}/serviceAccounts/{key_id}".format(project_id=PROJECT_ID, key_id=SERVICE_ACCOUNT_ID)
 
 request = service.projects().serviceAccounts().undelete(name=body)
 print(request.execute())
