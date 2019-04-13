@@ -37,7 +37,6 @@ def mnist_preprocessing_fn(image, label, FLAGS):
 
     return {'dense_input':image}, label
 
-
 def input_mnist_array_dataset_fn(x_data, y_data, FLAGS, batch_size=128, mode=tf.estimator.ModeKeys.TRAIN):
     if mode == tf.estimator.ModeKeys.PREDICT:
         logging.info("input_dataset_fn: PREDICT, {}".format(mode))
@@ -369,11 +368,11 @@ def keras_baseline_model(dim_input, num_classes):
 
 
 # convert a keras model to an estimator model
-def baseline_model(FLAGS, training_config):
+def baseline_model(FLAGS, config):
 
     model = keras_baseline_model(FLAGS.dim_input, FLAGS.num_classes)
 
-    return tf.keras.estimator.model_to_estimator(keras_model=model, config=training_config)
+    return tf.keras.estimator.model_to_estimator(keras_model=model, config=config)
 
 
 # estimator model
@@ -396,8 +395,10 @@ def baseline_estimator_model(features, labels, mode, params):
     dense_inpout = features['dense_input']
 
     # Logits layer
-    #logits = model(dense_inpout)
-    logits = model(dense_inpout, training=False)
+    if mode == tf.estimator.ModeKeys.TRAIN:
+        logits = model(dense_inpout, training=True)
+    else:
+        logits = model(dense_inpout, training=False)
 
     # Compute predictions
     probabilities = tf.nn.softmax(logits)
@@ -427,11 +428,27 @@ def baseline_estimator_model(features, labels, mode, params):
     loss = tf.keras.losses.CategoricalCrossentropy(from_logits=True)(labels, logits)
 
     # Generate necessary evaluation metrics
-    accuracy = tf.compat.v1.metrics.accuracy(labels=tf.argmax(input=labels, axis=1), predictions=classes, name='accuracy')
+    #accuracy = tf.compat.v1.metrics.accuracy(labels=tf.argmax(input=labels, axis=1), predictions=classes, name='accuracy')
+    #print(tf.argmax(input=labels, axis=1))
+    #print(classes)
+    #print('step 1')
+    accuracy = tf.keras.metrics.CategoricalAccuracy()
+    #print('step 2')
+    accuracy(labels, logits)
+    #print('step 3')
+    #print(' accuracy',  accuracy.numpy())
     eval_metrics = {'accuracy': accuracy}
+    #print('step 4')
+    #print(accuracy)
+    #print('step 5')
+    print(accuracy.result())
 
     #tf.compat.v1.summary.scalar('accuracy', accuracy[1])
-    tf.summary.scalar('accuracy', accuracy[1])
+    #tf.summary.scalar('accuracy', accuracy[1])
+    tf.summary.scalar('accuracy', accuracy.result())
+    #tf.compat.v1.summary.scalar('accuracy', accuracy.result())
+
+    print('step 6')
 
     # Provide an estimator spec for `ModeKeys.EVAL`
     if mode == tf.estimator.ModeKeys.EVAL:
@@ -442,19 +459,20 @@ def baseline_estimator_model(features, labels, mode, params):
     # Provide an estimator spec for `ModeKeys.TRAIN`
     if mode == tf.estimator.ModeKeys.TRAIN:
 
-        #optimizer = tf.keras.optimizers.Adam(lr=0.01, beta_1=0.9, epsilon=1e-07)
+        optimizer = tf.keras.optimizers.Adam(lr=0.01, beta_1=0.9, epsilon=1e-07)
         # same parameter than for the same keras optimizer but doesn't converge !
         #optimizer = tf.train.AdamOptimizer(learning_rate=0.01, beta1=0.9,  epsilon=1e-07)
         # converge for tf optimizer
-        optimizer = tf.compat.v1.train.AdamOptimizer(learning_rate=0.001, beta1=0.9)
+        #optimizer = tf.compat.v1.train.AdamOptimizer(learning_rate=0.001, beta1=0.9)
         #optimizer = tf.compat.v1.train.AdamOptimizer(learning_rate=0.01, beta1=0.9,  epsilon=1e-07)
-        train_op = optimizer.minimize(loss=loss,
-                                      global_step=tf.compat.v1.train.get_or_create_global_step())
+        print('step 7')
+        train_op = optimizer.minimize(loss, tf.compat.v1.train.get_or_create_global_step())
 
-
+        print('step 8')
         return tf.estimator.EstimatorSpec(mode=mode,
                                           loss=loss,
                                           train_op=train_op)
+        print('step 9')
 
         #return tf.estimator.EstimatorSpec(mode=mode, predictions=predictions, loss=loss, train_op=train_op, eval_metric_ops=evalmetrics, export_outputs=predictions_output)
         #return tf.estimator.EstimatorSpec(mode=mode, predictions=predictions, loss=loss, train_op=train_op, export_outputs=predictions_output)
@@ -484,7 +502,9 @@ def train_and_evaluate(FLAGS, use_keras=True):
     #tf.compat.v1.summary.FileWriterCache.clear()
     #EVAL_INTERVAL = 10  # seconds
 
-    strategy = tf.distribute.MirroredStrategy()
+    # Issue https://github.com/tensorflow/tensorflow/issues/27696
+    #strategy = tf.distribute.MirroredStrategy()
+    strategy = None
     run_config = tf.estimator.RunConfig(train_distribute=strategy,
                                         model_dir=FLAGS.model_dir,
                                         save_summary_steps=10,  # save summary every n steps

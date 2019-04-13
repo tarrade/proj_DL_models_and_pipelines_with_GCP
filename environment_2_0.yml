@@ -35,4 +35,5 @@ dependencies:
 - pip=18.0
 - pip:
   - tensorflow==2.0.0-alpha0
+  - tensorflow-datasets
 
