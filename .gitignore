@@ -9,6 +9,9 @@ notebook/data
 notebook/.ipynb_checkpoints/
 notebook/TF_2.0/.ipynb_checkpoints/
 
+notebook/Images/data_science_circle.jpg
+notebook/Images/data_science_circle_steps.png
+
 results/
 script/__pycache__
 script/config_client*

@@ -3,6 +3,7 @@ import os
 import json
 import argparse
 import shutil
+from pprint import pprint 
 
 from .model import train_and_evaluate
 
@@ -63,9 +64,9 @@ if __name__ == '__main__':
     )
 
     args = parser.parse_args().__dict__
-    print("Arguments:\n{}".format(args)) 
+    pprint("Arguments:\n{}".format(args)) 
     args['hidden_units'] = [int(x) for x in args['hidden_units'].split(' ')]
-    print("Arguments:\n{}".format(args)) 
+    pprint("Arguments:\n{}".format(args)) 
     
     output_dir = args['output_dir']
     # Append trial_id to path if we are doing hptuning
