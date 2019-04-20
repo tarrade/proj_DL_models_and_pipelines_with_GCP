@@ -344,21 +344,12 @@ def keras_baseline_model(dim_input, num_classes):
     # Radom Normal: keras.initializers.RandomNormal(mean=0.0, stddev=0.05, seed=None)
     # Truncated Normal: keras.initializers.TruncatedNormal(mean=0.0, stddev=0.05, seed=None)
 
-    #if opt == 'keras':
     optimiser = tf.keras.optimizers.Adam(lr=0.01, beta_1=0.9, epsilon=1e-07)
-    #optimiser = tf.keras.optimizers.Adam(lr=0.01, beta_1=0.9, epsilon=1e-07)
+
     # GD/SGC:   keras.optimizers.SGD(lr=0.01, momentum=0.0, decay=0.0, nesterov=False)
     # Adam:     keras.optimizers.Adam(lr=0.001, beta_1=0.9, beta_2=0.999, epsilon=None, decay=0.0, amsgrad=False)
     # RMSProp:  keras.optimizers.RMSprop(lr=0.001, rho=0.9, epsilon=None, decay=0.0)
     # Momentum: keras.optimizers.SGD(lr=0.01, momentum=0.9, decay=0.0, nesterov=False)
-    #else:
-    # optimiser (use tf.train and not tf.keras to use MirrorStrategy)
-    # https://www.tensorflow.org/api_docs/python/tf/train/Optimizer
-    #optimiser = tf.compat.v1.train.AdamOptimizer(learning_rate=0.01, beta1=0.9, epsilon=1e-07)
-    # GD/SGC:   tf.train.GradientDescentOptimizer(learning_rate, use_locking=False, name='GradientDescent')
-     # Adam:     tf.train.AdamOptimizer(learning_rate=0.001, beta1=0.9, beta2=0.999, epsilon=1e-08, use_locking=False,name='Adam')
-     # RMSProp:  tf.train.RMSPropOptimizer(learning_rate, decay=0.9, momentum=0.0, epsilon=1e-10, use_locking=False, centered=False, name='RMSProp')
-     # Momentum: tf.train.MomentumOptimizer(learning_rate, momentum, use_locking=False, name='Momentum', use_nesterov=False)
 
     # Compile model
     model.compile(loss='categorical_crossentropy',
@@ -381,13 +372,6 @@ def baseline_estimator_model(features, labels, mode, params):
     Model function for Estimator
     """
     print('model based on keras layer but return an estimator model')
-    # Build the model using keras layers
-    # should we put   model(image, training=False) for predict
-    # or should weset the learning phase
-    #if mode == tf.estimator.ModeKeys.TRAIN:
-    #    K.set_learning_phase(True)
-    #else:
-    #    K.set_learning_phase(False)
 
     # gettings the bulding blocks
     model = keras_building_blocks(params['dim_input'], params['num_classes'])
@@ -424,31 +408,20 @@ def baseline_estimator_model(features, labels, mode, params):
                                           export_outputs={tf.saved_model.DEFAULT_SERVING_SIGNATURE_DEF_KEY: predictions_output})
 
     # Compute loss for both TRAIN and EVAL modes
-    #loss = tf.compat.v1.losses.softmax_cross_entropy(onehot_labels=labels, logits=logits)
+    ##loss = tf.compat.v1.losses.softmax_cross_entropy(onehot_labels=labels, logits=logits)
     loss = tf.keras.losses.CategoricalCrossentropy(from_logits=True)(labels, logits)
 
     # Generate necessary evaluation metrics
-    #accuracy = tf.compat.v1.metrics.accuracy(labels=tf.argmax(input=labels, axis=1), predictions=classes, name='accuracy')
+    ##accuracy = tf.compat.v1.metrics.accuracy(labels=tf.argmax(input=labels, axis=1), predictions=classes, name='accuracy')
+    accuracy = tf.keras.metrics.CategoricalAccuracy()
+    accuracy.update_state(labels, logits)
+
     #print(tf.argmax(input=labels, axis=1))
     #print(classes)
-    #print('step 1')
-    accuracy = tf.keras.metrics.CategoricalAccuracy()
-    #print('step 2')
-    accuracy(labels, logits)
-    #print('step 3')
-    #print(' accuracy',  accuracy.numpy())
+
     eval_metrics = {'accuracy': accuracy}
-    #print('step 4')
-    #print(accuracy)
-    #print('step 5')
-    print(accuracy.result())
 
-    #tf.compat.v1.summary.scalar('accuracy', accuracy[1])
-    #tf.summary.scalar('accuracy', accuracy[1])
     tf.summary.scalar('accuracy', accuracy.result())
-    #tf.compat.v1.summary.scalar('accuracy', accuracy.result())
-
-    print('step 6')
 
     # Provide an estimator spec for `ModeKeys.EVAL`
     if mode == tf.estimator.ModeKeys.EVAL:
@@ -459,11 +432,14 @@ def baseline_estimator_model(features, labels, mode, params):
     # Provide an estimator spec for `ModeKeys.TRAIN`
     if mode == tf.estimator.ModeKeys.TRAIN:
 
-        optimizer = tf.keras.optimizers.Adam(lr=0.01, beta_1=0.9, epsilon=1e-07)
+        optimizer = tf.keras.optimizers.Adam(learning_rate=0.01, beta_1=0.9, epsilon=1e-07)
         # same parameter than for the same keras optimizer but doesn't converge !
         #optimizer = tf.train.AdamOptimizer(learning_rate=0.01, beta1=0.9,  epsilon=1e-07)
         # converge for tf optimizer
+
+
         #optimizer = tf.compat.v1.train.AdamOptimizer(learning_rate=0.001, beta1=0.9)
+
         #optimizer = tf.compat.v1.train.AdamOptimizer(learning_rate=0.01, beta1=0.9,  epsilon=1e-07)
         print('step 7')
         train_op = optimizer.minimize(loss, tf.compat.v1.train.get_or_create_global_step())
@@ -476,6 +452,74 @@ def baseline_estimator_model(features, labels, mode, params):
 
         #return tf.estimator.EstimatorSpec(mode=mode, predictions=predictions, loss=loss, train_op=train_op, eval_metric_ops=evalmetrics, export_outputs=predictions_output)
         #return tf.estimator.EstimatorSpec(mode=mode, predictions=predictions, loss=loss, train_op=train_op, export_outputs=predictions_output)
+
+# estimator model
+def baseline_estimator_model_compat_v1(features, labels, mode, params):
+    """
+    Model function for Estimator
+    """
+    print('model based on keras layer but return an estimator model')
+    # Build the model using keras layers
+
+    # gettings the bulding blocks
+    model = keras_building_blocks(params['dim_input'], params['num_classes'])
+
+    dense_inpout = features['dense_input']
+
+    # Logits layer
+    if mode == tf.estimator.ModeKeys.TRAIN:
+        logits = model(dense_inpout, training=True)
+    else:
+        logits = model(dense_inpout, training=False)
+
+    # Compute predictions
+    probabilities = tf.nn.softmax(logits)
+    classes = tf.argmax(input=probabilities, axis=1, )
+
+    # made prediction
+    predictions = {
+        'classes': classes,
+        'probabilities': probabilities,
+    }
+
+    # to be tested
+    predictions_output = tf.estimator.export.PredictOutput(predictions)
+
+    #predictions_output = {
+    #    'classify': tf.estimator.export.PredictOutput(predictions)
+    #}
+
+    # Provide an estimator spec for `ModeKeys.PREDICT`
+    if mode == tf.estimator.ModeKeys.PREDICT:
+        return tf.estimator.EstimatorSpec(mode=mode,
+                                          predictions=predictions,
+                                          export_outputs={tf.saved_model.DEFAULT_SERVING_SIGNATURE_DEF_KEY: predictions_output})
+
+    # Compute loss for both TRAIN and EVAL modes
+    loss = tf.keras.losses.CategoricalCrossentropy(from_logits=True)(labels, logits)
+
+    # Generate necessary evaluation metrics
+    accuracy = tf.compat.v1.metrics.accuracy(labels=tf.argmax(input=labels, axis=1), predictions=classes, name='accuracy')
+
+    eval_metrics = {'accuracy': accuracy}
+
+    # Provide an estimator spec for `ModeKeys.EVAL`
+    if mode == tf.estimator.ModeKeys.EVAL:
+        return tf.estimator.EstimatorSpec(mode=mode,
+                                          loss=loss,
+                                          eval_metric_ops=eval_metrics)
+
+    # Provide an estimator spec for `ModeKeys.TRAIN`
+    if mode == tf.estimator.ModeKeys.TRAIN:
+
+        # converge for tf optimizer
+        optimizer = tf.compat.v1.train.AdamOptimizer(learning_rate=0.001, beta1=0.9)
+
+        train_op = optimizer.minimize(loss, tf.compat.v1.train.get_or_create_global_step())
+
+        return tf.estimator.EstimatorSpec(mode=mode,
+                                          loss=loss,
+                                          train_op=train_op)
 
 
 # Create serving input function
@@ -571,4 +615,24 @@ def train_and_evaluate_old(FLAGS, use_keras):
                                       exporters=exporter)
 
     tf.estimator.train_and_evaluate(estimator, train_spec, eval_spec)
+
+def test_CNN():
+
+    model = Sequential()
+    model.add(Conv2D(64, (3, 3), activation='relu', input_shape=input_shape, padding='same'))
+    model.add(Conv2D(64, (3, 3), activation='relu', padding='same'))
+    model.add(AveragePooling2D(pool_size=(2, 2)))
+    model.add(Dropout(0.25))
+    model.add(Conv2D(32, (3, 3), activation='relu', padding='same'))
+    model.add(Conv2D(32, (3, 3), activation='relu', padding='same'))
+    model.add(AveragePooling2D(pool_size=(2, 2)))
+    model.add(Dropout(0.25))
+    model.add(Flatten())
+    model.add(Dense(256, activation='relu'))
+    model.add(Dropout(0.5))
+    model.add(Dense(10, activation='softmax'))
+
+    model.compile(loss=keras.losses.sparse_categorical_crossentropy,
+                  optimizer="Adam",
+                  metrics=['accuracy'])
 
