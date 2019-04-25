@@ -90,7 +90,7 @@ def train_and_evaluate(args):
             'x', shape=[N_PIXEL, ])],
         model_dir=args['output_dir'],
         n_classes=NUM_LABELS,
-        optimizer=tf.train.AdamOptimizer(learning_rate=0.001),
+        optimizer=tf.train.AdamOptimizer(learning_rate=args['learning_rate']),
         # activation_fn=,
         dropout=0.2,
         batch_norm=False,
