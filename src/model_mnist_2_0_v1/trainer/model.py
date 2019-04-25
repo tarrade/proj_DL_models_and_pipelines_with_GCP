@@ -434,14 +434,14 @@ def baseline_estimator_model(features, labels, mode, params):
     if mode == tf.estimator.ModeKeys.TRAIN:
 
         # crashing
-        #optimizer = tf.keras.optimizers.Adam(learning_rate=0.01, beta_1=0.9, epsilon=1e-07)
+        optimizer = tf.keras.optimizers.Adam(learning_rate=0.01, beta_1=0.9, epsilon=1e-07)
 
-        optimizer = tf.compat.v1.train.AdamOptimizer(learning_rate=0.001, beta1=0.9)
+        #optimizer = tf.compat.v1.train.AdamOptimizer(learning_rate=0.001, beta1=0.9)
 
         print('step 7')
-        train_op = optimizer.minimize(loss, tf.compat.v1.train.get_or_create_global_step())
+        #train_op = optimizer.minimize(loss, tf.compat.v1.train.get_or_create_global_step())
         #train_op = optimizer.minimize(loss, tf.train.get_or_create_global_step())
-        #train_op = optimizer.minimize(loss,var_list=model.weights)
+        train_op = optimizer.minimize(loss,var_list=model.weights)
 
         print('step 8')
         return tf.estimator.EstimatorSpec(mode=mode,
