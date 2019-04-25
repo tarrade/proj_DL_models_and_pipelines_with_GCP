@@ -22,7 +22,9 @@ def parse_labels(y):
 
 def numpy_input_fn(images: np.ndarray,
                    labels: np.ndarray,
-                   mode=tf.estimator.ModeKeys.EVAL):
+                   mode=tf.estimator.ModeKeys.EVAL,
+                   epochs=EPOCHS,
+                   batch_size=BATCH_SIZE):
     """
     Return depending on the `mode`-key an Interator which can be use to
     feed into the Estimator-Model. 
@@ -31,9 +33,9 @@ def numpy_input_fn(images: np.ndarray,
     `dataset.make_one_shot_iterator().get_next()`
     """
     if mode == tf.estimator.ModeKeys.TRAIN:
-        _epochs = EPOCHS
+        _epochs = epochs
         _shuffle = True
-        _num_threads = 2 # This leads to doubling the number of epochs
+        _num_threads = 1 # This leads to doubling the number of epochs
     else:
         _epochs = 1
         _shuffle = False
@@ -42,10 +44,9 @@ def numpy_input_fn(images: np.ndarray,
     return tf.estimator.inputs.numpy_input_fn(
         {'x': images},
         y=labels,
-        batch_size=BATCH_SIZE,
-        num_epochs=_epochs, # Boolean, if True shuffles the queue.
-                            # Avoid shuffle at prediction time.
-        shuffle=_shuffle,
+        batch_size=batch_size,
+        num_epochs=_epochs,                             
+        shuffle=_shuffle, # Boolean, if True shuffles the queue. Avoid shuffle at prediction time.
         queue_capacity=1000, # Integer, number of threads used for reading 
         # and enqueueing. To have predicted order of reading and enqueueing,
         # such as in prediction and evaluation mode, num_threads should be 1.
@@ -88,8 +89,8 @@ def train_and_evaluate(args):
         feature_columns=[tf.feature_column.numeric_column(
             'x', shape=[N_PIXEL, ])],
         model_dir=args['output_dir'],
-        n_classes=10,
-        optimizer=tf.train.AdamOptimizer,
+        n_classes=NUM_LABELS,
+        optimizer=tf.train.AdamOptimizer(learning_rate=0.001),
         # activation_fn=,
         dropout=0.2,
         batch_norm=False,
@@ -105,10 +106,12 @@ def train_and_evaluate(args):
     )
     train_spec = tf.estimator.TrainSpec(
         input_fn=numpy_input_fn(
-            x_train, y_train, mode=tf.estimator.ModeKeys.TRAIN),
+            x_train, y_train, mode=tf.estimator.ModeKeys.TRAIN, 
+            batch_size = args['train_batch_size']),    
         max_steps=args['train_steps'],
         # hooks = None
     )
+    # use `LatestExporter` for regular model exports:
     exporter = tf.estimator.LatestExporter('exporter', serving_input_fn)
     eval_spec = tf.estimator.EvalSpec(
         input_fn=numpy_input_fn(

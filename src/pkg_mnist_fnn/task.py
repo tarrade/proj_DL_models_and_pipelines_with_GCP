@@ -31,18 +31,17 @@ if __name__ == '__main__':
         type=int,
         default='200'
     )
-    # parser.add_argument(
-    #     '--hidden_units',
-    #     help='List of hidden layer sizes to use for DNN feature columns',
-    #     nargs='+',
-    #     type=int,
-    #     default=[128, 64, 32]
-    # )
+    parser.add_argument(
+        '--learning_rate',
+        help='Learning Rate used for Adam',
+        type=float,
+        default='0.001'
+    )
     parser.add_argument(
     '--hidden_units',
     help = 'Hidden layer sizes to use for DNN feature columns -- provide space-separated layers',
     type = str,
-    default = "128 32 4"
+    default = "256 128 64"
     )   
     parser.add_argument(
         '--job_dir',
