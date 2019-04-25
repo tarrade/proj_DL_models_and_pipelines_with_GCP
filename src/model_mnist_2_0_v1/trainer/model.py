@@ -384,6 +384,7 @@ def baseline_estimator_model(features, labels, mode, params):
     else:
         logits = model(dense_inpout, training=False)
 
+
     # Compute predictions
     probabilities = tf.nn.softmax(logits)
     classes = tf.argmax(input=probabilities, axis=1, )
@@ -432,17 +433,15 @@ def baseline_estimator_model(features, labels, mode, params):
     # Provide an estimator spec for `ModeKeys.TRAIN`
     if mode == tf.estimator.ModeKeys.TRAIN:
 
-        optimizer = tf.keras.optimizers.Adam(learning_rate=0.01, beta_1=0.9, epsilon=1e-07)
-        # same parameter than for the same keras optimizer but doesn't converge !
-        #optimizer = tf.train.AdamOptimizer(learning_rate=0.01, beta1=0.9,  epsilon=1e-07)
-        # converge for tf optimizer
+        # crashing
+        #optimizer = tf.keras.optimizers.Adam(learning_rate=0.01, beta_1=0.9, epsilon=1e-07)
 
+        optimizer = tf.compat.v1.train.AdamOptimizer(learning_rate=0.001, beta1=0.9)
 
-        #optimizer = tf.compat.v1.train.AdamOptimizer(learning_rate=0.001, beta1=0.9)
-
-        #optimizer = tf.compat.v1.train.AdamOptimizer(learning_rate=0.01, beta1=0.9,  epsilon=1e-07)
         print('step 7')
         train_op = optimizer.minimize(loss, tf.compat.v1.train.get_or_create_global_step())
+        #train_op = optimizer.minimize(loss, tf.train.get_or_create_global_step())
+        #train_op = optimizer.minimize(loss,var_list=model.weights)
 
         print('step 8')
         return tf.estimator.EstimatorSpec(mode=mode,
