@@ -24,6 +24,10 @@ data/mnist/tfrecords_image_test/
 data/mnist/tfrecords_image_train/
 data/mnist/tfrecords_numpy_test/
 data/mnist/tfrecords_numpy_train/
+data/mnist/raw/*.csv
+
+data/mnist/mnist_number_tabulate
+data/mnist/mnist_number_tabulate.tex
 
 trained/
 

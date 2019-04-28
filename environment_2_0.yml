@@ -32,10 +32,11 @@ dependencies:
 - lime
 - google-cloud-storage
 - google-cloud-bigquery
-- pip=18.0
+- psutil
+- pip=19.1
 - pip:
-  - tfds-nightly
-  - tf-nightly-2.0-preview
+  - tfds-nightly==1.0.2.dev201904260105
+  - tf-nightly-2.0-preview==2.0.0.dev20190426
   #- tensorflow==2.0.0-alpha0
   #- tensorflow-datasets
 

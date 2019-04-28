@@ -434,9 +434,9 @@ def baseline_estimator_model(features, labels, mode, params):
     if mode == tf.estimator.ModeKeys.TRAIN:
 
         # crashing
-        optimizer = tf.keras.optimizers.Adam(learning_rate=0.01, beta_1=0.9, epsilon=1e-07)
+        #optimizer = tf.keras.optimizers.Adam(learning_rate=0.01, beta_1=0.9, epsilon=1e-07)
 
-        #optimizer = tf.compat.v1.train.AdamOptimizer(learning_rate=0.001, beta1=0.9)
+        optimizer = tf.compat.v1.train.AdamOptimizer(learning_rate=0.001, beta1=0.9)
 
         print('step 7')
         #train_op = optimizer.minimize(loss, tf.compat.v1.train.get_or_create_global_step())
@@ -530,7 +530,7 @@ def serving_input_receiver_fn():
     tf.estimator.export.ServingInputReceiver
     """
 
-    input_images = tf.compat.v1.placeholder(tf.float32, [None, 784])
+    input_images = tf.Variable(tf.float32, [None, 784]) #tf.compat.v1.placeholder(tf.float32, [None, 784])
     features = {
         'dense_input': input_images}  # this is the dict that is then passed as "features" parameter to your model_fn
     receiver_tensors = {
@@ -574,9 +574,9 @@ def train_and_evaluate(FLAGS, use_keras=True):
                                                                                         batch_size=FLAGS.batch_size),
                                         max_steps=FLAGS.step)
 
-    #exporter = tf.estimator.LatestExporter('exporter', serving_input_receiver_fn = serving_input_receiver_fn)
+    exporter = tf.estimator.LatestExporter('exporter', serving_input_receiver_fn = serving_input_receiver_fn)
 
-    #print('exporter',exporter)
+    print('exporter',exporter)
 
     # evaluation
     eval_spec = tf.estimator.EvalSpec(input_fn=lambda:input_mnist_tfrecord_dataset_fn(FLAGS.input_test_tfrecords,
@@ -585,8 +585,8 @@ def train_and_evaluate(FLAGS, use_keras=True):
                                                                                       batch_size=10000),
                                       steps=1,
                                       start_delay_secs=0,
-                                      throttle_secs=0 )#,
-                                      #exporters=exporter)
+                                      throttle_secs=0,
+                                      exporters=exporter)
 
     tf.estimator.train_and_evaluate(estimator, train_spec, eval_spec)
 
