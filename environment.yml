@@ -8,13 +8,14 @@ dependencies:
 - numpy=1.16
 - scipy=1.2
 - scikit-learn=0.20
+- scikit-image
 - tornado=5.1
 - jupyter
 - jupyterlab
 - jupyter_contrib_nbextensions
 - jupyter_nbextensions_configurator
 - pandas=0.24
-- matplotlib
+- matplotlib=2.1.0
 #- nomkl # Only for Mac user
 - notebook
 - ipykernel
@@ -38,7 +39,9 @@ dependencies:
 - google-cloud-bigquery
 - rise
 - pip:
-  - apache-beam[gcp]
-  - google-cloud-storage
-  - google-cloud-bigquery[pandas]
-  - google-cloud-bigquery-storage[fastavro,pandas]
+    - PyYAML
+    - apache-beam[gcp]
+    - google-cloud-storage
+    - google-cloud-core==0.29
+    - google-cloud-bigquery[pandas]
+    - google-cloud-bigquery-storage[fastavro,pandas]
