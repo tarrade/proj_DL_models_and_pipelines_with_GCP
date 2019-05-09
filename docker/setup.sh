@@ -37,7 +37,7 @@ grep /etc/group -e "sudo"
 echo ""
 echo ""
 echo "!!!!! Don't forget to reconnect to the VM to have the changes activated !!!!!!"
-source ~/.bashrc 
+source ~/.bashrc #doesn't work
 echo ""
 echo ""
 
@@ -45,8 +45,8 @@ echo ""
 gcloud auth configure-docker -q
 
 # test
-# docker tag hello-world  gcr.io/docker-ml-dl-28571/hello-world
-# docker push gcr.io/docker-ml-dl-28571/hello-world
+# docker tag hello-world  gcr.io/docker-ml-dl-28571/hello-world:test1
+# docker push gcr.io/docker-ml-dl-28571/hello-world:test1
 
 # configure git
 git config --global user.name tarrade
