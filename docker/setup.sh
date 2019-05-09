@@ -1,3 +1,8 @@
+# get the git repo
+# git clone https://github.com/tarrade/proj_DL_models_and_pipelines_with_GCP.git
+# cd proj_DL_models_and_pipelines_with_GCP/docker/
+
+
 # install Docker
 # https://docs.docker.com/install/linux/docker-ce/debian/
 sudo apt-get remove docker docker-engine docker.io containerd runc -y
@@ -29,18 +34,23 @@ echo ""
 echo ""
 echo 'grep /etc/group -e "sudo"'
 grep /etc/group -e "sudo"
-#echo ""
-#echo ""
-#echo "!!!!! Don't forget to reconnect to the VM to have the changes activated !!!!!!"
+echo ""
+echo ""
+echo "!!!!! Don't forget to reconnect to the VM to have the changes activated !!!!!!"
+source ~/.bashrc 
+echo ""
+echo ""
 
-#echo ""
-#echo ""
 # authorisation to be able to write in the container registry  
 gcloud auth configure-docker -q
 
 # test
 # docker tag hello-world  gcr.io/docker-ml-dl-28571/hello-world
 # docker push gcr.io/docker-ml-dl-28571/hello-world
+
+# configure git
+git config --global user.name tarrade
+git config --global user.email fabien.tarrade@gmail.com
 
 # installing SDK is not installed
 #curl https://sdk.cloud.google.com | bash
