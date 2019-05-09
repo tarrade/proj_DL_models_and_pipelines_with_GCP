@@ -18,29 +18,29 @@ sudo apt-get install docker-ce docker-ce-cli containerd.io -y
 sudo docker run hello-world
 
 
-
-#sudo apt-get update
-#sudo apt-get install docker-ce docker-ce-cli containerd.io
-#sudo docker run hello-world # for testing
-#sudo usermod -a -G docker USER (put your USER name)
-
-
 ## checking user access with Docker
-#echo "sudo usermod -a -G docker $USER"
-#sudo usermod -a -G docker $USER
-#echo ""
-#echo ""
-#echo 'grep /etc/group -e "docker"'
-#grep /etc/group -e "docker"
-#echo ""
-#echo ""
-#echo 'grep /etc/group -e "sudo"'
-#grep /etc/group -e "sudo"
+echo "sudo usermod -a -G docker $USER"
+sudo usermod -a -G docker $USER
+echo ""
+echo ""
+echo 'grep /etc/group -e "docker"'
+grep /etc/group -e "docker"
+echo ""
+echo ""
+echo 'grep /etc/group -e "sudo"'
+grep /etc/group -e "sudo"
 #echo ""
 #echo ""
 #echo "!!!!! Don't forget to reconnect to the VM to have the changes activated !!!!!!"
+
 #echo ""
 #echo ""
+# authorisation to be able to write in the container registry  
+gcloud auth configure-docker -q
+
+# test
+# docker tag hello-world  gcr.io/docker-ml-dl-28571/hello-world
+# docker push gcr.io/docker-ml-dl-28571/hello-world
 
 # installing SDK is not installed
 #curl https://sdk.cloud.google.com | bash
