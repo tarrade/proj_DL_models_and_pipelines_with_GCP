@@ -41,6 +41,10 @@ source ~/.bashrc #doesn't work
 echo ""
 echo ""
 
+# to avoid logout/login
+sudo chmod 666 /var/run/docker.sock
+
+
 # authorisation to be able to write in the container registry  
 gcloud auth configure-docker -q
 
