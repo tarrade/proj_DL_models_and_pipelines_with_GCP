@@ -35,8 +35,10 @@ dependencies:
 - psutil
 - pip=19.1
 - pip:
-  - tfds-nightly==1.0.2.dev201904260105
-  - tf-nightly-2.0-preview==2.0.0.dev20190426
+  - tfds-nightly==1.0.2.dev201905090105
+  - tf-nightly-2.0-preview==2.0.0.dev20190509
+  #- tfds-nightly==1.0.2.dev201904260105
+  #- tf-nightly-2.0-preview==2.0.0.dev20190426
   #- tensorflow==2.0.0-alpha0
   #- tensorflow-datasets
 
