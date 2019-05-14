@@ -1,3 +1,5 @@
+
+# example AI Platform Notebook Instance using Deepp Learning VM
 export CONTAINER="gcr.io/deeplearning-platform-release/tf-cpu:latest"
 export IMAGE_FAMILY="common-container"
 export ZONE="europe-west1-b"
@@ -12,7 +14,7 @@ gcloud compute instances create $INSTANCE_NAME \
 --scopes=https://www.googleapis.com/auth/cloud-platform \
 --metadata="proxy-mode=project_editors,container=${CONTAINER}"
 
-
+# example AI Platform Notebook Instance using self made image that derived from Deepp Learning VM
 export CONTAINER="gcr.io/axa-ch-machine-learning-dev/custom_container_image_pip:test1"
 export IMAGE_FAMILY="common-container"
 export ZONE="europe-west1-b"
@@ -27,8 +29,10 @@ gcloud compute instances create $INSTANCE_NAME \
 --scopes=https://www.googleapis.com/auth/cloud-platform \
 --metadata="proxy-mode=project_editors,container=${CONTAINER}"
 
+# test and run the Docker image
 docker run -i -t gcr.io/axa-ch-machine-learning-dev/custom_container_image_pip:test1
 
+# example AI Platform Notebook Instance using self made image that derived from Deepp Learning VM
 export CONTAINER="gcr.io/axa-ch-machine-learning-dev/custom_container_image_conda:test"
 export IMAGE_FAMILY="common-container"
 export ZONE="europe-west6-a"
@@ -43,4 +47,5 @@ gcloud compute instances create $INSTANCE_NAME \
 --scopes=https://www.googleapis.com/auth/cloud-platform \
 --metadata="proxy-mode=project_editors,container=${CONTAINER}"
 
-gcloud deployment-manager deployments create my-first-deployment-notebook-4 --config test_vm_notebook_min.yaml
+# how to deploy a YAML scrip to create a AI Platform Notebook Instance
+gcloud deployment-manager deployments create my-first-deployment-notebook --config create_notebook_instance.yaml
