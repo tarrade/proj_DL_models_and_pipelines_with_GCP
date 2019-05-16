@@ -1,0 +1,126 @@
+{
+  "name": string,
+  "description": string(opt),
+  "tags": {
+    "items": [
+      string
+    ],
+    "fingerprint": string
+  },
+  "machineType": string,
+  "canIpForward": boolean,
+  "networkInterfaces": [
+    {
+      "network": string,
+      "subnetwork": string,
+      "networkIP": string,
+      "accessConfigs": [
+        {
+          "type": enum,
+          "name": string,
+          "natIP": string,
+          "setPublicPtr": boolean,
+          "publicPtrDomainName": string,
+          "networkTier": enum,
+        }
+      ],
+      "aliasIpRanges": [
+        {
+          "ipCidrRange": string,
+          "subnetworkRangeName": string
+        }
+      ],
+      "fingerprint": string,
+    }
+  ],
+  "disks": [
+    {
+      "type": enum,
+      "mode": enum,
+      "source": string,
+      "deviceName": string,
+      "boot": boolean,
+      "initializeParams": {
+        "diskName": string,
+        "sourceImage": string,
+        "diskSizeGb": string,
+        "diskType": string,
+        "sourceImageEncryptionKey": {
+          "rawKey": string,
+          "kmsKeyName": string,
+        },
+        "labels": {
+          string: string,
+          ...
+        },
+        "sourceSnapshot": string,
+        "sourceSnapshotEncryptionKey": {
+          "rawKey": string,
+          "kmsKeyName": string,
+        },
+        "description": string
+      },
+      "autoDelete": boolean,
+      "interface": enum,
+      "guestOsFeatures": [
+        {
+          "type": enum
+        }
+      ],
+      "diskEncryptionKey": {
+        "rawKey": string,
+        "kmsKeyName": string
+
+      }
+    }
+  ],
+  "metadata": {
+    "fingerprint": string,
+    "items": [
+      {
+        "key": string,
+        "value": string
+      }
+    ]
+  },
+  "serviceAccounts": [
+    {
+      "email": string,
+      "scopes": [
+        string
+      ]
+    }
+  ],
+  "scheduling": {
+    "onHostMaintenance": enum,
+    "automaticRestart": boolean,
+    "preemptible": boolean,
+    "nodeAffinities": [
+      {
+        "key": string,
+        "operator": enum,
+        "values": [
+          string
+        ]
+      }
+    ]
+  },
+  "labelFingerprint": string,
+  "minCpuPlatform": string,
+  "guestAccelerators": [
+    {
+      "acceleratorType": string,
+      "acceleratorCount": number
+    }
+  ],
+  "deletionProtection": boolean,
+  "hostname": string,
+  "shieldedInstanceConfig": {
+    "enableSecureBoot": boolean,
+    "enableVtpm": boolean,
+    "enableIntegrityMonitoring": boolean
+  },
+  "shieldedInstanceIntegrityPolicy": {
+    "updateAutoLearnPolicy": boolean
+  },
+}
