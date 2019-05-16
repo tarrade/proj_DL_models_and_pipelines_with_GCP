@@ -1,0 +1,1 @@
+gcloud deployment-manager deployments create deployment-notebook-fabien --config create_notebook_instance_axa-ch.yaml
