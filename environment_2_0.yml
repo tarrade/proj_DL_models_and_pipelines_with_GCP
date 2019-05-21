@@ -35,8 +35,8 @@ dependencies:
 - psutil
 - pip=19.1
 - pip:
-  - tfds-nightly==1.0.2.dev201905190105
-  - tf-nightly-2.0-preview==2.0.0.dev20190518
+  - tfds-nightly==1.0.2.dev201905210105
+  - tf-nightly-2.0-preview==2.0.0.dev20190521
   #- tf-estimator-nightly==1.14.0.dev2019051601
   #- tfds-nightly==1.0.2.dev201905090105
   #- tf-nightly-2.0-preview==2.0.0.dev20190509
