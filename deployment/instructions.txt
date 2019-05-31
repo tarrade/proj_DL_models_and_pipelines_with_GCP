@@ -47,5 +47,19 @@ gcloud compute instances create $INSTANCE_NAME \
 --scopes=https://www.googleapis.com/auth/cloud-platform \
 --metadata="proxy-mode=project_editors,container=${CONTAINER}"
 
-# how to deploy a YAML scrip to create a AI Platform Notebook Instance
+## how to deploy a YAML scrip to create a AI Platform Notebook Instance
 gcloud deployment-manager deployments create my-first-deployment-notebook --config create_notebook_instance.yaml
+
+
+## Using templates with jinja and yaml files
+
+# option 1: call the tempate in a yaml file and define all properties
+gcloud deployment-manager deployments create debian-for-docker-v01 --config  use-debian-for-docker-template.yaml \
+
+# option 2: call the template directly and pass all properties
+gcloud deployment-manager deployments create debian-for-docker-v01 --template debian-for-docker-template.jinja \
+ --properties zone:europe-west6-a,region:europe-west6,network:network-xxx,subnet:subnet-xxxx,machineTypes:n1-standard-1,image:debian-9,application-tag:docker-vm,network-tag:subnet,owner-tag:xxx,type-tag:production,creation-tag:jinja
+
+ # option 3: call the template directly, defined a template and pass properties
+ gcloud deployment-manager deployments create debian-for-docker-v01 --template debian-for-docker-template.jinja \
+ --properties network:network-xxx,subnet:subnet-xxx,owner-tag:fabien
