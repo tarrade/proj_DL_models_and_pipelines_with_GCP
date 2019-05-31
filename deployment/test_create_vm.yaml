@@ -1,0 +1,34 @@
+resources:
+- name:  test-debian-docker-v01
+  type: compute.v1.instance
+  properties:
+    zone: ZONE
+    tags:
+        items:
+        - docker-vm
+    machineType: https://www.googleapis.com/compute/v1/projects/PROJECT/zones/ZONE/machineTypes/n1-standard-1
+    disks:
+    - boot: true
+      autoDelete: true
+      initializeParams:
+        diskSizeGb: 30
+        sourceImage: https://www.googleapis.com/compute/v1/projects/debian-cloud/global/images/family/debian-9
+    networkInterfaces:
+    - subnetwork: https://www.googleapis.com/compute/v1/projects/PROJECT/regions/REGION/subnetworks/SUBNET
+      accessConfigs:
+      - name: External NAT
+        type: ONE_TO_ONE_NAT
+    metadata:
+        items:
+        - key: startup-script-url
+          value: gs://PROJECT/scripts/start-up-script-vm.sh
+    labels:
+        application: docker-vm
+        network: subnet
+        owner: name
+        type: production
+        creation: yaml
+    serviceAccounts:
+    - email: default
+      scopes:
+      - https://www.googleapis.com/auth/cloud-platform
