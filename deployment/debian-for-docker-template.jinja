@@ -1,0 +1,34 @@
+resources:
+- name:  vm-{{env["deployment"]}}
+  type: compute.v1.instance
+  properties:
+    zone: {{properties["zone"]}}
+    tags:
+        items:
+        - docker-vm
+    machineType: zones/{{ properties["zone"] }}/machineTypes/{{properties["machineTypes"]}}
+    disks:
+    - boot: true
+      autoDelete: true
+      initializeParams:
+        diskSizeGb: 30
+        sourceImage: projects/debian-cloud/global/images/family/{{properties["image"]}}
+    networkInterfaces:
+    - subnetwork: projects/{{properties["network"]}}/regions/{{properties["region"]}}/subnetworks/{{properties["subnet"]}}
+      accessConfigs:
+      - name: External NAT
+        type: ONE_TO_ONE_NAT
+    metadata:
+        items:
+        - key: startup-script-url
+          value: gs://{{env["project"]}}/scripts/start-up-script-vm.sh
+    labels:
+        application: {{properties["application-tag"]}}
+        network:  {{properties["network-tag"]}}
+        owner: {{properties["owner-tag"]}}
+        type:  {{properties["type-tag"]}}
+        creation: {{properties["creation-tag"]}}
+    serviceAccounts:
+    - email: default
+      scopes:
+      - https://www.googleapis.com/auth/cloud-platform

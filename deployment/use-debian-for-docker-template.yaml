@@ -1,0 +1,18 @@
+imports:
+- path: debian-for-docker-template.jinja
+
+resources:
+- name: debian-for-docker
+  type: debian-for-docker-template.jinja
+  properties:
+    zone: europe-west6-a
+    region: europe-west6
+    network: network
+    subnet: subnet
+    machineTypes: n1-standard-1
+    image: debian-9
+    application-tag: docker-vm
+    network-tag: subnet
+    owner-tag: nane
+    type-tag: production
+    creation-tag: jinja
