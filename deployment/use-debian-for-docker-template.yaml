@@ -13,6 +13,6 @@ resources:
     image: debian-9
     application-tag: docker-vm
     network-tag: subnet
-    owner-tag: nane
+    owner-tag: name
     type-tag: production
     creation-tag: jinja

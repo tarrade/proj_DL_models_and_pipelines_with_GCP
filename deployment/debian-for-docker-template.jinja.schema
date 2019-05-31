@@ -1,0 +1,56 @@
+info:
+  title: VM Template
+  author: Fabien Tarrade
+  description: Creates a Debian Docker instance
+  version: 1.0
+
+imports:
+- path: debian-for-docker-template.jinja 
+
+required:
+- network
+- subnet
+- owner-tag
+
+properties:
+  zone:
+    type: string
+    default: europe-west6-a
+    description: Zone to run
+  region:
+    type: string
+    default: europe-west6
+    description: Region to run
+  network:
+    type: string
+    description: Network to use
+  subnet:
+    type: string
+    description: Subnet to use
+  machineTypes:
+    type: string
+    default: n1-standard-1
+    description: machineTypes to use
+  image:
+    type: string
+    default: debian-9
+    description: image to use
+  application-tag:
+    type: string
+    default: docker-vm
+    description: application tag
+  network-tag:
+    type: string
+    default: subnet
+    description: network tag
+  owner-tag:
+    type: string
+    description: owner tag
+  type-tag:
+    type: string
+    default: production
+    description: type tag
+  creation-tag:
+    type: string
+    default: jinja
+    description: type tag
