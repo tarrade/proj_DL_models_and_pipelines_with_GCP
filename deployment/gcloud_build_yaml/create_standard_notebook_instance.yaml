@@ -6,16 +6,16 @@ resources:
     tags:
         items:
         - deeplearning-vm
-    machineType: https://www.googleapis.com/compute/v1/projects/docker-ml-dl-28571/zones/europe-west6-a/machineTypes/n1-standard-1
+    machineType: projects/docker-ml-dl-28571/zones/europe-west6-a/machineTypes/n1-standard-1
     disks:
     - boot: true
       autoDelete: true
       initializeParams:
         diskSizeGb: 80
-        sourceImage: https://www.googleapis.com/compute/v1/projects/deeplearning-platform-release/global/images/family/common-container
+        sourceImage: projects/deeplearning-platform-release/global/images/family/common-container
     networkInterfaces:
-    - network: https://www.googleapis.com/compute/v1/projects/docker-ml-dl-28571/global/networks/default
-      subnetwork: https://www.googleapis.com/compute/v1/projects/docker-ml-dl-28571/regions/europe-west6/subnetworks/default
+    - network: projects/docker-ml-dl-28571/global/networks/default
+      subnetwork: projects/docker-ml-dl-28571/regions/europe-west6/subnetworks/default
       accessConfigs:
       - name: External NAT
         type: ONE_TO_ONE_NAT
