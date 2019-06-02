@@ -1,0 +1,14 @@
+name: base
+channels:
+- defaults
+- conda-forge
+dependencies:
+- python=3.6
+- jupyter_nbextensions_configurator
+- jupyter_contrib_nbextensions
+- notebook=5.6.0
+- nb_conda
+- six=1.11.0
+- autopep8
+- pep8=1.7.1
+- nbdime

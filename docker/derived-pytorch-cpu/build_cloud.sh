@@ -16,6 +16,7 @@ cp ../../deployment/known_hosts known_hosts
 cp ../../deployment/id_rsa id_rsa
 
 # Build the image
+  
 gcloud builds submit --tag $IMAGE_URI . --timeout "2h00m0s"
 
 # Remove the config files
