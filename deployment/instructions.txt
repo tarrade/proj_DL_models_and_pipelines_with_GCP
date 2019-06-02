@@ -1,7 +1,6 @@
 ## how to deploy a YAML scrip to create a AI Platform Notebook Instance
 gcloud deployment-manager deployments create my-first-deployment-notebook --config create_notebook_instance.yaml
 
-
 ## Using templates with jinja and yaml files
 
 # option 1: call the tempate in a yaml file and define all properties
