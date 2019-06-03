@@ -1,0 +1,25 @@
+steps:
+# copy config files
+- name: 'gcr.io/cloud-builders/gsutil'
+  args: ['cp', 'gs://${_BUCKET}/scripts/known_hosts', '.']
+- name: 'gcr.io/cloud-builders/gsutil'
+  args: ['cp', 'gs://${_BUCKET}/scripts/id_rsa', '.']
+- name: 'gcr.io/cloud-builders/gsutil'
+  args: ['cp', 'gs://${_BUCKET}/scripts/.gitconfig', '.']
+- name: 'gcr.io/cloud-builders/gsutil'
+  args: ['cp', 'gs://${_BUCKET}/scripts/.condarc', '.']
+- name: 'gcr.io/cloud-builders/gsutil'
+  args: ['cp', 'gs://${_BUCKET}/scripts/pip.conf', '.']
+- name: 'gcr.io/cloud-builders/gsutil'
+  args: ['cp', 'gs://${_BUCKET}/scripts/base.yml', '.']   
+- name: 'gcr.io/cloud-builders/gsutil'
+  args: ['cp', 'gs://${_BUCKET}/scripts/environment.yml', '.']   
+# build docker image
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['build', '-t', 'gcr.io/$PROJECT_ID/custom_container_image_conda:${_TAG}', '.']
+# push image in Container Registry  
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'gcr.io/$PROJECT_ID/custom_container_image_conda:${_TAG}']
+substitutions:
+    _BUCKET: not-defined
+    _TAG: dev-v1.1.0
