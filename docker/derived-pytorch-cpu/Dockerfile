@@ -100,7 +100,8 @@ RUN ls -la  /home
 RUN echo $HOME
 
 # Managed to have /home working
-#WORKDIR /home/
+WORKDIR /home/
 
 # Trying to set an entry pooint script
 #ENTRYPOINT ["entryoint.sh"]
+#ENTRYPOINT ["/bin/bash", "-c", "entryoint.sh"]

@@ -13,7 +13,7 @@ gcloud deployment-manager deployments create debian-for-docker-v01 --template de
  # option 3: call the template directly, defined a template and pass properties
  # creation of VM for docker
  gcloud deployment-manager deployments create debian-for-docker-v01 --template debian-for-docker-template.jinja \
- --properties network:network-xxx,subnet:subnet-xxx,owner-tag:name
+ --properties network:network-xxx,subnet:subnet-xxx,owner-tag:name,bucket:xxxx
 
  # creation of Notebook instance of optimized image
 gcloud deployment-manager deployments create notebook-instance-v01 --template notebook-instance-optimized-template.jinja \

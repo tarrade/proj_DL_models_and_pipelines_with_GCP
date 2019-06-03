@@ -6,7 +6,7 @@ resources:
     tags:
         items:
         - docker-vm
-    machineType: zones/{{ properties["zone"] }}/machineTypes/{{properties["machineTypes"]}}
+    machineType: zones/{{properties["zone"]}}/machineTypes/{{properties["machineTypes"]}}
     disks:
     - boot: true
       autoDelete: true
@@ -21,7 +21,7 @@ resources:
     metadata:
         items:
         - key: startup-script-url
-          value: gs://{{env["project"]}}/scripts/start-up-script-vm.sh
+          value: gs://{{properties["gs-bucket"]}}/scripts/start-up-script-vm.sh
     labels:
         application: {{properties["application-tag"]}}
         network:  {{properties["network-tag"]}}

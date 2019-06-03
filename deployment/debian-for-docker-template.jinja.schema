@@ -35,6 +35,9 @@ properties:
     type: string
     default: debian-9
     description: image to use
+  gs-bucket:
+    type: string
+    description: location of the script
   application-tag:
     type: string
     default: docker-vm
