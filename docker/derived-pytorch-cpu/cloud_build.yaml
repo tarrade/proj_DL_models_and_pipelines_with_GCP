@@ -1,49 +1,88 @@
 steps:
 # Copy config files
 - name: 'gcr.io/cloud-builders/git'
-  args: ['clone', 'https://github.com/tarrade/proj_DL_models_and_pipelines_with_GCP']
+  args: 
+  - 'clone'
+  - 'https://github.com/tarrade/proj_DL_models_and_pipelines_with_GCP'
   id: Clone Github
 - name: 'gcr.io/cloud-builders/gsutil'
-  args: ['cp', 'gs://${_BUCKET}/scripts/known_hosts', 'proj_DL_models_and_pipelines_with_GCP/docker/${_DOCKERFILE}/.']
+  args: 
+  - 'cp'
+  - 'gs://${_BUCKET}/scripts/known_hosts'
+  - 'proj_DL_models_and_pipelines_with_GCP/docker/${_DOCKERFILE}/.'
   id: Copy host for git
 - name: 'gcr.io/cloud-builders/gsutil'
-  args: ['cp', 'gs://${_BUCKET}/scripts/id_rsa', 'proj_DL_models_and_pipelines_with_GCP/docker/${_DOCKERFILE}/.']
+  args: 
+  - 'cp'
+  - 'gs://${_BUCKET}/scripts/id_rsa'
+  - 'proj_DL_models_and_pipelines_with_GCP/docker/${_DOCKERFILE}/.'
   id: Copy private key git
 - name: 'gcr.io/cloud-builders/gsutil'
-  args: ['cp', 'gs://${_BUCKET}/scripts/.gitconfig', 'proj_DL_models_and_pipelines_with_GCP/docker/${_DOCKERFILE}/.']
+  args: 
+  - 'cp'
+  - 'gs://${_BUCKET}/scripts/.gitconfig'
+  - 'proj_DL_models_and_pipelines_with_GCP/docker/${_DOCKERFILE}/.'
   id: Copy git config file
 - name: 'gcr.io/cloud-builders/gsutil'
-  args: ['cp', 'gs://${_BUCKET}/scripts/.condarc', 'proj_DL_models_and_pipelines_with_GCP/docker/${_DOCKERFILE}/.']
+  args: 
+  - 'cp'
+  - 'gs://${_BUCKET}/scripts/.condarc'
+  - 'proj_DL_models_and_pipelines_with_GCP/docker/${_DOCKERFILE}/.'
   id: Copy conda config file
 - name: 'gcr.io/cloud-builders/gsutil'
-  args: ['cp', 'gs://${_BUCKET}/scripts/pip.conf', 'proj_DL_models_and_pipelines_with_GCP/docker/${_DOCKERFILE}/.']
+  args: 
+  - 'cp'
+  - 'gs://${_BUCKET}/scripts/pip.conf'
+  - 'proj_DL_models_and_pipelines_with_GCP/docker/${_DOCKERFILE}/.'
   id: Copy pip config file
 - name: 'gcr.io/cloud-builders/gsutil'
-  args: ['cp', 'gs://${_BUCKET}/scripts/base.yml', 'proj_DL_models_and_pipelines_with_GCP/docker/${_DOCKERFILE}/.']
+  args: 
+  - 'cp'
+  - 'gs://${_BUCKET}/scripts/base.yml'
+  - 'proj_DL_models_and_pipelines_with_GCP/docker/${_DOCKERFILE}/.'
   id: Copy base env   
 - name: 'gcr.io/cloud-builders/gsutil'
-  args: ['cp', 'gs://${_BUCKET}/scripts/environment.yml', 'proj_DL_models_and_pipelines_with_GCP/docker/${_DOCKERFILE}/.']
+  args: 
+  - 'cp'
+  - 'gs://${_BUCKET}/scripts/environment.yml'
+  - 'proj_DL_models_and_pipelines_with_GCP/docker/${_DOCKERFILE}/.'
   id: Copy env 
  
 # Build docker image
 - name: 'gcr.io/cloud-builders/docker'
-  args: ['build', '-t', 'gcr.io/$PROJECT_ID/${_DOCKERFILE}:${_TAG}', '.']
+  args: 
+  - 'build'
+  - '-t'
+  - 'gcr.io/$PROJECT_ID/${_DOCKERFILE}:${_TAG}'
+  - '.'
   id: Build the Docker image
   dir: 'proj_DL_models_and_pipelines_with_GCP/docker/${_DOCKERFILE}'
 
 # Push image in Container Registry  
 - name: 'gcr.io/cloud-builders/docker'
-  args: ['push', 'gcr.io/$PROJECT_ID/${_DOCKERFILE}:${_TAG}']
+  args: 
+  - 'push'
+  - 'gcr.io/$PROJECT_ID/${_DOCKERFILE}:${_TAG}'
   id: Push the image in ContainerRegistry
 
 - name: 'debian'
-  args: ['ls', '-la']
+  args: 
+  - 'ls'
+  - '-la'
   id: List files
 
 # Deploy (add , '--verbosity', 'debug' for more info)
 - name: 'gcr.io/cloud-builders/gcloud'
   id: Deploy the AI Platform Notebook instance
-  args: ['deployment-manager', 'deployments', 'create', '${_NAME_INSTANCE}', '--template', 'notebook-instance-optimized-template.jinja', '--properties','network:${_NETWORK},subnet:${_SUBNET},container:gcr.io/$PROJECT_ID/${_DOCKERFILE}:${_TAG},owner-tag:${_OWNER}']
+  args: 
+  - 'deployment-manager'
+  - 'deployments'
+  - 'create'
+  - '${_NAME_INSTANCE}'
+  - '--template'
+  - 'notebook-instance-optimized-template.jinja'
+  - '--properties'
+  - 'network:${_NETWORK},subnet:${_SUBNET},container:gcr.io/$PROJECT_ID/${_DOCKERFILE}:${_TAG},owner-tag:${_OWNER}'
   dir: 'proj_DL_models_and_pipelines_with_GCP/deployment'
 
 substitutions:
