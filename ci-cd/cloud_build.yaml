@@ -92,6 +92,9 @@ steps:
   - '-la'
   - 'root'
   id: List files root
+  volumes:
+  - name: 'ssh'
+  path: /root/.ssh
 
 # Build docker image
 - name: 'gcr.io/cloud-builders/docker'
@@ -102,6 +105,9 @@ steps:
   - '.'
   id: Build the Docker image
   dir: 'proj_DL_models_and_pipelines_with_GCP/docker/${_DOCKERFILE}'
+  volumes:
+  - name: 'ssh'
+  path: /root/.ssh
 
 # Push image in Container Registry  
 - name: 'gcr.io/cloud-builders/docker'
