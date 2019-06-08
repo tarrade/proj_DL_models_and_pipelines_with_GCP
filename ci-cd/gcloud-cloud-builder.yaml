@@ -1,0 +1,50 @@
+# Decrypt the file containing the key
+steps:
+- name: 'gcr.io/cloud-builders/gcloud'
+  args:
+  - kms
+  - decrypt
+  - --ciphertext-file=id_rsa.enc
+  - --plaintext-file=/root/.ssh/id_rsa
+  - --location=global
+  - --keyring=fabien-keyring
+  - --key=github-key
+  volumes:
+  - name: 'ssh'
+    path: /root/.ssh
+
+# Set up git with key and domain
+- name: 'gcr.io/cloud-builders/git'
+  entrypoint: 'bash'
+  args:
+  - '-c'
+  - |
+    chmod 600 /root/.ssh/id_rsa
+    cat <<EOF >/root/.ssh/config
+    Hostname github.axa.com
+    IdentityFile /root/.ssh/id_rsa
+    EOF
+    mv known_hosts /root/.ssh/known_hosts
+  volumes:
+  - name: 'ssh'
+    path: /root/.ssh
+
+# Use git clone
+- name: 'gcr.io/cloud-builders/git'
+  args:
+  - clone
+  - git@github.axa.com:AXACH-CCDA/proj_claim_triage_arag.git
+  volumes:
+  - name: 'ssh'
+    path: /root/.ssh
+
+# Build the Docker image
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['build', '-t', 'gcr.io/ls-omni-dev/catalog-search:test', '.']
+
+# Run the Docker image and execute tests
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['run', 'gcr.io/ls-omni-dev/catalog-search:test', 'py.test', 'tests/unit']
+
+# Push the Docker image to GCR
+images: ['gcr.io/ls-omni-dev/catalog-search:test']
