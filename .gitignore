@@ -3,6 +3,7 @@
 .DS_Store
 conda
 datalab
+private
 
 notebook/data
 notebook/.ipynb_checkpoints/
