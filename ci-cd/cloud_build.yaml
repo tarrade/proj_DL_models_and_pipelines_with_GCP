@@ -86,7 +86,7 @@ steps:
     Hostname github.axa.com
     IdentityFile /root/.ssh/id_rsa
     EOF
-    mv proj_DL_models_and_pipelines_with_GCP/docker/${_DOCKERFILE}/known_hosts /root/.ssh/known_hosts
+    cp proj_DL_models_and_pipelines_with_GCP/docker/${_DOCKERFILE}/known_hosts /root/.ssh/known_hosts
   volumes:
   - name: 'ssh'
     path: /root/.ssh
