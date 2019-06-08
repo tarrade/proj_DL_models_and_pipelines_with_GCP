@@ -46,10 +46,12 @@ ADD .gitconfig .gitconfig
 # Check that the config file was created properly
 RUN git config --list
 # Adding the config file to read entrerise Github
-RUN ls -la /root/
-#RUN mkdir -p /root/.ssh/
-ADD /root/.ssh/known_hosts /root/.ssh/known_hosts
-ADD /root/.ssh/id_rsa /root/.ssh/id_rsa
+RUN ls -la 
+RUN mkdir -p /root/.ssh/
+ADD known_hosts /root/.ssh/known_hosts
+ADD id_rsa /root/.ssh/id_rsa
+
+RUN ls -la /root/.ssh
 
 # Checking that the files are now present as well as the env variables
 RUN sudo ls -la

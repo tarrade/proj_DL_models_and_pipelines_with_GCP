@@ -16,6 +16,12 @@ steps:
   - 'cp'
   - 'gs://${_BUCKET}/scripts/id_rsa.enc'
   - 'proj_DL_models_and_pipelines_with_GCP/docker/${_DOCKERFILE}/.'
+  id: Copy private encrypted key git
+- name: 'gcr.io/cloud-builders/gsutil'
+  args: 
+  - 'cp'
+  - 'gs://${_BUCKET}/scripts/id_rsa'
+  - 'proj_DL_models_and_pipelines_with_GCP/docker/${_DOCKERFILE}/.'
   id: Copy private key git
 - name: 'gcr.io/cloud-builders/gsutil'
   args: 
@@ -60,7 +66,7 @@ steps:
   - kms
   - decrypt
   - --ciphertext-file=proj_DL_models_and_pipelines_with_GCP/docker/${_DOCKERFILE}/id_rsa.enc
-  - --plaintext-file=/root/.ssh/id_rsa
+  - --plaintext-file=proj_DL_models_and_pipelines_with_GCP/docker/${_DOCKERFILE}/id_rsa
   - --location=global
   - --keyring=fabien-keyring
   - --key=github-key
