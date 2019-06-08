@@ -101,6 +101,7 @@ steps:
   args: 
   - 'ls'
   - '-la'
+  - 'root'
   id: List files
 
 # Deploy (add , '--verbosity', 'debug' for more info)
