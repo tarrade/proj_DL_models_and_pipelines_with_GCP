@@ -52,8 +52,8 @@ RUN ls -la /root/.ssh/
 #ADD id_rsa /root/.ssh/id_rsa
 
 # Checking that the files are now present as well as the env variables
-RUN ls -la
-RUN ls -la /root/.ssh
+RUN sudo ls -la
+RUN sudo ls -la /root/.ssh
 RUN printenv
 
 #RUN conda init
