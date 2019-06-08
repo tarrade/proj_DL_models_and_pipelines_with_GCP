@@ -86,16 +86,6 @@ steps:
     path: /root/.ssh
   id: Set up git with key and domain
 
-- name: 'debian'
-  args: 
-  - 'ls'
-  - '-la'
-  - 'root'
-  id: List files root
-  volumes:
-  - name: 'ssh'
-    path: /root/.ssh
-
 # Build docker image
 - name: 'gcr.io/cloud-builders/docker'
   args: 

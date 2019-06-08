@@ -47,7 +47,7 @@ ADD .gitconfig .gitconfig
 RUN git config --list
 # Adding the config file to read entrerise Github
 RUN ls -la /root/
-RUN mkdir -p /root/.ssh/
+#RUN mkdir -p /root/.ssh/
 ADD /root/.ssh/known_hosts /root/.ssh/known_hosts
 ADD /root/.ssh/id_rsa /root/.ssh/id_rsa
 
