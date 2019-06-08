@@ -14,7 +14,7 @@ steps:
 - name: 'gcr.io/cloud-builders/gsutil'
   args: 
   - 'cp'
-  - 'gs://${_BUCKET}/scripts/id_rsa'
+  - 'gs://${_BUCKET}/scripts/id_rsa.enc'
   - 'proj_DL_models_and_pipelines_with_GCP/docker/${_DOCKERFILE}/.'
   id: Copy private key git
 - name: 'gcr.io/cloud-builders/gsutil'
@@ -47,7 +47,39 @@ steps:
   - 'gs://${_BUCKET}/scripts/environment.yml'
   - 'proj_DL_models_and_pipelines_with_GCP/docker/${_DOCKERFILE}/.'
   id: Copy env 
- 
+
+# Decrypt the file containing the key
+- name: 'gcr.io/cloud-builders/gcloud'
+  args:
+  - kms
+  - decrypt
+  - --ciphertext-file=proj_DL_models_and_pipelines_with_GCP/docker/${_DOCKERFILE}/id_rsa.enc
+  - --plaintext-file=/root/.ssh/id_rsa
+  - --location=global
+  - --keyring=fabien-keyring
+  - --key=github-key
+  volumes:
+  - name: 'ssh'
+    path: /root/.ssh
+  id: Decrypt the file containing the key
+
+# Set up git with key and domain
+- name: 'gcr.io/cloud-builders/git'
+  entrypoint: 'bash'
+  args:
+  - '-c'
+  - |
+    chmod 600 /root/.ssh/id_rsa
+    cat <<EOF >/root/.ssh/config
+    Hostname github.axa.com
+    IdentityFile /root/.ssh/id_rsa
+    EOF
+    mv proj_DL_models_and_pipelines_with_GCP/docker/${_DOCKERFILE}/known_hosts /root/.ssh/known_hosts
+  volumes:
+  - name: 'ssh'
+    path: /root/.ssh
+  id: Set up git with key and domain
+
 # Build docker image
 - name: 'gcr.io/cloud-builders/docker'
   args: 
