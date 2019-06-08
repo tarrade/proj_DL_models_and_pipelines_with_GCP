@@ -1,0 +1,12 @@
+
+export NAME_INSTANCE="notebook-instance-$(date +%Y-%m-%d-%H-%M)-v05"
+export TAG="dev-v1.1.0"
+
+export DOCKERFILE="derived-pytorch-cpu"
+export OWNER="fabien"
+export NETWORK="network"
+export SUBNET="subnet-"
+export BUCKET="bucket"
+
+gcloud builds submit --config=cloud_build.yaml \
+--substitutions=_BUCKET=$BUCKET,_TAG=$TAG,_NAME_INSTANCE=$NAME_INSTANCE,_DOCKERFILE=$DOCKERFILE,_OWNER=$OWNER,_NETWORK=$NETWORK,_SUBNET=$SUBNET
