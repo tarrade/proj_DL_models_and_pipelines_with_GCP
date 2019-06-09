@@ -82,14 +82,11 @@ steps:
   args:
   - '-c'
   - |
-    mkdir -p /root/.ssh/
-    cp proj_DL_models_and_pipelines_with_GCP/docker/${_DOCKERFILE}/id_rsa /root/.ssh/id_rsa
-    chmod 600 /root/.ssh/id_rsa
-    cat <<EOF >/root/.ssh/config
+    chmod 600 proj_DL_models_and_pipelines_with_GCP/docker/${_DOCKERFILE}/id_rsa
+    cat <<EOF >proj_DL_models_and_pipelines_with_GCP/docker/${_DOCKERFILE}/config
     Hostname github.axa.com
     IdentityFile /root/.ssh/id_rsa
     EOF
-    cp proj_DL_models_and_pipelines_with_GCP/docker/${_DOCKERFILE}/known_hosts /root/.ssh/known_hosts
   #volumes:
   #- name: 'ssh'
   #  path: /root/.ssh
