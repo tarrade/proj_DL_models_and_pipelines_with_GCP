@@ -13,6 +13,8 @@ steps:
   - 'NETWORK=${_NETWORK}'
   - 'SUBNET=${_SUBNET}'
   - 'BUCKET=${_BUCKET}'
+  id: Check env variables
+  dir: 'proj_DL_models_and_pipelines_with_GCP/docker/${_DOCKERFILE}'
   
 # Copy config files
 - name: 'gcr.io/cloud-builders/git'
