@@ -1,21 +1,4 @@
 steps:
-# set and print env variables for its execution
-#- name: 'debian'
-#  args: 
-#  - 'bash'
-#  - '-c'
-#  - 'check_env.sh'
-#  env:
-#  - 'PROJECT=$PROJECT_ID'
-#  - 'NAME_INSTANCE=${_NAME_INSTANCE}'
-#  - 'TAG=${_TAG}'
-#  - 'DOCKERFILE=${_DOCKERFILE}'
-#  - 'OWNER=${_OWNER}'
-#  - 'NETWORK=${_NETWORK}'
-#  - 'SUBNET=${_SUBNET}'
-#  - 'BUCKET=${_BUCKET}'
-#  id: Check env variables
-#  dir: 'proj_DL_models_and_pipelines_with_GCP/docker/${_DOCKERFILE}'
 
 # Copy config files
 - name: 'gcr.io/cloud-builders/git'
@@ -23,6 +6,23 @@ steps:
   - 'clone'
   - 'https://github.com/tarrade/proj_DL_models_and_pipelines_with_GCP'
   id: Clone Github
+
+  # Set and print env variables for its execution
+- name: 'debian'
+  args: 
+  - 'bash'
+  - 'check_env.sh'
+  env:
+  - 'PROJECT=$PROJECT_ID'
+  - 'NAME_INSTANCE=${_NAME_INSTANCE}'
+  - 'TAG=${_TAG}'
+  - 'DOCKERFILE=${_DOCKERFILE}'
+  - 'OWNER=${_OWNER}'
+  - 'NETWORK=${_NETWORK}'
+  - 'SUBNET=${_SUBNET}'
+  - 'BUCKET=${_BUCKET}'
+  id: Check env variables
+  dir: 'proj_DL_models_and_pipelines_with_GCP/docker/${_DOCKERFILE}'
 
 - name: 'gcr.io/cloud-builders/gsutil'
   args: 
