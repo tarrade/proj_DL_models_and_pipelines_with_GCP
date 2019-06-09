@@ -1,11 +1,9 @@
 steps:
 # set and print env variables for its execution
 - name: 'bash'
-  args: ['bash', './check_env.sh']
+  args: ['bash', 'check_env.sh']
   env:
-  - 'BUILD=$BUILD_ID'
   - 'PROJECT=$PROJECT_ID'
-  - 'REV=$REVISION_ID'
   - 'NAME_INSTANCE=${_NAME_INSTANCE}'
   - 'TAG=${_TAG}'
   - 'DOCKERFILE=${_DOCKERFILE}'
