@@ -1,5 +1,5 @@
 resources:
-- name: optimized-{{env["deployment"]}}         
+- name: $(date +%Y-%m-%d-%H-%M)-optimized-{{env["deployment"]}}       
   type: compute.v1.instance
   properties:
     zone: {{properties["zone"]}}
