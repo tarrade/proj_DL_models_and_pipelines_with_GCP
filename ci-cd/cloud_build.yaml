@@ -3,7 +3,7 @@ steps:
 - name: 'bash'
   args: 
   - 'bash'
-  - 'proj_DL_models_and_pipelines_with_GCP/docker/${_DOCKERFILE}/check_env.sh'
+  - './check_env.sh'
   env:
   - 'PROJECT=$PROJECT_ID'
   - 'NAME_INSTANCE=${_NAME_INSTANCE}'
@@ -15,7 +15,7 @@ steps:
   - 'BUCKET=${_BUCKET}'
   id: Check env variables
   dir: 'proj_DL_models_and_pipelines_with_GCP/docker/${_DOCKERFILE}'
-   
+
 # Copy config files
 - name: 'gcr.io/cloud-builders/git'
   args: 
