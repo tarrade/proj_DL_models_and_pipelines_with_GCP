@@ -16,6 +16,7 @@ steps:
   - 'PROJECT=$PROJECT_ID'
   - 'NAME_INSTANCE=${_NAME_INSTANCE}'
   - 'TAG=${_TAG}'
+  - 'TEST=$(date -u +%Y-%m-%d-%H-%M)'
   - 'DOCKERFILE=${_DOCKERFILE}'
   - 'OWNER=${_OWNER}'
   - 'NETWORK=${_NETWORK}'
