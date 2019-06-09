@@ -1,6 +1,5 @@
-{% set BASE_NAME =$(date +%Y-%m-%d-%H-%M) + '-optimized-' + env['deployment'] %}
 resources:
-- name:  {{ BASE_NAME }}       
+- name: {{env["deployment"]}}       
   type: compute.v1.instance
   properties:
     zone: {{properties["zone"]}}
