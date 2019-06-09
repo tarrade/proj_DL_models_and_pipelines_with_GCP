@@ -7,13 +7,6 @@ steps:
   - 'https://github.com/tarrade/proj_DL_models_and_pipelines_with_GCP'
   id: Clone Github
 
-# Set build tag and write to file _TAG
-- name: 'debian'
-  args: 
-  - 'bash'
-  - '-c'
-  - 'date -u +%Y-%m-%d-%H-%M-optimized-${_NAME_INSTANCE} > _NAME_INSTANCE'
-
   # Set and print env variables for its execution
 - name: 'debian'
   args: 
@@ -21,7 +14,7 @@ steps:
   - 'check_env.sh'
   env:
   - 'PROJECT=$PROJECT_ID'
-  - 'NAME_INSTANCE=${_NAME_INSTANCE}'
+  - 'NAME_INSTANCE={date -u +%Y-%m-%d-%H-%M-optimized}-${_NAME_INSTANCE}-${_NAME_INSTANCE}'
   - 'TAG=${_TAG}'
   - 'DOCKERFILE=${_DOCKERFILE}'
   - 'OWNER=${_OWNER}'
