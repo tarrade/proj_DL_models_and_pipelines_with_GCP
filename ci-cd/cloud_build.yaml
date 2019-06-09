@@ -7,6 +7,13 @@ steps:
   - 'https://github.com/tarrade/proj_DL_models_and_pipelines_with_GCP'
   id: Clone Github
 
+# Set build tag and write to file _TAG
+- name: 'debian'
+  args: 
+  - 'bash'
+  - '-c'
+  - 'date -u +%Y-%m-%d-%H-%M-optimized-${_NAME_INSTANCE} > _NAME_INSTANCE'
+
   # Set and print env variables for its execution
 - name: 'debian'
   args: 
@@ -141,7 +148,7 @@ steps:
   - 'deployment-manager'
   - 'deployments'
   - 'create'
-  - '(date +%Y-%m-%d-%H-%M)-optimized-${_NAME_INSTANCE}'
+  - '${_NAME_INSTANCE}'
   - '--template'
   - 'notebook-instance-optimized-template.jinja'
   - '--properties'
