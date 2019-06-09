@@ -141,7 +141,7 @@ steps:
   - 'deployment-manager'
   - 'deployments'
   - 'create'
-  - '${date +%Y-%m-%d-%H-%M}-optimized-${_NAME_INSTANCE}'
+  - '(date +%Y-%m-%d-%H-%M)-optimized-${_NAME_INSTANCE}'
   - '--template'
   - 'notebook-instance-optimized-template.jinja'
   - '--properties'
