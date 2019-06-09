@@ -1,34 +1,47 @@
 steps:
+# set and print env variables for its execution
+- name: 'bash'
+  args: ['bash', './check_env.sh']
+  env:
+  - 'BUILD=$BUILD_ID'
+  - 'PROJECT=$PROJECT_ID'
+  - 'REV=$REVISION_ID'
+  - 'NAME_INSTANCE=${_NAME_INSTANCE}'
+  - 'TAG=${_TAG}'
+  - 'DOCKERFILE=${_DOCKERFILE}'
+  - 'OWNER=${_OWNER}'
+  - 'NETWORK=${_NETWORK}'
+  - 'SUBNET=${_SUBNET}'
+  - 'BUCKET=${_BUCKET}'
+  
 # Copy config files
 - name: 'gcr.io/cloud-builders/git'
   args: 
   - 'clone'
   - 'https://github.com/tarrade/proj_DL_models_and_pipelines_with_GCP'
   id: Clone Github
+
 - name: 'gcr.io/cloud-builders/gsutil'
   args: 
   - 'cp'
   - 'gs://${_BUCKET}/scripts/known_hosts'
   - 'proj_DL_models_and_pipelines_with_GCP/docker/${_DOCKERFILE}/.'
   id: Copy host for git
+
 - name: 'gcr.io/cloud-builders/gsutil'
   args: 
   - 'cp'
   - 'gs://${_BUCKET}/scripts/id_rsa.enc'
   - 'proj_DL_models_and_pipelines_with_GCP/docker/${_DOCKERFILE}/.'
   id: Copy private encrypted key git
-#- name: 'gcr.io/cloud-builders/gsutil'
-#  args: 
-#  - 'cp'
-#  - 'gs://${_BUCKET}/scripts/id_rsa'
-#  - 'proj_DL_models_and_pipelines_with_GCP/docker/${_DOCKERFILE}/.'
-#  id: Copy private key git
+
 - name: 'gcr.io/cloud-builders/gsutil'
   args: 
   - 'cp'
   - 'gs://${_BUCKET}/scripts/.gitconfig'
   - 'proj_DL_models_and_pipelines_with_GCP/docker/${_DOCKERFILE}/.'
   id: Copy git config file
+
 - name: 'gcr.io/cloud-builders/gsutil'
   args: 
   - 'cp'
@@ -41,6 +54,7 @@ steps:
   - 'gs://${_BUCKET}/scripts/pip.conf'
   - 'proj_DL_models_and_pipelines_with_GCP/docker/${_DOCKERFILE}/.'
   id: Copy pip config file
+
 - name: 'debian'
   args: 
   - 'cp'
