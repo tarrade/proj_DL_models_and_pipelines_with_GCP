@@ -54,13 +54,6 @@ steps:
   - 'proj_DL_models_and_pipelines_with_GCP/docker/${_DOCKERFILE}/.'
   id: Copy env 
 
-- name: 'debian'
-  args: 
-  - 'ls'
-  - '-la'
-  id: List files after copy
-  dir: 'proj_DL_models_and_pipelines_with_GCP/docker/${_DOCKERFILE}'
-
 # Decrypt the file containing the key
 - name: 'gcr.io/cloud-builders/gcloud'
   args:
@@ -91,6 +84,13 @@ steps:
   #- name: 'ssh'
   #  path: /root/.ssh
   id: Set up git with key and domain
+
+- name: 'debian'
+  args: 
+  - 'ls'
+  - '-la'
+  id: List files after copy
+  dir: 'proj_DL_models_and_pipelines_with_GCP/docker/${_DOCKERFILE}'
 
 # Build docker image
 - name: 'gcr.io/cloud-builders/docker'
