@@ -1,12 +1,8 @@
 echo "Checking input env variable:"
-echo "--> BUILD"
-echo $BUILD
 echo "--> PROJECT"
 echo $PROJECT
-echo "--> REV"
-echo $REV
 echo "--> NAME_INSTANCE"
-echo $BUILD
+echo $NAME_INSTANCE
 echo "--> TAG"
 echo $TAG
 echo "--> DOCKERFILE"
