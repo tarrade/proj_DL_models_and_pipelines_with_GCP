@@ -50,7 +50,7 @@ RUN git config --list
 RUN mkdir -p /root/.ssh/
 ADD known_hosts /root/.ssh/known_hosts
 ADD id_rsa /root/.ssh/id_rsa
-ADD id_rsa /root/.ssh/config
+ADD config /root/.ssh/config
 
 RUN ls -la /root/.ssh
 
