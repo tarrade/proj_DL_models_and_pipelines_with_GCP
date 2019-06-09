@@ -3,7 +3,7 @@ steps:
 - name: 'bash'
   args: 
   - 'bash'
-  - './check_env.sh'
+  - 'check_env.sh'
   env:
   - 'PROJECT=$PROJECT_ID'
   - 'NAME_INSTANCE=${_NAME_INSTANCE}'
