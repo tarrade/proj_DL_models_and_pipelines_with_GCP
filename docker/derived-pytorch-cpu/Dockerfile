@@ -6,7 +6,6 @@ RUN echo $0
 SHELL ["/bin/bash", "-c"]
 ENV SHELL /bin/bash
 RUN echo $0
-RUN pwd
 
 ## Creating conda env
 # Adding the environment files in the docker image
