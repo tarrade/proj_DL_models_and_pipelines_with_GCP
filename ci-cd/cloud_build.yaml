@@ -1,9 +1,9 @@
 steps:
 # set and print env variables for its execution
-- name: 'bash'
+- name: 'debian'
   args: 
   - 'bash'
-  - 'proj_DL_models_and_pipelines_with_GCP/docker/${_DOCKERFILE}/check_env.sh'
+  - 'check_env.sh'
   env:
   - 'PROJECT=$PROJECT_ID'
   - 'NAME_INSTANCE=${_NAME_INSTANCE}'
@@ -14,6 +14,7 @@ steps:
   - 'SUBNET=${_SUBNET}'
   - 'BUCKET=${_BUCKET}'
   id: Check env variables
+  dir: 'proj_DL_models_and_pipelines_with_GCP/docker/${_DOCKERFILE}'
 
 # Copy config files
 - name: 'gcr.io/cloud-builders/git'
