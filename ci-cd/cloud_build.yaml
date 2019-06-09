@@ -14,7 +14,7 @@ steps:
   - 'check_env.sh'
   env:
   - 'PROJECT=$PROJECT_ID'
-  - 'NAME_INSTANCE={date -u +%Y-%m-%d-%H-%M-optimized}-${_NAME_INSTANCE}-${_NAME_INSTANCE}'
+  - 'NAME_INSTANCE={date -u +%Y-%m-%d-%H-%M-optimized-${_NAME_INSTANCE}}'
   - 'TAG=${_TAG}'
   - 'DOCKERFILE=${_DOCKERFILE}'
   - 'OWNER=${_OWNER}'
