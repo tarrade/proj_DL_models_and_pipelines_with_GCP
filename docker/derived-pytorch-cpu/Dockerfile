@@ -6,6 +6,7 @@ RUN echo $0
 SHELL ["/bin/bash", "-c"]
 ENV SHELL /bin/bash
 RUN echo $0
+RUN pwd
 
 ## Creating conda env
 # Adding the environment files in the docker image
@@ -46,10 +47,10 @@ ADD .gitconfig .gitconfig
 # Check that the config file was created properly
 RUN git config --list
 # Adding the config file to read entrerise Github
-RUN ls -la 
-RUN mkdir -p /root/.ssh/
-ADD known_hosts /root/.ssh/known_hosts
-ADD id_rsa /root/.ssh/id_rsa
+#RUN ls -la 
+#RUN mkdir -p /root/.ssh/
+#ADD known_hosts /root/.ssh/known_hosts
+#ADD id_rsa /root/.ssh/id_rsa
 
 RUN ls -la /root/.ssh
 

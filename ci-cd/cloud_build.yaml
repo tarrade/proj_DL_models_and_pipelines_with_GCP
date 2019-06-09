@@ -17,12 +17,12 @@ steps:
   - 'gs://${_BUCKET}/scripts/id_rsa.enc'
   - 'proj_DL_models_and_pipelines_with_GCP/docker/${_DOCKERFILE}/.'
   id: Copy private encrypted key git
-- name: 'gcr.io/cloud-builders/gsutil'
-  args: 
-  - 'cp'
-  - 'gs://${_BUCKET}/scripts/id_rsa'
-  - 'proj_DL_models_and_pipelines_with_GCP/docker/${_DOCKERFILE}/.'
-  id: Copy private key git
+#- name: 'gcr.io/cloud-builders/gsutil'
+#  args: 
+#  - 'cp'
+#  - 'gs://${_BUCKET}/scripts/id_rsa'
+#  - 'proj_DL_models_and_pipelines_with_GCP/docker/${_DOCKERFILE}/.'
+#  id: Copy private key git
 - name: 'gcr.io/cloud-builders/gsutil'
   args: 
   - 'cp'
@@ -59,6 +59,7 @@ steps:
   - 'ls'
   - '-la'
   id: List files after copy
+  dir: 'proj_DL_models_and_pipelines_with_GCP/docker/${_DOCKERFILE}'
 
 # Decrypt the file containing the key
 - name: 'gcr.io/cloud-builders/gcloud'
@@ -70,9 +71,9 @@ steps:
   - --location=global
   - --keyring=fabien-keyring
   - --key=github-key
-  volumes:
-  - name: 'ssh'
-    path: /root/.ssh
+  #volumes:
+  #- name: 'ssh'
+  #  path: /root/.ssh
   id: Decrypt the file containing the key
 
 # Set up git with key and domain
@@ -81,15 +82,17 @@ steps:
   args:
   - '-c'
   - |
+    mkdir -p /root/.ssh/
+    cp proj_DL_models_and_pipelines_with_GCP/docker/${_DOCKERFILE}/id_rsa /root/.ssh/id_rsa
     chmod 600 /root/.ssh/id_rsa
     cat <<EOF >/root/.ssh/config
     Hostname github.axa.com
     IdentityFile /root/.ssh/id_rsa
     EOF
     cp proj_DL_models_and_pipelines_with_GCP/docker/${_DOCKERFILE}/known_hosts /root/.ssh/known_hosts
-  volumes:
-  - name: 'ssh'
-    path: /root/.ssh
+  #volumes:
+  #- name: 'ssh'
+  #  path: /root/.ssh
   id: Set up git with key and domain
 
 # Build docker image
@@ -114,6 +117,7 @@ steps:
   - 'ls'
   - '-la'
   id: List files
+  dir: 'proj_DL_models_and_pipelines_with_GCP/docker/${_DOCKERFILE}'
 
 # Deploy (add , '--verbosity', 'debug' for more info)
 - name: 'gcr.io/cloud-builders/gcloud'

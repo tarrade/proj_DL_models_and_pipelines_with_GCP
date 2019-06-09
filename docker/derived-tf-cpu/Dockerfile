@@ -1,6 +1,5 @@
-# Specifies base image and tag
+ # Specifies base image and tag
 FROM gcr.io/deeplearning-platform-release/tf-cpu:latest
-
 
 RUN wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh && \
 /bin/bash Miniconda3-latest-Linux-x86_64.sh -b -p /opt/conda && \
