@@ -80,7 +80,7 @@ RUN printenv
 # create user and create home directory
 #RUN useradd -m jupyter
 #RUN pwd && cd /home &&  mkdir jupyter && ls -la && pwd && jupyter:users jupyter
-RUN adduser --disabled-password --gecos "" jupyter
+#RUN adduser --disabled-password --gecos "" jupyter
 #RUN useradd -rm -d /home/jupyter -s /bin/bash -g root -G sudo -u 1000 jupyter
 
 # Checking more info
@@ -94,15 +94,15 @@ RUN ls -la
 RUN ls -la  /home
 
 # Trying to switch to jupyter user
-USER jupyter
-WORKDIR /home/jupyter
+#USER jupyter
+#WORKDIR /home/jupyter
 
 # Running some checks
 RUN echo $HOME
 
-# Managed to have /home working
-#WORKDIR /home/
-
 # Trying to set an entry pooint script
 #ENTRYPOINT ["entryoint.sh"]
-# --> test VM 1 ENTRYPOINT ["/bin/bash", "-c", "/entryoint.sh"]
+ENTRYPOINT ["/bin/bash", "-c", "/entryoint.sh"]
+
+# Managed to have /home working
+WORKDIR /home/
