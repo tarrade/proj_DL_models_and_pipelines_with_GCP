@@ -105,4 +105,4 @@ WORKDIR /home/
 
 # Trying to set an entry pooint script
 #ENTRYPOINT ["entryoint.sh"]
-#ENTRYPOINT ["/bin/bash", "-c", "entryoint.sh"]
+ENTRYPOINT ["/bin/bash", "-c", "/entryoint.sh"]
