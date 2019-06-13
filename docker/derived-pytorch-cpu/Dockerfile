@@ -102,7 +102,8 @@ RUN echo $HOME
 
 # Trying to set an entry pooint script
 #ENTRYPOINT ["entryoint.sh"]
-RUN PWD
+RUN pwd
+RUN ls -la entryoint.sh
 ENTRYPOINT ["/bin/bash", "-c", "entryoint.sh"]
 
 # Managed to have /home working
