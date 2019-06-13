@@ -106,8 +106,9 @@ RUN pwd
 RUN ls -la entrypoint.sh
 #RUN . /entrypoint.sh
 RUN chmod +x /entrypoint.sh
-RUN source entrypoint.sh
+RUN . entrypoint.sh
 RUN conda info -e 
+RUN conda activate base
 #ENTRYPOINT ["source", "/entrypoint.sh"]
 #ENTRYPOINT ["/bin/bash", "/entrypoint.sh"]
 #ENTRYPOINT ["/bin/bash", "-c", "entrypoint.sh"]
