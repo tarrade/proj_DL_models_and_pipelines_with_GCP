@@ -1,5 +1,5 @@
 resources:
-- name: {{env["deployment"]}}       
+- name: vm-{{env["deployment"]}}       
   type: compute.v1.instance
   properties:
     zone: {{properties["zone"]}}
