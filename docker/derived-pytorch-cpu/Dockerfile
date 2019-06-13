@@ -106,8 +106,19 @@ RUN pwd
 RUN ls -la entrypoint.sh
 #RUN . /entrypoint.sh
 RUN chmod +x /entrypoint.sh
-ENTRYPOINT ["source", "/entrypoint.sh"]
+#ENTRYPOINT ["source", "/entrypoint.sh"]
+ENTRYPOINT ["/bin/bash", "/entrypoint.sh"]
 #ENTRYPOINT ["/bin/bash", "-c", "entrypoint.sh"]
 
 # Managed to have /home working
 #WORKDIR /home/
+
+#$ docker run -it --entrypoint="/bin/bash"  gcr.io/axa-ch-machine-learning-dev/derived-pytorch-cpu:dev-v1.1.14 ./entrypoint.sh
+
+#root@86bfac2f6ccc:/# source entrypoint.sh   
+#(base) root@86bfac2f6ccc:/# more entrypoint.sh 
+##!/bin/bash
+#. /env.sh
+#. /root/miniconda3/etc/profile.d/conda.sh
+#conda activate base
+#exec "$@"
