@@ -106,8 +106,10 @@ RUN pwd
 RUN ls -la entrypoint.sh
 #RUN . /entrypoint.sh
 RUN chmod +x /entrypoint.sh
+RUN source entrypoint.sh
+RUN conda info -e 
 #ENTRYPOINT ["source", "/entrypoint.sh"]
-ENTRYPOINT ["/bin/bash", "/entrypoint.sh"]
+#ENTRYPOINT ["/bin/bash", "/entrypoint.sh"]
 #ENTRYPOINT ["/bin/bash", "-c", "entrypoint.sh"]
 
 # Managed to have /home working
