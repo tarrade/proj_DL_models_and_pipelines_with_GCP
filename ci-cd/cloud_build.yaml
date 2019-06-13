@@ -142,7 +142,7 @@ steps:
   - 'deployment-manager'
   - 'deployments'
   - 'create'
-  - 'container-${_NAME_INSTANCE}'
+  - 'C-$BUILD_ID-${_NAME_INSTANCE}'
   - '--template'
   - 'notebook-instance-optimized-template.jinja'
   - '--properties'
