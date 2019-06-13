@@ -106,10 +106,10 @@ RUN pwd
 RUN ls -la entrypoint.sh
 #RUN . /entrypoint.sh
 RUN chmod +x /entrypoint.sh
-#RUN . entrypoint.sh
+RUN . entrypoint.sh
 RUN . /root/miniconda3/etc/profile.d/conda.sh
 RUN conda init
-RUN source ~/.bashrc
+RUN source /root/.bashrc
 RUN conda info -e 
 RUN conda activate base
 #ENTRYPOINT ["source", "/entrypoint.sh"]
