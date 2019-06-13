@@ -104,8 +104,9 @@ RUN echo $HOME
 #ENTRYPOINT ["entryoint.sh"]
 RUN pwd
 RUN ls -la entrypoint.sh
-RUN . /entrypoint.sh
-ENTRYPOINT ["/entrypoint.sh"]
+#RUN . /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+ENTRYPOINT ["source", "/entrypoint.sh"]
 #ENTRYPOINT ["/bin/bash", "-c", "entrypoint.sh"]
 
 # Managed to have /home working
