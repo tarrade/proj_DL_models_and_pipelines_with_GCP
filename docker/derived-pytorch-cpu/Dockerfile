@@ -104,7 +104,7 @@ RUN echo $HOME
 #ENTRYPOINT ["entryoint.sh"]
 RUN pwd
 RUN ls -la entrypoint.sh
-ENTRYPOINT ["/bin/bash", "-c", "/entrypoint.sh"]
+ENTRYPOINT ["/bin/bash", "-c", "entrypoint.sh"]
 
 # Managed to have /home working
-WORKDIR /home/
+#WORKDIR /home/
