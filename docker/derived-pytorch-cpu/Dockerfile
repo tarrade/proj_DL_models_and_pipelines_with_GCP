@@ -113,7 +113,7 @@ RUN chmod +x /entrypoint.sh
 #ENTRYPOINT ["/bin/bash", "/entrypoint.sh"]
 
 # this suff is working ?
-CMD [".", "/entrypoint.sh"]
+CMD ["source", "/entrypoint.sh"]
 
 # Managed to have /home working
 #WORKDIR /home/
