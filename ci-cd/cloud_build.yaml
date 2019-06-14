@@ -166,4 +166,4 @@ substitutions:
     _SUBNET: subnet
     _OWNER: name
 
-timeout: '1600s'
+timeout: 2h00m0s
