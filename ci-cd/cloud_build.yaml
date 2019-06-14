@@ -13,8 +13,7 @@ steps:
   - 'bash'
   - '-c' 
   - |
-    cat >> $HOME
-    echo 'export TEST=$(date -u +%Y-%m-%d-%H-%M)' >> ~/.bashrc
+    echo 'export TEST=$(date -u +%Y-%m-%d-%H-%M)' >> ~/.bashr
 
   # Set and print env variables for its execution
 - name: 'debian'
