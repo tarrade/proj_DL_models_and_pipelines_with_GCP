@@ -6,6 +6,7 @@ steps:
   - 'clone'
   - 'https://github.com/tarrade/proj_DL_models_and_pipelines_with_GCP'
   id: Clone Github
+
 # create timestamp
 - name: 'debian'
   args: 
@@ -148,7 +149,7 @@ steps:
   - 'deployment-manager'
   - 'deployments'
   - 'create'
-  - 'c-$BUILD_ID-${_NAME_INSTANCE}'
+  - c-$BUILD_ID-${_NAME_INSTANCE}
   - '--template'
   - 'notebook-instance-optimized-template.jinja'
   - '--properties'
