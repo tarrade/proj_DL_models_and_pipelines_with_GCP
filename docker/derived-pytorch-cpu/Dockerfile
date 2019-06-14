@@ -123,11 +123,11 @@ ENV TINI_VERSION v0.18.0
 ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /tini
 RUN chmod +x /tini
 ENTRYPOINT ["/tini", "--"]
-CMD [ "/bin/bash" ]
+#CMD [ "/bin/bash" ]
 
 
 # Managed to have /home working
-WORKDIR /home/
+#WORKDIR /home/
 
 
 #root@86bfac2f6ccc:/# source entrypoint.sh   
