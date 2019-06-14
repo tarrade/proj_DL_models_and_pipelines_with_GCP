@@ -17,10 +17,6 @@ ADD base.yml base.yml
 RUN conda update -n base conda -y
 RUN conda env update --file base.yml
 
-# add packagesin the base to be able to see the env
-RUN jupyter contrib nbextension install
-RUN jupyter nbextensions_configurator enable
-
 # Install extra conda packages
 RUN conda env create -f environment.yml -n env_gcp_dl
 
@@ -74,7 +70,8 @@ RUN /root/miniconda3/bin/python -m ipykernel install --name 'base' --display-nam
 #RUN uname -a
 
 # Update to fix issue with extension of jupyter lab
-#RUN npm install core-js@^3
+RUN jupyter labextension list
+RUN npm install --save core-js@^3
 RUN jupyter labextension install @jupyterlab/latex
 RUN jupyter labextension install @mflevine/jupyterlab_html
 RUN jupyter labextension install jupyterlab-drawio
@@ -82,6 +79,9 @@ RUN jupyter labextension install @jupyterlab/plotly-extension
 RUN jupyter labextension install jupyterlab_bokeh
 RUN jupyter labextension install @jupyterlab/toc
 RUN jupyter labextension install @jupyterlab/github
+RUN jupyter contrib nbextension install
+RUN jupyter nbextensions_configurator enable
+RUN jupyter lab build
 
 # create user and create home directory
 #RUN useradd -m jupyter
