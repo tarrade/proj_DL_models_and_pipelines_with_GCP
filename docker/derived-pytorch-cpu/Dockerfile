@@ -75,7 +75,13 @@ RUN /root/miniconda3/bin/python -m ipykernel install --name 'base' --display-nam
 
 # Update to fix issue with extension of jupyter lab
 #RUN npm install core-js@^3
-#RUN jupyter lab build
+RUN jupyter labextension install @jupyterlab/latex
+RUN jupyter labextension install @mflevine/jupyterlab_html
+RUN jupyter labextension install jupyterlab-drawio
+RUN jupyter labextension install @jupyterlab/plotly-extension
+RUN jupyter labextension install jupyterlab_bokeh
+RUN jupyter labextension install @jupyterlab/toc
+RUN jupyter labextension install @jupyterlab/github
 
 # create user and create home directory
 #RUN useradd -m jupyter
