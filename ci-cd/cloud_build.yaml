@@ -147,6 +147,7 @@ steps:
   id: Deploy the AI Platform Notebook instance
   entrypoint: 'bash'
   args: 
+  - '-c'
   - 'deployment-manager'
   - 'deployments'
   - 'create'
