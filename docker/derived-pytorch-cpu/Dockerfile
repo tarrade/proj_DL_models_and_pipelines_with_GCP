@@ -110,10 +110,10 @@ RUN chmod +x /entrypoint.sh
 #RUN . entrypoint.sh && conda init bash && source /root/.bashrc && conda info -e && conda activate base
 
 # this stuff doesn't work
-ENTRYPOINT ["/bin/bash", "/entrypoint.sh"]
-
 #ENTRYPOINT ["/bin/bash", "/entrypoint.sh"]
-#ENTRYPOINT ["/bin/bash", "-c", "entrypoint.sh"]
+
+# this suff is working ?
+CMD [".", "/entrypoint.sh"]
 
 # Managed to have /home working
 #WORKDIR /home/
