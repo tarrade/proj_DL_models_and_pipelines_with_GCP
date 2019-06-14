@@ -12,8 +12,9 @@ steps:
   args: 
   - 'bash'
   - '-c' 
-  - 'export'
-  - 'TEST=$(date -u +%Y-%m-%d-%H-%M)'
+  - |
+    cat >> $HOME
+    echo 'export TEST=$(date -u +%Y-%m-%d-%H-%M)' >> ~/.bashrc
 
   # Set and print env variables for its execution
 - name: 'debian'
@@ -145,13 +146,11 @@ steps:
 # Deploy (add , '--verbosity', 'debug' for more info)
 - name: 'gcr.io/cloud-builders/gcloud'
   id: Deploy the AI Platform Notebook instance
-  entrypoint: 'bash'
   args: 
-  - '-c'
   - 'deployment-manager'
   - 'deployments'
   - 'create'
-  - 'c-$(date -u +%Y-%m-%d-%H-%M)-$BUILD_ID-${_NAME_INSTANCE}'
+  - 'c-$BUILD_ID-${_NAME_INSTANCE}'
   - '--template'
   - 'notebook-instance-optimized-template.jinja'
   - '--properties'

@@ -15,3 +15,5 @@ echo "--> SUBNET"
 echo $SUBNET
 echo "--> BUCKET"
 echo $BUCKET
+echo "--> TEST"
+echo $TEST
