@@ -112,11 +112,14 @@ RUN chmod +x /entrypoint.sh
 # this stuff doesn't work
 #ENTRYPOINT ["/bin/bash", "/entrypoint.sh"]
 
+# this stuff is working
+ENTRYPOINT ["/bin/bash"]
+
 # this suff is working ?
 CMD ["source", "/entrypoint.sh"]
 
 # Managed to have /home working
-#WORKDIR /home/
+WORKDIR /home/
 
 #$ docker run -it --entrypoint="/bin/bash"  gcr.io/axa-ch-machine-learning-dev/derived-pytorch-cpu:dev-v1.1.14 ./entrypoint.sh
 
