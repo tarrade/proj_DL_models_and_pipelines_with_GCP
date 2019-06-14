@@ -64,8 +64,8 @@ RUN printenv
 #RUN conda activate base
 #RUN conda activate env_gcp_dl
 
-#RUN /root/miniconda3/envs/env_gcp_dl/bin/python -m ipykernel install --name 'env_gcp_dl' --display-name "Py36_env_gcp_dl"
-#RUN /root/miniconda3/bin/python -m ipykernel install --name 'base' --display-name "Py_36_base"
+RUN /root/miniconda3/envs/env_gcp_dl/bin/python -m ipykernel install --name 'env_gcp_dl' --display-name "Py36_env_gcp_dl"
+RUN /root/miniconda3/bin/python -m ipykernel install --name 'base' --display-name "Py_36_base"
 
 # Checking some basics info
 #RUN ps | grep `echo $$` | awk '{ print $4 }'
