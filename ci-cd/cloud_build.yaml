@@ -19,8 +19,7 @@ steps:
 # check config file
 - name: 'debian'
   args: 
-  - 'ls'
-  - '-la'
+  - 'pwd'
   id: List configfile
 
   # Set and print env variables for its execution
