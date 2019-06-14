@@ -145,6 +145,7 @@ steps:
 # Deploy (add , '--verbosity', 'debug' for more info)
 - name: 'gcr.io/cloud-builders/gcloud'
   id: Deploy the AI Platform Notebook instance
+  entrypoint: 'bash'
   args: 
   - 'deployment-manager'
   - 'deployments'
