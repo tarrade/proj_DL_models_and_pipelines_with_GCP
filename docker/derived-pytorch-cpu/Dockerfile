@@ -112,16 +112,23 @@ RUN chmod +x /entrypoint.sh
 # this stuff doesn't work
 #ENTRYPOINT ["/bin/bash", "/entrypoint.sh"]
 
-# this stuff is working
-ENTRYPOINT ["/bin/bash"]
+# this stuff is working not working
+#ENTRYPOINT ["/bin/bash"]
 
 # this suff is working ?
-CMD ["source", "/entrypoint.sh"]
+#CMD ["source", "/entrypoint.sh"]
+
+# Add Tini
+ENV TINI_VERSION v0.18.0
+ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /tini
+RUN chmod +x /tini
+ENTRYPOINT ["/tini", "--"]
+CMD [ "/bin/bash" ]
+
 
 # Managed to have /home working
 WORKDIR /home/
 
-#$ docker run -it --entrypoint="/bin/bash"  gcr.io/axa-ch-machine-learning-dev/derived-pytorch-cpu:dev-v1.1.14 ./entrypoint.sh
 
 #root@86bfac2f6ccc:/# source entrypoint.sh   
 #(base) root@86bfac2f6ccc:/# more entrypoint.sh 
