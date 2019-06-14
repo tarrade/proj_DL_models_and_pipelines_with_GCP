@@ -6,6 +6,13 @@ steps:
   - 'clone'
   - 'https://github.com/tarrade/proj_DL_models_and_pipelines_with_GCP'
   id: Clone Github
+# create timestamp
+- name: 'debian'
+  args: 
+  - 'bash'
+  - '-c' 
+  - 'export'
+  - 'TEST=$(date -u +%Y-%m-%d-%H-%M)'
 
   # Set and print env variables for its execution
 - name: 'debian'
@@ -16,7 +23,6 @@ steps:
   - 'PROJECT=$PROJECT_ID'
   - 'NAME_INSTANCE=${_NAME_INSTANCE}'
   - 'TAG=${_TAG}'
-  - 'TEST=$(date -u +%Y%m%dT%H%M%S)'
   - 'DOCKERFILE=${_DOCKERFILE}'
   - 'OWNER=${_OWNER}'
   - 'NETWORK=${_NETWORK}'
@@ -142,7 +148,7 @@ steps:
   - 'deployment-manager'
   - 'deployments'
   - 'create'
-  - 'c-$(date -u +%Y%m%dT%H%M%S)-$BUILD_ID-${_NAME_INSTANCE}'
+  - 'c-$BUILD_ID-${_NAME_INSTANCE}'
   - '--template'
   - 'notebook-instance-optimized-template.jinja'
   - '--properties'
