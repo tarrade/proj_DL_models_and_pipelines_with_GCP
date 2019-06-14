@@ -122,9 +122,9 @@ RUN chmod +x /entrypoint.sh
 ENV TINI_VERSION v0.18.0
 ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /tini
 RUN chmod +x /tini
-ENTRYPOINT ["/tini", "--"]
+ENTRYPOINT ["/tini", "--", "/entrypoint.sh"]
 #CMD [ "/bin/bash" ]
-CMD ["source", "/entrypoint.sh"]
+#CMD ["source", "/entrypoint.sh"]
 
 
 # Managed to have /home working
