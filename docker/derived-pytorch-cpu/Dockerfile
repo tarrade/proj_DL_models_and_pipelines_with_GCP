@@ -107,9 +107,9 @@ RUN chmod +x /entrypoint.sh
 #RUN . entrypoint.sh && conda activate base
 
 # this stuff is working -> conda is activated
-#RUN conda init bash && source /root/.bashrc && conda info -e && conda activate base
+RUN conda init bash && source /root/.bashrc && conda info -e && conda activate base
 
-ENTRYPOINT ["/bin/bash", "/entrypoint.sh"]
+#ENTRYPOINT ["/bin/bash", "/entrypoint.sh"]
 
 #ENTRYPOINT ["/bin/bash", "/entrypoint.sh"]
 #ENTRYPOINT ["/bin/bash", "-c", "entrypoint.sh"]
