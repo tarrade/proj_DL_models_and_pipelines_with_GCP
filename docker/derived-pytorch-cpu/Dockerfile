@@ -14,21 +14,21 @@ ADD base.yml base.yml
 
 # Update conda envs
 #RUN conda install -c conda-forge nodejs
-#RUN conda update -n base conda -y
-#RUN conda env update --file base.yml
+RUN conda update -n base conda -y
+RUN conda env update --file base.yml
 
 # add packagesin the base to be able to see the env
-##RUN jupyter contrib nbextension install
-##RUN jupyter nbextensions_configurator enable
+RUN jupyter contrib nbextension install
+RUN jupyter nbextensions_configurator enable
 
-# install extra conda packages
-#RUN conda env create -f environment.yml -n env_gcp_dl
+# Install extra conda packages
+RUN conda env create -f environment.yml -n env_gcp_dl
 
 # Checking the creation of the nevs
-#RUN conda info -e
+RUN conda info -e
 
 # Clean all downloaded packages
-#RUN conda clean -a -y
+RUN conda clean -a -y
 
 ## Configuration related to the entrerpise proxy server 
 # Setup the proxy server for conda
@@ -107,11 +107,11 @@ RUN chmod +x /entrypoint.sh
 #RUN . entrypoint.sh && conda activate base
 
 # this stuff is working -> conda is activated
-#RUN . entrypoint.sh && conda init bash && source /root/.bashrc && conda info -e && conda activate base
+RUN . entrypoint.sh && conda init bash && source /root/.bashrc && conda info -e && conda activate base
 
 # this stuff doesn't work
 #ENTRYPOINT ["/bin/bash", "/entrypoint.sh"]
-ENTRYPOINT source /entrypoint.sh
+#ENTRYPOINT source /entrypoint.sh
 
 # this stuff is working not working
 #ENTRYPOINT ["/bin/bash"]
@@ -129,7 +129,7 @@ ENTRYPOINT source /entrypoint.sh
 
 
 # Managed to have /home working
-#WORKDIR /home/
+WORKDIR /home/
 
 
 #root@86bfac2f6ccc:/# source entrypoint.sh   
