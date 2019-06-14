@@ -38,8 +38,8 @@ dependencies:
 - google-cloud-storage
 - google-cloud-bigquery
 - rise
+- pyyaml=3.12
 - pip:
-    - PyYAML
     - apache-beam[gcp]
     - google-cloud-storage
     - google-cloud-core==0.29
