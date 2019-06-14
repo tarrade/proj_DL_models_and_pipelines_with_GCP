@@ -8,19 +8,13 @@ steps:
   id: Clone Github
   
 # create timestamp
-- name: 'debian'
-  args: 
-  - 'bash'
-  - '-c' 
-  - |
-    echo 'export TEST=$(date -u +%Y-%m-%d-%H-%M)' >> ~/.bashr
-  id: Create timestamp env variables
-
-# check config file
-- name: 'debian'
-  args: 
-  - 'pwd'
-  id: List configfile
+#- name: 'debian'
+#  args: 
+#  - 'bash'
+#  - '-c' 
+#  - |
+#    echo 'export TEST=$(date -u +%Y-%m-%d-%H-%M)' >> ~/.bashr
+#  id: Create timestamp env variables
 
   # Set and print env variables for its execution
 - name: 'debian'

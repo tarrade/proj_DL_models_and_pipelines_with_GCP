@@ -100,15 +100,15 @@ RUN ls -la  /home
 # Running some checks
 RUN echo $HOME
 
-# Trying to set an entry pooint script
-#ENTRYPOINT ["entryoint.sh"]
-RUN pwd
-RUN ls -la entrypoint.sh
-#RUN . /entrypoint.sh
+# Trying to set an entry point script
 RUN chmod +x /entrypoint.sh
-#RUN . entrypoint.sh
-#RUN . /root/miniconda3/etc/profile.d/conda.sh
-RUN . entrypoint.sh && conda init bash && source /root/.bashrc && conda info -e && conda activate base
+
+
+RUN . entrypoint.sh && conda activate base
+
+# this stuff is working
+#RUN conda init bash && source /root/.bashrc && conda info -e && conda activate base
+
 #ENTRYPOINT ["source", "/entrypoint.sh"]
 #ENTRYPOINT ["/bin/bash", "/entrypoint.sh"]
 #ENTRYPOINT ["/bin/bash", "-c", "entrypoint.sh"]
