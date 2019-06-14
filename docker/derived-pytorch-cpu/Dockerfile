@@ -101,13 +101,13 @@ RUN ls -la  /home
 RUN echo $HOME
 
 # Trying to set an entry point script
-RUN chmod +x /entrypoint.sh
+#RUN chmod +x /entrypoint.sh
 
+# this stuff is not working-> conda not activated
+#RUN . entrypoint.sh && conda activate base
 
-RUN . entrypoint.sh && conda activate base
-
-# this stuff is working
-#RUN conda init bash && source /root/.bashrc && conda info -e && conda activate base
+# this stuff is working -> conda is activated
+RUN conda init bash && source /root/.bashrc && conda info -e && conda activate base
 
 #ENTRYPOINT ["source", "/entrypoint.sh"]
 #ENTRYPOINT ["/bin/bash", "/entrypoint.sh"]
