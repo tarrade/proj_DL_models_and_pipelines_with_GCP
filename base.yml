@@ -5,7 +5,6 @@ channels:
 dependencies:
 - jupyter_nbextensions_configurator
 - jupyter_contrib_nbextensions
-- jupyterlab_latex
 - nodejs
 - notebook=5.6.0
 - nb_conda
@@ -14,3 +13,5 @@ dependencies:
 - autopep8
 - pep8=1.7.1
 - nbdime
+- pip:
+    - jupyterlab_latex
