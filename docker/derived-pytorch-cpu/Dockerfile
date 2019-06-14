@@ -111,6 +111,7 @@ RUN chmod +x /entrypoint.sh
 
 # this stuff doesn't work
 #ENTRYPOINT ["/bin/bash", "/entrypoint.sh"]
+ENTRYPOINT source /entrypoint.sh
 
 # this stuff is working not working
 #ENTRYPOINT ["/bin/bash"]
@@ -118,11 +119,11 @@ RUN chmod +x /entrypoint.sh
 # this suff is working ?
 #CMD ["source", "/entrypoint.sh"]
 
-# Add Tini
-ENV TINI_VERSION v0.18.0
-ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /tini
-RUN chmod +x /tini
-ENTRYPOINT ["/tini", "--", "/entrypoint.sh"]
+# this stuff doesn't work
+#ENV TINI_VERSION v0.18.0
+#ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /tini
+#RUN chmod +x /tini
+#ENTRYPOINT ["/tini", "--", "/entrypoint.sh"]
 #CMD [ "/bin/bash" ]
 #CMD ["source", "/entrypoint.sh"]
 
