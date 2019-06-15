@@ -60,6 +60,7 @@ steps:
   - 'gs://${_BUCKET}/scripts/.condarc'
   - 'proj_DL_models_and_pipelines_with_GCP/docker/${_DOCKERFILE}/.'
   id: Copy conda config file
+
 - name: 'gcr.io/cloud-builders/gsutil'
   args: 
   - 'cp'
@@ -79,7 +80,21 @@ steps:
   - 'cp'
   - 'proj_DL_models_and_pipelines_with_GCP/environment.yml'
   - 'proj_DL_models_and_pipelines_with_GCP/docker/${_DOCKERFILE}/.'
-  id: Copy env 
+  id: Copy env environment.yml
+
+- name: 'debian'
+  args: 
+  - 'cp'
+  - 'proj_DL_models_and_pipelines_with_GCP/environment_2_0.yml'
+  - 'proj_DL_models_and_pipelines_with_GCP/docker/${_DOCKERFILE}/.'
+  id: Copy env environment_2_0.yml
+
+- name: 'debian'
+  args: 
+  - 'cp'
+  - 'proj_DL_models_and_pipelines_with_GCP/environment_2_0_nightly.yml'
+  - 'proj_DL_models_and_pipelines_with_GCP/docker/${_DOCKERFILE}/.'
+  id: Copy env environment_2_0_nightly.yml
 
 # Decrypt the file containing the key
 - name: 'gcr.io/cloud-builders/gcloud'
