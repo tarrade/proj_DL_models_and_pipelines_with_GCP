@@ -1,5 +1,6 @@
 # compare to ml-engine runtimes
 # https://cloud.google.com/ml-engine/docs/tensorflow/runtime-version-list
+name: env_gcp_dl
 channels:
 - defaults
 - conda-forge
