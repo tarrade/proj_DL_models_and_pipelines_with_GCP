@@ -15,21 +15,21 @@ ADD environment_2_0.yml environment_2_0.yml
 ADD environment_2_0_nightly.yml environment_2_0_nightly.yml
 
 # Update Conda manager
-RUN conda update -n base conda -y
+#RUN conda update -n base conda -y
 
 # Update conda envs
-RUN conda env update --file base.yml
+#RUN conda env update --file base.yml
 
 # Install env
-RUN conda env create -f environment.yml
-RUN conda env create -f environment_2_0.yml
-RUN conda env create -f environment_2_0_nightly.yml
+#RUN conda env create -f environment.yml
+#RUN conda env create -f environment_2_0.yml
+#RUN conda env create -f environment_2_0_nightly.yml
 
 # Checking the creation of the nevs
-RUN conda info -e
+#RUN conda info -e
 
 # Clean all downloaded packages
-RUN conda clean -a -y
+#RUN conda clean -a -y
 
 ## Configuration related to the entrerpise proxy server 
 # Setup the proxy server for conda
@@ -65,10 +65,10 @@ ADD config /root/.ssh/config
 #RUN conda activate env_gcp_dl
 
 # Create Kernel
-RUN /root/miniconda3/bin/python -m ipykernel install --name 'base' --display-name "Py_36_base"
-RUN /root/miniconda3/envs/env_gcp_dl/bin/python -m ipykernel install --name 'env_gcp_dl' --display-name "Py36_env_gcp_dl"
-RUN /root/miniconda3/envs/env_gcp_dl_2_0_beta/bin/python -m ipykernel install --name 'env_gcp_dl_2_0_beta' --display-name "Py36_env_2_0_beta"
-RUN /root/miniconda3/envs/env_gcp_dl_2_0_nightly/bin/python -m ipykernel install --name 'env_gcp_dl_2_0_nightly' --display-name "Py36_env_2_0_nightly"
+#RUN /root/miniconda3/bin/python -m ipykernel install --name 'base' --display-name "Py_36_base"
+#RUN /root/miniconda3/envs/env_gcp_dl/bin/python -m ipykernel install --name 'env_gcp_dl' --display-name "Py36_env_gcp_dl"
+#RUN /root/miniconda3/envs/env_gcp_dl_2_0_beta/bin/python -m ipykernel install --name 'env_gcp_dl_2_0_beta' --display-name "Py36_env_2_0_beta"
+#RUN /root/miniconda3/envs/env_gcp_dl_2_0_nightly/bin/python -m ipykernel install --name 'env_gcp_dl_2_0_nightly' --display-name "Py36_env_2_0_nightly"
 
 # Checking some basics info
 #RUN ps | grep `echo $$` | awk '{ print $4 }'
@@ -77,18 +77,18 @@ RUN /root/miniconda3/envs/env_gcp_dl_2_0_nightly/bin/python -m ipykernel install
 #RUN uname -a
 
 # Update to fix issue with extension of jupyter lab
-RUN jupyter labextension list
-RUN npm install --save core-js@^3
-RUN jupyter labextension install @jupyterlab/latex
-RUN jupyter labextension install @mflevine/jupyterlab_html
-RUN jupyter labextension install jupyterlab-drawio
-RUN jupyter labextension install @jupyterlab/plotly-extension
-RUN jupyter labextension install jupyterlab_bokeh
-RUN jupyter labextension install @jupyterlab/toc
-RUN jupyter labextension install @jupyterlab/github
-RUN jupyter contrib nbextension install
-RUN jupyter nbextensions_configurator enable
-RUN jupyter lab build
+#RUN jupyter labextension list
+#RUN npm install --save core-js@^3
+#RUN jupyter labextension install @jupyterlab/latex
+#RUN jupyter labextension install @mflevine/jupyterlab_html
+#RUN jupyter labextension install jupyterlab-drawio
+#RUN jupyter labextension install @jupyterlab/plotly-extension
+#RUN jupyter labextension install jupyterlab_bokeh
+#RUN jupyter labextension install @jupyterlab/toc
+#RUN jupyter labextension install @jupyterlab/github
+#RUN jupyter contrib nbextension install
+#RUN jupyter nbextensions_configurator enable
+#RUN jupyter lab build
 
 # create user and create home directory
 #RUN useradd -m jupyter
@@ -149,6 +149,6 @@ WORKDIR /home/
 #(base) root@86bfac2f6ccc:/# more entrypoint.sh 
 ##!/bin/bash
 #. /env.sh
-#. /root/miniconda3/etc/profile.d/conda.sh
+#l. /root/miniconda3/etc/profile.d/conda.sh
 #conda activate base
 #exec "$@"
