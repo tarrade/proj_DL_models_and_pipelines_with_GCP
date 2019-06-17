@@ -167,7 +167,7 @@ steps:
 
 # Deploy (add , '--verbosity', 'debug' for more info)
 - name: 'gcr.io/cloud-builders/gcloud'
-  entrypoint: sh
+  entrypoint: bash
   id: Deploy the AI Platform Notebook instance
   args: 
   - '-c'
@@ -186,7 +186,7 @@ steps:
 # Read timestamp
 - name: 'gcr.io/cloud-builders/gcloud'
   entrypoint: sh
-  args: ['-c', 'date_test=$(date -u +%Y-%m-%d-%H-%M); echo $date_test>_DATE;echo $(cat _DATE)']
+  args: ['-c', 'echo $(cat _DATE)']
   id: Read timestamp
 
 substitutions:
