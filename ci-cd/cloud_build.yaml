@@ -158,10 +158,11 @@ steps:
   id: List files
   dir: 'proj_DL_models_and_pipelines_with_GCP/docker/${_DOCKERFILE}'
 
+# Create timestamp
 - name: 'gcr.io/cloud-builders/gcloud'
   entrypoint: sh
-  args: ['-c', 'date_test=$(date -u +%Y-%m-%d-%H-%M); echo $date_test']
-  id: Test timestamp
+  args: ['-c', 'date_test=$(date -u +%Y-%m-%d-%H-%M); echo $date_test>_DATE;echo $(cat _DATE)']
+  id: Create timestamp
 
 
 # Deploy (add , '--verbosity', 'debug' for more info)
@@ -175,12 +176,18 @@ steps:
     deployment-manager \
     deployments \
     create \
-    c-$(date -u +%Y-%m-%d-%H-%M)-$BUILD_ID-${_NAME_INSTANCE} \
+    date-$(date -u +%Y-%m-%d-%H-%M)-${_NAME_INSTANCE} \
     --template \
     notebook-instance-optimized-template.jinja \
     --properties \
     network:${_NETWORK},subnet:${_SUBNET},container:gcr.io/$PROJECT_ID/${_DOCKERFILE}:${_TAG},owner-tag:${_OWNER} \
   dir: 'proj_DL_models_and_pipelines_with_GCP/deployment'
+
+# Read timestamp
+- name: 'gcr.io/cloud-builders/gcloud'
+  entrypoint: sh
+  args: ['-c', 'date_test=$(date -u +%Y-%m-%d-%H-%M); echo $date_test>_DATE;echo $(cat _DATE)']
+  id: Read timestamp
 
 substitutions:
     _BUCKET: not-defined
@@ -190,5 +197,6 @@ substitutions:
     _NETWORK: network
     _SUBNET: subnet
     _OWNER: name
+    _DATE: none
 
 timeout: 2h00m0s
