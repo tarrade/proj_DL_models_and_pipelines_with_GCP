@@ -170,14 +170,15 @@ steps:
   id: Deploy the AI Platform Notebook instance
   args: 
   - '-c'
-  - 'deployment-manager'
-  - 'deployments'
-  - 'create'
-  - 'c-$(date -u +%Y-%m-%d-%H-%M-$BUILD_ID-${_NAME_INSTANCE}'
-  - '--template'
-  - 'notebook-instance-optimized-template.jinja'
-  - '--properties'
-  - 'network:${_NETWORK},subnet:${_SUBNET},container:gcr.io/$PROJECT_ID/${_DOCKERFILE}:${_TAG},owner-tag:${_OWNER}'
+  - |
+    deployment-manager 
+    deployments 
+    create 
+    c-$(date -u +%Y-%m-%d-%H-%M-$BUILD_ID-${_NAME_INSTANCE} 
+    --template 
+    notebook-instance-optimized-template.jinja 
+    --properties 
+    network:${_NETWORK},subnet:${_SUBNET},container:gcr.io/$PROJECT_ID/${_DOCKERFILE}:${_TAG},owner-tag:${_OWNER}
   dir: 'proj_DL_models_and_pipelines_with_GCP/deployment'
 
 substitutions:
