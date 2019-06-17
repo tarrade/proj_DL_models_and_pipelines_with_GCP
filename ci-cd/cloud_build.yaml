@@ -189,8 +189,8 @@ steps:
   args: ['-c', 'echo $(cat _DATE)']
   id: Read timestamp
 
-# Save cache
-- name: 'gcr.io/$PROJECT_ID/save_cache:1.0'
+# Save cache 
+- name: 'gcr.io/$PROJECT_ID/save_cache'
   args:
   - '--bucket=gs://${_CACHE_BUCKET}'
   - '--key=build-cache-$( checksum build.gradle )-$( checksum cloudbuild.yaml )'
