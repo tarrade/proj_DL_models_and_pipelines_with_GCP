@@ -175,7 +175,7 @@ steps:
     deployment-manager \
     deployments \
     create \
-    c-$(date -u +%Y-%m-%d-%H-%M-$BUILD_ID-${_NAME_INSTANCE} \
+    c-$(date -u +%Y-%m-%d-%H-%M)-$BUILD_ID-${_NAME_INSTANCE} \
     --template \
     notebook-instance-optimized-template.jinja \
     --properties \
