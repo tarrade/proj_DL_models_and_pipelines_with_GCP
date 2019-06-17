@@ -177,8 +177,14 @@ steps:
   args: 
   - 'push'
   - 'gcr.io/$PROJECT_ID/${_DOCKERFILE}:${_TAG}'
-  - 'gcr.io/$PROJECT_ID/${_DOCKERFILE}:latest'
   id: Push the image in ContainerRegistry
+
+# Push image in Container Registry  
+- name: 'gcr.io/cloud-builders/docker'
+  args: 
+  - 'push'
+  - 'gcr.io/$PROJECT_ID/${_DOCKERFILE}:latest'
+  id: Push the image latest in ContainerRegistry
 
 - name: 'debian'
   args: 
