@@ -160,10 +160,10 @@ steps:
 
 - name: 'gcr.io/cloud-builders/gcloud'
   entrypoint: sh
-  args: ['-c', 'date_test=$(date +"%s"); echo $date_test']
+  args: ['-c', 'date_test=$(date -u +%Y-%m-%d-%H-%M); echo $date_test']
   id: Test timestamp
-  
-    
+
+
 # Deploy (add , '--verbosity', 'debug' for more info)
 - name: 'gcr.io/cloud-builders/gcloud'
   id: Deploy the AI Platform Notebook instance
