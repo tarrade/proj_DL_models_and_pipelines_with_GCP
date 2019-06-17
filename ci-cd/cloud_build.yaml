@@ -134,6 +134,15 @@ steps:
   id: List files after copy
   dir: 'proj_DL_models_and_pipelines_with_GCP/docker/${_DOCKERFILE}'
 
+# Restore cache
+- name: 'gcr.io/$PROJECT_ID/restore_cache'
+  args:
+  - '--bucket=gs://project-cache/'
+  - '--key=gradle-$( checksum build.gradle )'
+  waitFor: 
+  - '-'
+  id: Restore cache from gs
+
 # Build docker image
 - name: 'gcr.io/cloud-builders/docker'
   args: 
@@ -198,6 +207,7 @@ steps:
   - '--path=.gradle/wrapper'
   waitFor:
   - Push the image in ContainerRegistry
+  id: Store cache in gs
 
 substitutions:
     _BUCKET: not-defined
