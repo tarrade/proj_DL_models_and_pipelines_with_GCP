@@ -177,6 +177,7 @@ steps:
   args: 
   - 'push'
   - 'gcr.io/$PROJECT_ID/${_DOCKERFILE}:${_TAG}'
+  - 'gcr.io/$PROJECT_ID/${_DOCKERFILE}:latest'
   id: Push the image in ContainerRegistry
 
 - name: 'debian'
