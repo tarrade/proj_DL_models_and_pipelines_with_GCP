@@ -179,7 +179,7 @@ steps:
     --template \
     notebook-instance-optimized-template.jinja \
     --properties \
-    network:${_NETWORK},subnet:${_SUBNET},container:gcr.io/$PROJECT_ID/${_DOCKERFILE}:${_TAG},owner-tag:${_OWNER}
+    network:${_NETWORK},subnet:${_SUBNET},container:gcr.io/$PROJECT_ID/${_DOCKERFILE}:${_TAG},owner-tag:${_OWNER} \
   dir: 'proj_DL_models_and_pipelines_with_GCP/deployment'
 
 substitutions:
