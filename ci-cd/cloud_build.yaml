@@ -169,6 +169,7 @@ steps:
   entrypoint: sh
   id: Deploy the AI Platform Notebook instance
   args: 
+  - '-c'
   - 'deployment-manager'
   - 'deployments'
   - 'create'
