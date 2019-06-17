@@ -166,12 +166,13 @@ steps:
 
 # Deploy (add , '--verbosity', 'debug' for more info)
 - name: 'gcr.io/cloud-builders/gcloud'
+  entrypoint: sh
   id: Deploy the AI Platform Notebook instance
   args: 
   - 'deployment-manager'
   - 'deployments'
   - 'create'
-  - 'c-$BUILD_ID-${_NAME_INSTANCE}'
+  - 'c-$(date -u +%Y-%m-%d-%H-%M-$BUILD_ID-${_NAME_INSTANCE}'
   - '--template'
   - 'notebook-instance-optimized-template.jinja'
   - '--properties'
