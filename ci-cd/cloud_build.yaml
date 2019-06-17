@@ -189,6 +189,16 @@ steps:
   args: ['-c', 'echo $(cat _DATE)']
   id: Read timestamp
 
+# Save cache
+- name: 'gcr.io/$PROJECT_ID/save_cache:1.0'
+  args:
+  - '--bucket=gs://${_CACHE_BUCKET}'
+  - '--key=build-cache-$( checksum build.gradle )-$( checksum cloudbuild.yaml )'
+  - '--path=.gradle/caches'
+  - '--path=.gradle/wrapper'
+  waitFor:
+  - Push the image in ContainerRegistry
+
 substitutions:
     _BUCKET: not-defined
     _TAG: dev
@@ -198,5 +208,7 @@ substitutions:
     _SUBNET: subnet
     _OWNER: name
     _DATE: none
+    _CACHE_BUCKET: axa-ch-project-build-cache
+    _CONFIG_BUCKET: project-build-config 
 
 timeout: 2h00m0s

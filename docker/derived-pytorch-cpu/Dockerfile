@@ -143,12 +143,3 @@ RUN . entrypoint.sh && conda init bash && source /root/.bashrc && conda info -e 
 
 # Managed to have /home working
 WORKDIR /home/
-
-
-#root@86bfac2f6ccc:/# source entrypoint.sh   
-#(base) root@86bfac2f6ccc:/# more entrypoint.sh 
-##!/bin/bash
-#. /env.sh
-#l. /root/miniconda3/etc/profile.d/conda.sh
-#conda activate base
-#exec "$@"
