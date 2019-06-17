@@ -144,20 +144,21 @@ steps:
 #  id: Restore cache from gs
 
 # Build docker image with latest tag using cache
-- name: 'gcr.io/cloud-builders/docker'
-  entrypoint: 'bash'
-  args:
-  - '-c'
-  - |
-    docker pull gcr.io/$PROJECT_ID/${_DOCKERFILE}:latest || exit 0
-- name: 'gcr.io/cloud-builders/docker'
-  args:
-  - 'build'
-  - '-t'
-  - 'gcr.io/$PROJECT_ID/${_DOCKERFILE}:latest'
-  - '--cache-from'
-  - 'gcr.io/$PROJECT_ID/${_DOCKERFILE}:latest'
-  - '.'
+#- name: 'gcr.io/cloud-builders/docker'
+#  entrypoint: 'bash'
+#  args:
+#  - '-c'
+#  - |
+#    docker pull gcr.io/$PROJECT_ID/${_DOCKERFILE}:latest || exit 0
+#
+#- name: 'gcr.io/cloud-builders/docker'
+#  args:
+#  - 'build'
+#  - '-t'
+#  - 'gcr.io/$PROJECT_ID/${_DOCKERFILE}:latest'
+#  - '--cache-from'
+#  - 'gcr.io/$PROJECT_ID/${_DOCKERFILE}:latest'
+#  - '.'
 
 # Build docker image with the tag
 - name: 'gcr.io/cloud-builders/docker'
@@ -165,6 +166,8 @@ steps:
   - 'build'
   - '-t'
   - 'gcr.io/$PROJECT_ID/${_DOCKERFILE}:${_TAG}'
+  - '-t'
+  - 'gcr.io/$PROJECT_ID/${_DOCKERFILE}:latest'
   - '.'
   id: Build the Docker image
   dir: 'proj_DL_models_and_pipelines_with_GCP/docker/${_DOCKERFILE}'
