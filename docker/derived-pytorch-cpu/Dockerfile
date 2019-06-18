@@ -1,9 +1,16 @@
 # Specify the base image and tag
-FROM gcr.io/deeplearning-platform-release/pytorch-cpu:latest
+FROM gcr.io/deeplearning-platform-release/pytorch-cpu:m26
+
+# Checking the type of machine
+RUN cat /etc/os-release
+RUN lsb_release -a
+RUN uname -r
 
 # Checking that the right shell is used in the image the build and later when the container is launched from the image
 RUN echo $0
+# active in the shell
 SHELL ["/bin/bash", "-c"]
+# active in the terminla later
 ENV SHELL /bin/bash
 RUN echo $0
 
@@ -120,8 +127,8 @@ RUN chmod +x /entrypoint.sh
 #RUN . entrypoint.sh && conda activate base
 
 # this stuff is working -> conda is activated
-RUN . entrypoint.sh && conda init bash && source /root/.bashrc && conda info -e && conda activate base
-
+#RUN . entrypoint.sh && conda init bash && source /root/.bashrc && conda info -e && conda activate base
+RUN conda init bash && . /root/.bashrc && conda info -e # && conda activate base
 # this stuff doesn't work
 #ENTRYPOINT ["/bin/bash", "/entrypoint.sh"]
 #ENTRYPOINT source /entrypoint.sh
@@ -131,7 +138,7 @@ RUN . entrypoint.sh && conda init bash && source /root/.bashrc && conda info -e 
 
 # this suff is working ?
 #CMD ["source", "/entrypoint.sh"]
-
+ENTRYPOINT ["/entrypoint.sh", "/run_jupyter.sh"]
 # this stuff doesn't work
 #ENV TINI_VERSION v0.18.0
 #ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /tini
