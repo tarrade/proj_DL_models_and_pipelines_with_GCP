@@ -123,9 +123,6 @@ RUN echo $HOME
 # set the right permission
 RUN chmod +x /entrypoint.sh
 
-# this stuff is not working-> conda not activated
-#RUN . entrypoint.sh && conda activate base
-
 # this stuff is working -> conda is activated
 #RUN . entrypoint.sh && conda init bash && source /root/.bashrc && conda info -e && conda activate base
 RUN conda init bash && . /root/.bashrc && conda info -e # && conda activate base
