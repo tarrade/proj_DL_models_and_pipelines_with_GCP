@@ -25,4 +25,4 @@ docker run -it -p 8585:8080 docker-test
 
  docker exec -it 8988bc6666ca   jupyter notebook list
 
- docker build -t test:latest -f Dockerfile.test ./ 
+ docker build -t test:latest -f Dockerfile.test ./

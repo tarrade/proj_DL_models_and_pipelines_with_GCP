@@ -1,9 +1,16 @@
 # Specify the base image and tag
-FROM gcr.io/deeplearning-platform-release/pytorch-cpu:latest
+FROM gcr.io/deeplearning-platform-release/pytorch-cpu:m26
+
+# Checking the type of machine
+RUN cat /etc/os-release
+RUN lsb_release -a
+RUN uname -r
 
 # Checking that the right shell is used in the image the build and later when the container is launched from the image
 RUN echo $0
+# active in the shell
 SHELL ["/bin/bash", "-c"]
+# active in the terminla later
 ENV SHELL /bin/bash
 RUN echo $0
 
@@ -65,10 +72,10 @@ ADD config /root/.ssh/config
 #RUN conda activate env_gcp_dl
 
 # Create Kernel
-RUN /root/miniconda3/bin/python -m ipykernel install --name 'base' --display-name "Py_36_base"
-RUN /root/miniconda3/envs/env_gcp_dl/bin/python -m ipykernel install --name 'env_gcp_dl' --display-name "Py36_env_gcp_dl"
-RUN /root/miniconda3/envs/env_gcp_dl_2_0_beta/bin/python -m ipykernel install --name 'env_gcp_dl_2_0_beta' --display-name "Py36_env_2_0_beta"
-RUN /root/miniconda3/envs/env_gcp_dl_2_0_nightly/bin/python -m ipykernel install --name 'env_gcp_dl_2_0_nightly' --display-name "Py36_env_2_0_nightly"
+RUN /root/miniconda3/bin/python -m ipykernel install --name 'base' --display-name "env_base_py36"
+RUN /root/miniconda3/envs/env_gcp_dl/bin/python -m ipykernel install --name 'env_gcp_dl' --display-name "env_gcp_dl_py36"
+RUN /root/miniconda3/envs/env_gcp_dl_2_0_beta/bin/python -m ipykernel install --name 'env_gcp_dl_2_0_beta' --display-name "env_2_0_beta_py36"
+RUN /root/miniconda3/envs/env_gcp_dl_2_0_nightly/bin/python -m ipykernel install --name 'env_gcp_dl_2_0_nightly' --display-name "env_2_0_nightly_py36"
 
 # Checking some basics info
 #RUN ps | grep `echo $$` | awk '{ print $4 }'
@@ -120,8 +127,8 @@ RUN chmod +x /entrypoint.sh
 #RUN . entrypoint.sh && conda activate base
 
 # this stuff is working -> conda is activated
-RUN . entrypoint.sh && conda init bash && source /root/.bashrc && conda info -e && conda activate base
-
+#RUN . entrypoint.sh && conda init bash && source /root/.bashrc && conda info -e && conda activate base
+RUN conda init bash && . /root/.bashrc && conda info -e # && conda activate base
 # this stuff doesn't work
 #ENTRYPOINT ["/bin/bash", "/entrypoint.sh"]
 #ENTRYPOINT source /entrypoint.sh
@@ -131,7 +138,7 @@ RUN . entrypoint.sh && conda init bash && source /root/.bashrc && conda info -e 
 
 # this suff is working ?
 #CMD ["source", "/entrypoint.sh"]
-
+ENTRYPOINT ["/entrypoint.sh", "/run_jupyter.sh"]
 # this stuff doesn't work
 #ENV TINI_VERSION v0.18.0
 #ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /tini
@@ -143,12 +150,3 @@ RUN . entrypoint.sh && conda init bash && source /root/.bashrc && conda info -e 
 
 # Managed to have /home working
 WORKDIR /home/
-
-
-#root@86bfac2f6ccc:/# source entrypoint.sh   
-#(base) root@86bfac2f6ccc:/# more entrypoint.sh 
-##!/bin/bash
-#. /env.sh
-#. /root/miniconda3/etc/profile.d/conda.sh
-#conda activate base
-#exec "$@"
