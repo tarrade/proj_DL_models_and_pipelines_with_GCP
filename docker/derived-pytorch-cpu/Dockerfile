@@ -72,10 +72,10 @@ ADD config /root/.ssh/config
 #RUN conda activate env_gcp_dl
 
 # Create Kernel
-RUN /root/miniconda3/bin/python -m ipykernel install --name 'base' --display-name "Py_36_base"
-RUN /root/miniconda3/envs/env_gcp_dl/bin/python -m ipykernel install --name 'env_gcp_dl' --display-name "Py36_env_gcp_dl"
-RUN /root/miniconda3/envs/env_gcp_dl_2_0_beta/bin/python -m ipykernel install --name 'env_gcp_dl_2_0_beta' --display-name "Py36_env_2_0_beta"
-RUN /root/miniconda3/envs/env_gcp_dl_2_0_nightly/bin/python -m ipykernel install --name 'env_gcp_dl_2_0_nightly' --display-name "Py36_env_2_0_nightly"
+RUN /root/miniconda3/bin/python -m ipykernel install --name 'base' --display-name "env_base_py36"
+RUN /root/miniconda3/envs/env_gcp_dl/bin/python -m ipykernel install --name 'env_gcp_dl' --display-name "env_gcp_dl_py36"
+RUN /root/miniconda3/envs/env_gcp_dl_2_0_beta/bin/python -m ipykernel install --name 'env_gcp_dl_2_0_beta' --display-name "env_2_0_beta_py36"
+RUN /root/miniconda3/envs/env_gcp_dl_2_0_nightly/bin/python -m ipykernel install --name 'env_gcp_dl_2_0_nightly' --display-name "env_2_0_nightly_py36"
 
 # Checking some basics info
 #RUN ps | grep `echo $$` | awk '{ print $4 }'
