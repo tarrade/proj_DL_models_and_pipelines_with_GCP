@@ -530,11 +530,11 @@ def serving_input_receiver_fn():
     tf.estimator.export.ServingInputReceiver
     """
 
-    input_images = tf.Variable(tf.float32, [None, 784]) #tf.compat.v1.placeholder(tf.float32, [None, 784])
+    input_images = tf.Variable(tf.float32, [None, 784])
     features = {
         'dense_input': input_images}  # this is the dict that is then passed as "features" parameter to your model_fn
     receiver_tensors = {
-        'dense_input4': input_images}  # As far as I understand this is needed to map the input to a name you can retrieve later
+        'dense_input': input_images}  # As far as I understand this is needed to map the input to a name you can retrieve later
 
     return tf.estimator.export.ServingInputReceiver(features, receiver_tensors)
 

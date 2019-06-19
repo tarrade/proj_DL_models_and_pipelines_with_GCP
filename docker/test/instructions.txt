@@ -1,0 +1,28 @@
+
+
+docker rm $(docker ps -a -q)
+docker rmi $(docker images -f "dangling=true" -q)
+
+docker build -t docker-test:latest .
+
+docker run -it docker-test
+docker run -it --entrypoint="/bin/bash" docker-test
+
+# inspect dock to see which command is ran
+docker ps -a --no-trunc
+docker inspect -f "{{.Name}} {{.Config.Cmd}}" $(docker ps -a -q)
+
+# find notebook instance
+docker exec -it container_id  jupyter notebook list
+
+# to run a std container
+docker run -it -p 8585:8080 gcr.io/deeplearning-platform-release/pytorch-cpu
+http://localhost:8585/lab?
+
+docker run -it -p 8585:8080 docker-test
+
+ docker ps -a --no-trunc
+
+ docker exec -it 8988bc6666ca   jupyter notebook list
+
+ docker build -t test:latest -f Dockerfile.test ./ 

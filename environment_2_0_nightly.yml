@@ -36,6 +36,6 @@ dependencies:
 - psutil
 - pip=19.1
 - pip:
-  - tfds-nightly==1.0.2.dev201906140105
+  - tfds-nightly==1.0.2.dev201906140105 # doesn't work on Mac
   - tf-nightly-2.0-preview==2.0.0.dev20190614
   #- tf-estimator-nightly==1.14.0.dev2019051601
