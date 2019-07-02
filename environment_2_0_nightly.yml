@@ -34,8 +34,10 @@ dependencies:
 - google-cloud-storage
 - google-cloud-bigquery
 - psutil
-- pip=19.1
+- pip=19.1.1
 - pip:
-  - tfds-nightly==1.0.2.dev201906180105 #1.0.2.dev201906140105
-  - tf-nightly-2.0-preview==2.0.0.dev20190618 #2.0.0.dev20190614
+  - tfds-nightly==1.0.2.dev201906290105 #1.0.2.dev201906140105
+  - tf-nightly-2.0-preview==2.0.0.dev20190629 #2.0.0.dev20190614
+  - tensorflow-text
+  - tensorflow-hub
   #- tf-estimator-nightly==1.14.0.dev2019051601
