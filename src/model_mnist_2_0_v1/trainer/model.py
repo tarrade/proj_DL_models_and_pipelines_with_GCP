@@ -412,6 +412,9 @@ def baseline_estimator_model(features, labels, mode, params):
     ##loss = tf.compat.v1.losses.softmax_cross_entropy(onehot_labels=labels, logits=logits)
     loss = tf.keras.losses.CategoricalCrossentropy(from_logits=True)(labels, logits)
 
+    ##loss = tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True, reduction=tf.keras.losses.Reduction.NONE)(labels, logits)
+    ##loss = tf.reduce_sum(loss) * (1. / 128)
+
     # Generate necessary evaluation metrics
     ##accuracy = tf.compat.v1.metrics.accuracy(labels=tf.argmax(input=labels, axis=1), predictions=classes, name='accuracy')
     accuracy = tf.keras.metrics.CategoricalAccuracy()
@@ -439,9 +442,9 @@ def baseline_estimator_model(features, labels, mode, params):
         optimizer = tf.compat.v1.train.AdamOptimizer(learning_rate=0.001, beta1=0.9)
 
         print('step 7')
-        #train_op = optimizer.minimize(loss, tf.compat.v1.train.get_or_create_global_step())
-        #train_op = optimizer.minimize(loss, tf.train.get_or_create_global_step())
-        train_op = optimizer.minimize(loss,var_list=model.weights)
+        train_op = optimizer.minimize(loss, tf.compat.v1.train.get_or_create_global_step()) # running with tf.compat.v1.train.AdamOptimizer
+        #train_op = optimizer.minimize(loss, tf.train.get_or_create_global_step()) #run for ever, step not incremental
+        #train_op = optimizer.minimize(loss,var_list=model.weights) #run for ever, step not incremental with tf.compat.v1.train.AdamOptimizer
 
         print('step 8')
         return tf.estimator.EstimatorSpec(mode=mode,
@@ -529,14 +532,16 @@ def serving_input_receiver_fn():
     -------
     tf.estimator.export.ServingInputReceiver
     """
-
+    print('step 2-1')
     input_images = tf.Variable(tf.float32, [None, 784])
+    print('step 2-2')
     features = {
         'dense_input': input_images}  # this is the dict that is then passed as "features" parameter to your model_fn
     receiver_tensors = {
         'dense_input': input_images}  # As far as I understand this is needed to map the input to a name you can retrieve later
-
-    return tf.estimator.export.ServingInputReceiver(features, receiver_tensors)
+    print('step 2-3')
+    #return tf.estimator.export.ServingInputReceiver(features, receiver_tensors)
+    return tf.compat.v2.estimator.export.ServingInputReceiver(features, receiver_tensors)
 
 # Create custom estimator's train and evaluate function
 def train_and_evaluate(FLAGS, use_keras=True):
@@ -574,9 +579,14 @@ def train_and_evaluate(FLAGS, use_keras=True):
                                                                                         batch_size=FLAGS.batch_size),
                                         max_steps=FLAGS.step)
 
-    exporter = tf.estimator.LatestExporter('exporter', serving_input_receiver_fn = serving_input_receiver_fn)
+    # crashing
+    print('step 1-1')
+    #exporter = tf.estimator.LatestExporter('exporter', serving_input_receiver_fn = serving_input_receiver_fn)
+    #exporter = tf.compat.v2.estimator.LatestExporter('exporter', serving_input_receiver_fn=serving_input_receiver_fn)
+    print('step 1-2')
 
-    print('exporter',exporter)
+    #print('exporter',exporter)
+    print('step 1-3')
 
     # evaluation
     eval_spec = tf.estimator.EvalSpec(input_fn=lambda:input_mnist_tfrecord_dataset_fn(FLAGS.input_test_tfrecords,
@@ -585,8 +595,8 @@ def train_and_evaluate(FLAGS, use_keras=True):
                                                                                       batch_size=10000),
                                       steps=1,
                                       start_delay_secs=0,
-                                      throttle_secs=0,
-                                      exporters=exporter)
+                                      throttle_secs=0)#,
+                                      #exporters=exporter)
 
     tf.estimator.train_and_evaluate(estimator, train_spec, eval_spec)
 

@@ -14,6 +14,12 @@ SHELL ["/bin/bash", "-c"]
 ENV SHELL /bin/bash
 RUN echo $0
 
+## Auto Shutdown On Idle
+RUN pwd
+RUN git clone --branch auto_shutdown https://github.com/b0noI/ai-platform-samples.git
+RUN cd ai-platform-samples/notebooks/auto-shutdown && sudo ./install.sh
+RUN pwd
+
 ## Creating conda env
 # Adding the environment files in the docker image
 ADD base.yml base.yml

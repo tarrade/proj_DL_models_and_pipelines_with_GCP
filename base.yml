@@ -13,5 +13,6 @@ dependencies:
 - autopep8
 - pep8=1.7.1
 - nbdime
+- pip
 - pip:
     - jupyterlab_latex

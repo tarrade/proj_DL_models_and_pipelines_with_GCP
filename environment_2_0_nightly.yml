@@ -36,8 +36,9 @@ dependencies:
 - psutil
 - pip=19.1.1
 - pip:
-  - tfds-nightly==1.0.2.dev201907160105 #1.0.2.dev201906290105
-  - tf-nightly-2.0-preview==2.0.0.dev20190716 #2.0.0.dev20190629
-  - tensorflow-text
-  - tensorflow-hub
+  - tfds-nightly==1.1.0.dev201907250105  #1.0.2.dev201906290105
+  - tf-nightly-2.0-preview==2.0.0.dev20190725 #2.0.0.dev20190720
+  #- tensorflow-text
+  #- tensorflow-hub
+  #- tf-explain
   #- tf-estimator-nightly==1.14.0.dev2019051601
