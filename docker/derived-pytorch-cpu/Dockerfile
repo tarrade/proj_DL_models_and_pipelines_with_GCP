@@ -18,6 +18,10 @@ RUN echo $0
 RUN apt-get update && apt-get install -y sysstat bc
 RUN git clone --branch auto_shutdown https://github.com/b0noI/ai-platform-samples.git
 RUN cd ai-platform-samples/notebooks/auto-shutdown && cp ./ashutdown /usr/local/bin/ && cp ./ashutdown.service /lib/systemd/system/
+RUN ls /usr/local/bin/
+RUN ls /lib/systemd/system/
+RUN ls -la /usr/local/bin/ashutdown
+RUn ls -la /lib/systemd/system/ashutdown.service
 ADD /usr/local/bin/ashutdown /usr/local/bin/
 ADD /lib/systemd/system/ashutdown.service /lib/systemd/system/
 
