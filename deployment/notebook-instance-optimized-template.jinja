@@ -20,6 +20,10 @@ resources:
         type: ONE_TO_ONE_NAT
     metadata:
         items:
+        - key: startup-script
+          value: |
+            #!/bin/bash
+            systemctl --no-reload --now enable /lib/systemd/system/ashutdown.service
         - key: framework
           value: {{properties["framework"]}}
         - key: proxy-mode
