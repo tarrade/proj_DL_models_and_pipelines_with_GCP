@@ -17,7 +17,7 @@ RUN echo $0
 ## Auto Shutdown On Idle
 RUN pwd
 RUN git clone --branch auto_shutdown https://github.com/b0noI/ai-platform-samples.git
-RUN cd ai-platform-samples/notebooks/auto-shutdown &&  ./install.sh
+RUN cd ai-platform-samples/notebooks/auto-shutdown && ls -la # &&  ./install.sh
 RUN pwd
 
 ## Creating conda env
