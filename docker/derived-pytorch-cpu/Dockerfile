@@ -15,10 +15,11 @@ ENV SHELL /bin/bash
 RUN echo $0
 
 ## Auto Shutdown On Idle
-RUN pwd
+RUN apt-get update && apt-get install -y sysstat bc
 RUN git clone --branch auto_shutdown https://github.com/b0noI/ai-platform-samples.git
-RUN cd ai-platform-samples/notebooks/auto-shutdown && ls -la # &&  ./install.sh
-RUN pwd
+RUN cd ai-platform-samples/notebooks/auto-shutdown && cp ./ashutdown /usr/local/bin/ && cp ./ashutdown.service /lib/systemd/system/
+#RUN cd ai-platform-samples/notebooks/auto-shutdown && ls -la # &&  ./install.sh
+#RUN pwd
 
 ## Creating conda env
 # Adding the environment files in the docker image
