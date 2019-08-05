@@ -23,8 +23,9 @@ resources:
         - key: post-startup-script
           value: |
             #!/bin/bash
+            pwd
             ls -la
-            ls -la /lib/systemd/system/
+            ls -la /lib/systemd/system/ashutdown.service
             systemctl --no-reload --now enable /lib/systemd/system/ashutdown.service
         - key: framework
           value: {{properties["framework"]}}
