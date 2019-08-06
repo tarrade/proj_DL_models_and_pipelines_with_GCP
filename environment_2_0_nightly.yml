@@ -14,7 +14,7 @@ dependencies:
 - jupyter_nbextensions_configurator=0.4.0
 - pandas=0.24.2
 - matplotlib
-- nomkl # Only for Mac user
+#- nomkl # Only for Mac user
 - notebook=5.6.0
 - ipykernel=4.10.0
 - ipywidgets=7.4.1
@@ -36,8 +36,8 @@ dependencies:
 - psutil
 - pip=19.1.1
 - pip:
-  - tfds-nightly==1.1.0.dev201907250105  #1.0.2.dev201906290105
-  - tf-nightly-2.0-preview==2.0.0.dev20190725 #2.0.0.dev20190720
+  - tfds-nightly==1.1.0.dev201908060105 #1.1.0.dev201907250105  #1.0.2.dev201906290105
+  - tf-nightly-2.0-preview==2.0.0.dev20190805 #2.0.0.dev20190725 #2.0.0.dev20190720
   #- tensorflow-text
   #- tensorflow-hub
   #- tf-explain

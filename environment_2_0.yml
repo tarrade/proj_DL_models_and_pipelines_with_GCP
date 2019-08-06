@@ -14,7 +14,7 @@ dependencies:
 - jupyter_nbextensions_configurator=0.4.0
 - pandas=0.24.2
 - matplotlib
-- nomkl # Only for Mac user
+#- nomkl # Only for Mac user
 - notebook=5.6.0
 - ipykernel=4.10.0
 - ipywidgets=7.4.1
