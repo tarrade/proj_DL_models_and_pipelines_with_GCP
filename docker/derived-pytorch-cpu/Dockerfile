@@ -94,7 +94,7 @@ RUN /root/miniconda3/envs/env_gcp_dl_2_0_nightly/bin/python -m ipykernel install
 
 # Update to fix issue with extension of jupyter lab
 RUN jupyter labextension list
-RUN npm install --save core-js@^3
+#RUN npm install --save core-js@^3
 RUN jupyter labextension install @jupyterlab/latex
 RUN jupyter labextension install @mflevine/jupyterlab_html
 RUN jupyter labextension install jupyterlab-drawio
@@ -102,8 +102,8 @@ RUN jupyter labextension install @jupyterlab/plotly-extension
 RUN jupyter labextension install jupyterlab_bokeh
 RUN jupyter labextension install @jupyterlab/toc
 RUN jupyter labextension install @jupyterlab/github
-RUN jupyter contrib nbextension install
-RUN jupyter nbextensions_configurator enable
+#RUN jupyter contrib nbextension install
+#RUN jupyter nbextensions_configurator enable
 RUN jupyter lab build
 
 # create user and create home directory
