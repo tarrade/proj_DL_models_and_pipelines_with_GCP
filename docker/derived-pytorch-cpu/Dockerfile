@@ -59,7 +59,7 @@ ADD pip.conf /pip.conf
 ENV PIP_CONFIG_FILE /pip.conf
 
 # Setup the proxy server for git
-ADD .gitconfig .gitconfig
+ADD .gitconfig /root/.gitconfig
 # Check that the config file was created properly
 RUN git config --list
 # Adding the config file to read entrerise Github
