@@ -10,18 +10,18 @@ dependencies:
 - scipy=1.2
 - scikit-learn=0.20
 - scikit-image
-- tornado=5.1
-- jupyter
-- jupyterlab
-- jupyter_contrib_nbextensions
-- jupyter_nbextensions_configurator
+#- tornado=5.1
+#- jupyter
+#- jupyterlab
+#- jupyter_contrib_nbextensions
+#- jupyter_nbextensions_configurator
 - pandas=0.24
 - matplotlib=2.1.0
 #- nomkl # Only for Mac user
-- notebook
+#- notebook
 - ipykernel
-- ipywidgets
-- nbconvert
+#- ipywidgets
+#- nbconvert
 - tensorflow=1.13
 - tensorboard=1.13
 - watermark
@@ -30,7 +30,7 @@ dependencies:
 - pylint
 - pep8
 - pylama
-- nbdime
+#- nbdime
 - pip
 - google-auth
 - pillow
