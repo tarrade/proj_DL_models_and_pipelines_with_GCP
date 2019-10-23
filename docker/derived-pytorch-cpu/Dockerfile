@@ -34,7 +34,7 @@ ADD environment.yml environment.yml
 RUN conda update -n base conda -y
 
 # Update conda envs
-#RUN conda env update --file base.yml
+RUN conda env update --file base.yml
 
 # Install env
 RUN conda env create -f environment.yml
