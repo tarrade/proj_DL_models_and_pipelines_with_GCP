@@ -27,8 +27,8 @@ RUN cd ai-platform-samples/notebooks/auto-shutdown && cp ./ashutdown /usr/local/
 # Adding the environment files in the docker image
 ADD base.yml base.yml
 ADD environment.yml environment.yml
-ADD environment_2_0.yml environment_2_0.yml
-ADD environment_2_0_nightly.yml environment_2_0_nightly.yml
+#ADD environment_2_0.yml environment_2_0.yml
+#ADD environment_2_0_nightly.yml environment_2_0_nightly.yml
 
 # Update Conda manager
 RUN conda update -n base conda -y
@@ -38,8 +38,8 @@ RUN conda update -n base conda -y
 
 # Install env
 RUN conda env create -f environment.yml
-RUN conda env create -f environment_2_0.yml
-RUN conda env create -f environment_2_0_nightly.yml
+#RUN conda env create -f environment_2_0.yml
+#RUN conda env create -f environment_2_0_nightly.yml
 
 # Checking the creation of the nevs
 RUN conda info -e
@@ -81,10 +81,10 @@ ADD config /root/.ssh/config
 #RUN conda activate env_gcp_dl
 
 # Create Kernel
-RUN /root/miniconda3/bin/python -m ipykernel install --name 'base' --display-name "env_base_py36"
-RUN /root/miniconda3/envs/env_gcp_dl/bin/python -m ipykernel install --name 'env_gcp_dl' --display-name "env_gcp_dl_py36"
-RUN /root/miniconda3/envs/env_gcp_dl_2_0_beta/bin/python -m ipykernel install --name 'env_gcp_dl_2_0_beta' --display-name "env_2_0_beta_py36"
-RUN /root/miniconda3/envs/env_gcp_dl_2_0_nightly/bin/python -m ipykernel install --name 'env_gcp_dl_2_0_nightly' --display-name "env_2_0_nightly_py36"
+#RUN /root/miniconda3/bin/python -m ipykernel install --name 'base' --display-name "env_base_py36"
+#RUN /root/miniconda3/envs/env_gcp_dl/bin/python -m ipykernel install --name 'env_gcp_dl' --display-name "env_gcp_dl_py36"
+#RUN /root/miniconda3/envs/env_gcp_dl_2_0_beta/bin/python -m ipykernel install --name 'env_gcp_dl_2_0_beta' --display-name "env_2_0_beta_py36"
+#RUN /root/miniconda3/envs/env_gcp_dl_2_0_nightly/bin/python -m ipykernel install --name 'env_gcp_dl_2_0_nightly' --display-name "env_2_0_nightly_py36"
 
 # Checking some basics info
 #RUN ps | grep `echo $$` | awk '{ print $4 }'
@@ -93,6 +93,29 @@ RUN /root/miniconda3/envs/env_gcp_dl_2_0_nightly/bin/python -m ipykernel install
 #RUN uname -a
 
 ## Update to fix issue with extension of jupyter lab
+ jupyter labextension install @jupyterlab/github
+ jupyter labextension install @jupyterlab/latex
+ jupyter labextension install @mflevine/jupyterlab_html
+ #jupyter labextension install jupyterlab-drawio
+ #jupyter labextension install @jupyterlab/plotly-extension
+ #jupyter labextension install jupyterlab_bokeh
+ jupyter labextension install @jupyterlab/toc
+ #jupyter labextension install @aquirdturtle/collapsible_headings
+ #jupyter labextension install jupyterlab-jupytext
+ #jupyter labextension install jupyterlab-cpustatus
+ #jupyter labextension install jupyterlab-python-file
+ #jupyter labextension install jupyterlab_toastify jupyterlab_conda
+ #jupyter labextension install @ijmbarr/jupyterlab_spellchecker
+ #jupyter labextension install @lckr/jupyterlab_variableinspector
+ jupyter labextension install nbdime-jupyterlab
+ #jupyter labextension install @ryantam626/jupyterlab_code_formatter
+ #jupyter labextension install @jupyterlab/jupyterlab-monaco
+ #jupyter labextension install jupyterlab-flake8
+ jupyter serverextension enable --py jupyterlab_code_formatter
+
+ jupyter lab build
+
+
 #RUN jupyter labextension list
 ##RUN npm install --save core-js@^3
 #RUN jupyter labextension install @jupyterlab/latex
