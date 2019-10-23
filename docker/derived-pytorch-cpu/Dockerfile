@@ -93,13 +93,13 @@ ADD config /root/.ssh/config
 #RUN uname -a
 
 ## Update to fix issue with extension of jupyter lab
- jupyter labextension install @jupyterlab/github
- jupyter labextension install @jupyterlab/latex
- jupyter labextension install @mflevine/jupyterlab_html
+ RUN jupyter labextension install @jupyterlab/github
+ RUN jupyter labextension install @jupyterlab/latex
+ RUN jupyter labextension install @mflevine/jupyterlab_html
  #jupyter labextension install jupyterlab-drawio
  #jupyter labextension install @jupyterlab/plotly-extension
  #jupyter labextension install jupyterlab_bokeh
- jupyter labextension install @jupyterlab/toc
+ RUN jupyter labextension install @jupyterlab/toc
  #jupyter labextension install @aquirdturtle/collapsible_headings
  #jupyter labextension install jupyterlab-jupytext
  #jupyter labextension install jupyterlab-cpustatus
@@ -107,13 +107,13 @@ ADD config /root/.ssh/config
  #jupyter labextension install jupyterlab_toastify jupyterlab_conda
  #jupyter labextension install @ijmbarr/jupyterlab_spellchecker
  #jupyter labextension install @lckr/jupyterlab_variableinspector
- jupyter labextension install nbdime-jupyterlab
+ RUN jupyter labextension install nbdime-jupyterlab
  #jupyter labextension install @ryantam626/jupyterlab_code_formatter
  #jupyter labextension install @jupyterlab/jupyterlab-monaco
  #jupyter labextension install jupyterlab-flake8
- jupyter serverextension enable --py jupyterlab_code_formatter
+ RUN jupyter serverextension enable --py jupyterlab_code_formatter
 
- jupyter lab build
+ RUN jupyter lab build
 
 
 #RUN jupyter labextension list
