@@ -6,7 +6,6 @@ dependencies:
 - nodejs
 #- six #=1.11.0
 # core packages
-- ipykernel
 - pip
 - nbdime
 # code audit
@@ -19,7 +18,7 @@ dependencies:
 - flake8
 - black
 #jupyter lab
-#- jupyter
+- jupyter
 - jupyterlab
 - ipykernel
 - notebook
