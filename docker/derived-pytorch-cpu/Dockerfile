@@ -108,8 +108,10 @@ ADD config /root/.ssh/config
  RUN jupyter labextension install @ijmbarr/jupyterlab_spellchecker
  RUN jupyter labextension install @lckr/jupyterlab_variableinspector
  RUN jupyter labextension install nbdime-jupyterlab
- RUN jupyter labextension install @ryantam626/jupyterlab_code_formatter
- RUN jupyter labextension install @jupyterlab/jupyterlab-monaco
+ RUN jupyter labextension update @jupyter-widgets/jupyterlab-manager
+ RUN jupyter labextension update @jupyterlab/celltags
+ #RUN jupyter labextension install @ryantam626/jupyterlab_code_formatter
+ #RUN jupyter labextension install @jupyterlab/jupyterlab-monaco
  RUN jupyter labextension install jupyterlab-flake8
  RUN jupyter serverextension enable --py jupyterlab_code_formatter
 
