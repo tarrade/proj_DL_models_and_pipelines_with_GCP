@@ -53,12 +53,32 @@ RUN conda info -e
 # Clean all downloaded packages
 RUN conda clean -a -y
 
+## checking display conda env in notebook
+RUN conda list nb_conda_kernels
+RUN conda list notebook
+RUN conda list ipykernel
+
+RUN conda list nb_conda_kernels -n env_gcp_dl
+RUN conda list notebook -n env_gcp_dl
+RUN conda list ipykernel -n env_gcp_dl
+
+# Check that the config file was created properly
+RUN conda config --show
+
+RUN jupyter kernelspec list
+
+RUN conda info
+
+RUN jupyter --paths
+
+## !!!!
+## !!!! NO pip, conda, git command below because of proxy config !!!!
+## !!!!
+
 ## Configuration related to the entrerpise proxy server 
 # Setup the proxy server for conda
 ADD .condarc /.condarc
 ENV CONDARC /.condarc
-# Check that the config file was created properly
-#RUN conda config --show !! not working !!
 
 # Setup the proxy server for pip
 ADD pip.conf /pip.conf
@@ -73,21 +93,6 @@ RUN mkdir -p /root/.ssh/
 ADD known_hosts /root/.ssh/known_hosts
 ADD id_rsa /root/.ssh/id_rsa
 ADD config /root/.ssh/config
-
-## checking display conda env in notebook
-RUN conda list nb_conda_kernels
-RUN conda list notebook
-RUN conda list ipykernel
-
-RUN conda list nb_conda_kernels -n env_gcp_dl
-RUN conda list notebook -n env_gcp_dl
-RUN conda list ipykernel -n env_gcp_dl
-
-RUN jupyter kernelspec list
-
-RUN conda info
-
-RUN jupyter --paths
 
 # Checking that the files are now present as well as the env variables
 #RUN ls -la /root/.ssh
@@ -117,29 +122,29 @@ RUN jupyter --paths
 RUN jupyter labextension list
 
 ## Update to fix issue with extension of jupyter lab
- RUN jupyter labextension install @jupyterlab/github
- RUN jupyter labextension install @jupyterlab/latex
- #RUN jupyter labextension install @mflevine/jupyterlab_html
- RUN jupyter labextension install jupyterlab-drawio
- RUN jupyter labextension install @jupyterlab/plotly-extension
- RUN jupyter labextension install jupyterlab_bokeh
- RUN jupyter labextension install @jupyterlab/toc
- #RUN jupyter labextension install @aquirdturtle/collapsible_headings
- RUN jupyter labextension install jupyterlab-jupytext
- RUN jupyter labextension install jupyterlab-cpustatus
- RUN jupyter labextension install jupyterlab-python-file
- #RUN jupyter labextension install jupyterlab_toastify jupyterlab_conda
- #RUN jupyter labextension install @ijmbarr/jupyterlab_spellchecker
- #RUN jupyter labextension install @lckr/jupyterlab_variableinspector
- RUN jupyter labextension install nbdime-jupyterlab
- #RUN jupyter labextension update @jupyter-widgets/jupyterlab-manager
- #RUN jupyter labextension update @jupyterlab/celltags
- #RUN jupyter labextension install @ryantam626/jupyterlab_code_formatter
- #RUN jupyter labextension install @jupyterlab/jupyterlab-monaco
- #RUN jupyter labextension install jupyterlab-flake8
- #RUN jupyter serverextension enable --py jupyterlab_code_formatter
+RUN jupyter labextension install @jupyterlab/github
+RUN jupyter labextension install @jupyterlab/latex
+#RUN jupyter labextension install @mflevine/jupyterlab_html
+RUN jupyter labextension install jupyterlab-drawio
+RUN jupyter labextension install @jupyterlab/plotly-extension
+RUN jupyter labextension install jupyterlab_bokeh
+RUN jupyter labextension install @jupyterlab/toc
+#RUN jupyter labextension install @aquirdturtle/collapsible_headings
+RUN jupyter labextension install jupyterlab-jupytext
+RUN jupyter labextension install jupyterlab-cpustatus
+RUN jupyter labextension install jupyterlab-python-file
+#RUN jupyter labextension install jupyterlab_toastify jupyterlab_conda
+#RUN jupyter labextension install @ijmbarr/jupyterlab_spellchecker
+#RUN jupyter labextension install @lckr/jupyterlab_variableinspector
+RUN jupyter labextension install nbdime-jupyterlab
+#RUN jupyter labextension update @jupyter-widgets/jupyterlab-manager
+#RUN jupyter labextension update @jupyterlab/celltags
+#RUN jupyter labextension install @ryantam626/jupyterlab_code_formatter
+#RUN jupyter labextension install @jupyterlab/jupyterlab-monaco
+#RUN jupyter labextension install jupyterlab-flake8
+#RUN jupyter serverextension enable --py jupyterlab_code_formatter
 
- RUN jupyter lab build
+RUN jupyter lab build
 
 
 #RUN jupyter labextension list
