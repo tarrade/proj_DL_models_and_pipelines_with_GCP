@@ -58,7 +58,7 @@ RUN conda clean -a -y
 ADD .condarc /.condarc
 ENV CONDARC /.condarc
 # Check that the config file was created properly
-RUN conda config --show
+#RUN conda config --show !! not working !!
 
 # Setup the proxy server for pip
 ADD pip.conf /pip.conf
