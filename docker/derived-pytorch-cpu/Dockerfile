@@ -27,19 +27,25 @@ RUN cd ai-platform-samples/notebooks/auto-shutdown && cp ./ashutdown /usr/local/
 # Adding the environment files in the docker image
 ADD base.yml base.yml
 ADD environment.yml environment.yml
-#ADD environment_2_0.yml environment_2_0.yml
-#ADD environment_2_0_nightly.yml environment_2_0_nightly.yml
+ADD environment_2_0.yml environment_2_0.yml
+ADD environment_2_0_nightly.yml environment_2_0_nightly.yml
+
+# Define a folder to store env
+RUN mkdir -p /home/.conda/
+RUN conda config --add envs_dirs /home/.conda
 
 # Update Conda manager
 RUN conda update -n base conda -y
 
 # Update conda envs
 RUN conda env update --file base.yml
+RUN conda info -e
+RUN conda list
 
 # Install env
 RUN conda env create -f environment.yml
-#RUN conda env create -f environment_2_0.yml
-#RUN conda env create -f environment_2_0_nightly.yml
+RUN conda env create -f environment_2_0.yml
+RUN conda env create -f environment_2_0_nightly.yml
 
 # Checking the creation of the nevs
 RUN conda info -e
@@ -68,6 +74,21 @@ ADD known_hosts /root/.ssh/known_hosts
 ADD id_rsa /root/.ssh/id_rsa
 ADD config /root/.ssh/config
 
+## checking display conda env in notebook
+RUN conda list nb_conda_kernels
+RUN conda list notebook
+RUN conda list ipykernel
+
+RUN conda list nb_conda_kernels -n env_gcp_dl
+RUN conda list notebook -n env_gcp_dl
+RUN conda list ipykernel -n env_gcp_dl
+
+RUN jupyter kernelspec list
+
+RUN conda info
+
+RUN jupyter --paths
+
 # Checking that the files are now present as well as the env variables
 #RUN ls -la /root/.ssh
 #RUN printenv
@@ -92,22 +113,25 @@ ADD config /root/.ssh/config
 #RUN ps | grep `echo $$` | awk '{ print $4 }'
 #RUN uname -a
 
+## Check which extension exist
+RUN jupyter labextension list
+
 ## Update to fix issue with extension of jupyter lab
- #RUN jupyter labextension install @jupyterlab/github
- #RUN jupyter labextension install @jupyterlab/latex
+ RUN jupyter labextension install @jupyterlab/github
+ RUN jupyter labextension install @jupyterlab/latex
  #RUN jupyter labextension install @mflevine/jupyterlab_html
  RUN jupyter labextension install jupyterlab-drawio
- #RUN jupyter labextension install @jupyterlab/plotly-extension
- #RUN jupyter labextension install jupyterlab_bokeh
+ RUN jupyter labextension install @jupyterlab/plotly-extension
+ RUN jupyter labextension install jupyterlab_bokeh
  RUN jupyter labextension install @jupyterlab/toc
  #RUN jupyter labextension install @aquirdturtle/collapsible_headings
- #RUN jupyter labextension install jupyterlab-jupytext
- #RUN jupyter labextension install jupyterlab-cpustatus
- #RUN jupyter labextension install jupyterlab-python-file
+ RUN jupyter labextension install jupyterlab-jupytext
+ RUN jupyter labextension install jupyterlab-cpustatus
+ RUN jupyter labextension install jupyterlab-python-file
  #RUN jupyter labextension install jupyterlab_toastify jupyterlab_conda
  #RUN jupyter labextension install @ijmbarr/jupyterlab_spellchecker
  #RUN jupyter labextension install @lckr/jupyterlab_variableinspector
- #RUN jupyter labextension install nbdime-jupyterlab
+ RUN jupyter labextension install nbdime-jupyterlab
  #RUN jupyter labextension update @jupyter-widgets/jupyterlab-manager
  #RUN jupyter labextension update @jupyterlab/celltags
  #RUN jupyter labextension install @ryantam626/jupyterlab_code_formatter
