@@ -18,10 +18,6 @@ RUN echo $0
 RUN apt-get update && apt-get install -y sysstat bc
 RUN git clone --branch auto_shutdown https://github.com/b0noI/ai-platform-samples.git
 RUN cd ai-platform-samples/notebooks/auto-shutdown && cp ./ashutdown /usr/local/bin/ && cp ./ashutdown.service /lib/systemd/system/
-#RUN mkdir -p  /usr/local/bin/
-#RUN mkdir -p  /lib/systemd/system/
-#ADD ai-platform-samples/notebooks/auto-shutdown/ashutdown /usr/local/bin/
-#ADD ai-platform-samples/notebooks/auto-shutdown/ashutdown.service /lib/systemd/system/
 
 ## Creating conda env
 # Adding the environment files in the docker image
@@ -30,46 +26,48 @@ ADD environment.yml environment.yml
 ADD environment_2_0.yml environment_2_0.yml
 ADD environment_2_0_nightly.yml environment_2_0_nightly.yml
 
-# Define a folder to store env
-RUN mkdir -p /home/.conda/
-RUN conda config --add envs_dirs /home/.conda
-
-# Update Conda manager
+# Update conda manager
 RUN conda update -n base conda -y
+
+# Define a folder to store env
+RUN mkdir -p /root/.conda-env/
+RUN mkdir -p /home/.conda-env/
+
+# Create config files
+RUN conda config --add channels conda-forge
+RUN conda config --add envs_dirs /root/.conda-env/
 
 # Update conda envs
 RUN conda env update --file base.yml
-RUN conda info -e
-RUN conda list
 
-# Install env
+# Create env
 RUN conda env create -f environment.yml
-RUN conda env create -f environment_2_0.yml
-RUN conda env create -f environment_2_0_nightly.yml
+#RUN conda env create -f environment_2_0.yml
+#RUN conda env create -f environment_2_0_nightly.yml
 
-# Checking the creation of the nevs
+# Checking configuration and new created envs
+RUN conda config --show
+RUN conda config --show-sources
+RUN conda config --show envs_dirs
+RUN conda info
 RUN conda info -e
+RUN conda env list
+RUN ls -la /root/.conda-env/
 
-# Clean all downloaded packages
-RUN conda clean -a -y
-
-## checking display conda env in notebook
+# checking display conda env in notebook
 RUN conda list nb_conda_kernels
 RUN conda list notebook
 RUN conda list ipykernel
 
-RUN conda list nb_conda_kernels -n env_gcp_dl
-RUN conda list notebook -n env_gcp_dl
-RUN conda list ipykernel -n env_gcp_dl
-
-# Check that the config file was created properly
-RUN conda config --show
+#RUN conda list nb_conda_kernels -n env_gcp_dl
+#RUN conda list notebook -n env_gcp_dl
+#RUN conda list ipykernel -n env_gcp_dl
 
 RUN jupyter kernelspec list
-
-RUN conda info
-
 RUN jupyter --paths
+
+## Clean all downloaded packages
+RUN conda clean -a -y
 
 ## !!!!
 ## !!!! NO pip, conda, git command below because of proxy config !!!!
@@ -94,71 +92,39 @@ ADD known_hosts /root/.ssh/known_hosts
 ADD id_rsa /root/.ssh/id_rsa
 ADD config /root/.ssh/config
 
-# Checking that the files are now present as well as the env variables
-#RUN ls -la /root/.ssh
-#RUN printenv
-
-#RUN conda init
-#RUN cat /etc/shells
-#RUN source  ~/.bashrc
-
-#RUN conda list
-#RUN conda activate base
-#RUN conda activate env_gcp_dl
-
-# Create Kernel
-#RUN /root/miniconda3/bin/python -m ipykernel install --name 'base' --display-name "env_base_py36"
-#RUN /root/miniconda3/envs/env_gcp_dl/bin/python -m ipykernel install --name 'env_gcp_dl' --display-name "env_gcp_dl_py36"
-#RUN /root/miniconda3/envs/env_gcp_dl_2_0_beta/bin/python -m ipykernel install --name 'env_gcp_dl_2_0_beta' --display-name "env_2_0_beta_py36"
-#RUN /root/miniconda3/envs/env_gcp_dl_2_0_nightly/bin/python -m ipykernel install --name 'env_gcp_dl_2_0_nightly' --display-name "env_2_0_nightly_py36"
-
-# Checking some basics info
-#RUN ps | grep `echo $$` | awk '{ print $4 }'
-#RUN exec bash
-#RUN ps | grep `echo $$` | awk '{ print $4 }'
-#RUN uname -a
-
+## Check for update
+RUN jupyter labextension update --all
 ## Check which extension exist
 RUN jupyter labextension list
 
-## Update to fix issue with extension of jupyter lab
+# Update to fix issue with extension of jupyter lab
 RUN jupyter labextension install @jupyterlab/github
 RUN jupyter labextension install @jupyterlab/latex
-#RUN jupyter labextension install @mflevine/jupyterlab_html
-RUN jupyter labextension install jupyterlab-drawio
-RUN jupyter labextension install @jupyterlab/plotly-extension
-RUN jupyter labextension install jupyterlab_bokeh
+RUN jupyter labextension install @mflevine/jupyterlab_html
+#RUN jupyter labextension install jupyterlab-drawio !! issue !!
+#RUN jupyter labextension install @jupyterlab/plotly-extension !! issue !!
+#RUN jupyter labextension install jupyterlab_bokeh !! issue !!
 RUN jupyter labextension install @jupyterlab/toc
-#RUN jupyter labextension install @aquirdturtle/collapsible_headings
+RUN jupyter labextension install @aquirdturtle/collapsible_headings
 RUN jupyter labextension install jupyterlab-jupytext
 RUN jupyter labextension install jupyterlab-cpustatus
 RUN jupyter labextension install jupyterlab-python-file
-#RUN jupyter labextension install jupyterlab_toastify jupyterlab_conda
-#RUN jupyter labextension install @ijmbarr/jupyterlab_spellchecker
-#RUN jupyter labextension install @lckr/jupyterlab_variableinspector
+#RUN jupyter labextension install jupyterlab_toastify jupyterlab_conda !! issue !!
+RUN jupyter labextension install @ijmbarr/jupyterlab_spellchecker
+RUN jupyter labextension install @lckr/jupyterlab_variableinspector
 RUN jupyter labextension install nbdime-jupyterlab
-#RUN jupyter labextension update @jupyter-widgets/jupyterlab-manager
-#RUN jupyter labextension update @jupyterlab/celltags
-#RUN jupyter labextension install @ryantam626/jupyterlab_code_formatter
-#RUN jupyter labextension install @jupyterlab/jupyterlab-monaco
-#RUN jupyter labextension install jupyterlab-flake8
-#RUN jupyter serverextension enable --py jupyterlab_code_formatter
+RUN jupyter labextension update @jupyter-widgets/jupyterlab-manager
+RUN jupyter labextension update @jupyterlab/celltags
+RUN jupyter labextension install @ryantam626/jupyterlab_code_formatter
+#RUN jupyter labextension install @jupyterlab/jupyterlab-monaco  !! issue !!
+#RUN jupyter labextension install jupyterlab-flake8 !! issue !!
+RUN jupyter serverextension enable --py jupyterlab_code_formatter
 
 RUN jupyter lab build
 
+RUN jupyter labextension list
 
-#RUN jupyter labextension list
-##RUN npm install --save core-js@^3
-#RUN jupyter labextension install @jupyterlab/latex
-#RUN jupyter labextension install @mflevine/jupyterlab_html
-#RUN jupyter labextension install jupyterlab-drawio
-#RUN jupyter labextension install @jupyterlab/plotly-extension
-#RUN jupyter labextension install jupyterlab_bokeh
-#RUN jupyter labextension install @jupyterlab/toc
-#RUN jupyter labextension install @jupyterlab/github
-##RUN jupyter contrib nbextension install
-##RUN jupyter nbextensions_configurator enable
-#RUN jupyter lab build
+#RUN npm install --save core-js@^3
 
 # create user and create home directory
 #RUN useradd -m jupyter
@@ -186,27 +152,25 @@ RUN echo $HOME
 # set the right permission
 RUN chmod +x /entrypoint.sh
 
-# this stuff is working -> conda is activated
-#RUN . entrypoint.sh && conda init bash && source /root/.bashrc && conda info -e && conda activate base
+RUN conda info -e
+RUN conda env list
+RUN conda list
+
+# Activate conda
 RUN conda init bash && . /root/.bashrc && conda info -e # && conda activate base
-# this stuff doesn't work
-#ENTRYPOINT ["/bin/bash", "/entrypoint.sh"]
-#ENTRYPOINT source /entrypoint.sh
 
-# this stuff is working not working
-#ENTRYPOINT ["/bin/bash"]
+# Add the copy from /root to /home
+RUN sed -i '1 a cp -r /root/.conda-env /home/.conda-env' /entrypoint.sh
+RUN cat  /entrypoint.sh
+RUN sed -i '1 a jupyter serverextension list\nconda list nb_conda_kernels\nconda env list' /run_jupyter.sh
+RUN cat  /run_jupyter.sh
+RUN sed -i -e "\$ac.NotebookApp.kernel_spec_manager_class = 'nb_conda_kernels.manager.CondaKernelSpecManager'" /root/.jupyter/jupyter_notebook_config.py
+RUN cat /root/.jupyter/jupyter_notebook_config.py
 
-# this suff is working ?
-#CMD ["source", "/entrypoint.sh"]
+# Define entry points
 ENTRYPOINT ["/entrypoint.sh", "/run_jupyter.sh"]
-# this stuff doesn't work
-#ENV TINI_VERSION v0.18.0
-#ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /tini
-#RUN chmod +x /tini
-#ENTRYPOINT ["/tini", "--", "/entrypoint.sh"]
-#CMD [ "/bin/bash" ]
-#CMD ["source", "/entrypoint.sh"]
-
+# For local test only
+#ENTRYPOINT ["/entrypoint.sh", "/bin/bash"]
 
 # Managed to have /home working
 WORKDIR /home/
