@@ -154,7 +154,7 @@ RUN echo $HOME
 RUN chmod +x /entrypoint.sh
 
 # Activate conda
-RUN conda init bash && . /root/.bashrc && conda info -e # && conda activate base
+#RUN conda init bash && . /root/.bashrc && conda info -e # && conda activate base
 
 # Add the copy from /root to /home
 RUN sed -i '1 a cp -r /root/.conda-env /home/.conda-env' /entrypoint.sh
