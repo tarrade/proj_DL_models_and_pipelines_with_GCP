@@ -124,8 +124,6 @@ RUN jupyter lab build
 
 RUN jupyter labextension list
 
-#RUN npm install --save core-js@^3
-
 # create user and create home directory
 #RUN useradd -m jupyter
 #RUN pwd && cd /home &&  mkdir jupyter && ls -la && pwd && jupyter:users jupyter
