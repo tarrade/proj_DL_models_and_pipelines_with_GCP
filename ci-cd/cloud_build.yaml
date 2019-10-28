@@ -144,12 +144,12 @@ steps:
 #  id: Restore cache from gs
 
 # Build docker image with latest tag using cache
-- name: 'gcr.io/cloud-builders/docker'
-  entrypoint: 'bash'
-  args:
-  - '-c'
-  - |
-    docker pull gcr.io/$PROJECT_ID/${_DOCKERFILE}:latest || exit 0
+#- name: 'gcr.io/cloud-builders/docker'
+#  entrypoint: 'bash'
+#  args:
+#  - '-c'
+#  - |
+#    docker pull gcr.io/$PROJECT_ID/${_DOCKERFILE}:latest || exit 0
 
 - name: 'gcr.io/cloud-builders/docker'
   args:

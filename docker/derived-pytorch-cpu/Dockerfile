@@ -27,7 +27,7 @@ ADD environment_2_0.yml environment_2_0.yml
 ADD environment_2_0_nightly.yml environment_2_0_nightly.yml
 
 # Update conda manager
-#RUN conda update -n base conda -y
+RUN conda update -n base conda -y
 
 # Define a folder to store env
 RUN mkdir -p /root/.conda-env/
