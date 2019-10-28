@@ -73,9 +73,9 @@ RUN jupyter --paths
 RUN conda clean -a -y
 
 ## Check for update
-#RUN jupyter labextension update --all
+RUN jupyter labextension update --all
 ## Check which extension exist
-#RUN jupyter labextension list
+RUN jupyter labextension list
 
 # Update to fix issue with extension of jupyter lab
 #RUN jupyter labextension install @jupyterlab/github
@@ -100,9 +100,9 @@ RUN conda clean -a -y
 ##RUN jupyter labextension install jupyterlab-flake8 !! issue !!
 #RUN jupyter serverextension enable --py jupyterlab_code_formatter
 
-#RUN jupyter lab build
+RUN jupyter lab build
 
-#RUN jupyter labextension list
+RUN jupyter labextension list
 
 # create user and create home directory
 #RUN useradd -m jupyter
