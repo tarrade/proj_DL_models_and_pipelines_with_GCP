@@ -72,29 +72,6 @@ RUN jupyter --paths
 ## Clean all downloaded packages
 RUN conda clean -a -y
 
-## !!!!
-## !!!! NO pip, conda, git command below because of proxy config !!!!
-## !!!!
-
-## Configuration related to the entrerpise proxy server 
-# Setup the proxy server for conda
-ADD .condarc /.condarc
-ENV CONDARC /.condarc
-
-# Setup the proxy server for pip
-ADD pip.conf /pip.conf
-ENV PIP_CONFIG_FILE /pip.conf
-
-# Setup the proxy server for git
-ADD .gitconfig /root/.gitconfig
-# Check that the config file was created properly
-RUN git config --list
-# Adding the config file to read entrerise Github
-RUN mkdir -p /root/.ssh/
-ADD known_hosts /root/.ssh/known_hosts
-ADD id_rsa /root/.ssh/id_rsa
-ADD config /root/.ssh/config
-
 ## Check for update
 RUN jupyter labextension update --all
 ## Check which extension exist
@@ -154,7 +131,30 @@ RUN echo $HOME
 RUN chmod +x /entrypoint.sh
 
 # Activate conda
-#RUN conda init bash && . /root/.bashrc && conda info -e # && conda activate base
+RUN conda init bash && . /root/.bashrc && conda info -e # && conda activate base
+
+## !!!!
+## !!!! NO pip, conda, git command below because of proxy config !!!!
+## !!!!
+
+## Configuration related to the entrerpise proxy server
+# Setup the proxy server for conda
+ADD .condarc /.condarc
+ENV CONDARC /.condarc
+
+# Setup the proxy server for pip
+ADD pip.conf /pip.conf
+ENV PIP_CONFIG_FILE /pip.conf
+
+# Setup the proxy server for git
+ADD .gitconfig /root/.gitconfig
+# Check that the config file was created properly
+RUN git config --list
+# Adding the config file to read entrerise Github
+RUN mkdir -p /root/.ssh/
+ADD known_hosts /root/.ssh/known_hosts
+ADD id_rsa /root/.ssh/id_rsa
+ADD config /root/.ssh/config
 
 # Add the copy from /root to /home
 RUN sed -i '1 a cp -r /root/.conda-env /home/.conda-env' /entrypoint.sh
