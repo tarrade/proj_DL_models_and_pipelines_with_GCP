@@ -49,9 +49,12 @@ RUN conda env create -f environment.yml
 RUN conda config --show
 RUN conda config --show-sources
 RUN conda config --show envs_dirs
+
 RUN conda info
 RUN conda info -e
 RUN conda env list
+RUN conda list
+
 RUN ls -la /root/.conda-env/
 
 # checking display conda env in notebook
@@ -149,10 +152,6 @@ RUN echo $HOME
 
 # set the right permission
 RUN chmod +x /entrypoint.sh
-
-RUN conda info -e
-RUN conda env list
-RUN conda list
 
 # Activate conda
 RUN conda init bash && . /root/.bashrc && conda info -e # && conda activate base
