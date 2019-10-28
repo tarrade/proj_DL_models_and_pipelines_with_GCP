@@ -158,8 +158,8 @@ steps:
   - 'gcr.io/$PROJECT_ID/${_DOCKERFILE}:latest'
   - '-t'
   - 'gcr.io/$PROJECT_ID/${_DOCKERFILE}:${_TAG}'
-  - '--cache-from'
-  - 'gcr.io/$PROJECT_ID/${_DOCKERFILE}:latest'
+  #- '--cache-from'
+  #- 'gcr.io/$PROJECT_ID/${_DOCKERFILE}:latest'
   - '.'
   id: Build the Docker image
   dir: 'proj_DL_models_and_pipelines_with_GCP/docker/${_DOCKERFILE}'
