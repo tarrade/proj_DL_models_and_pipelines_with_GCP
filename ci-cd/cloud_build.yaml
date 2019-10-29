@@ -188,6 +188,8 @@ steps:
   args: 
   - 'push'
   - 'gcr.io/$PROJECT_ID/${_DOCKERFILE}:latest'
+  env:
+    - 'DOCKER_DRIVER=overlay'
   id: Push the image latest in ContainerRegistry
 
 - name: 'debian'
