@@ -138,6 +138,8 @@ steps:
 - name: 'gcr.io/cloud-builders/docker'
   args:
   - 'info'
+  env:
+    - 'DOCKER_DRIVER=overlay'
   id: Check the config of Docker
 
 # Restore cache
@@ -185,7 +187,7 @@ steps:
 # Check sizes of the images
 - name: 'gcr.io/cloud-builders/docker'
   args:
-  - 'images'
+  - 'images -a'
   id: Check sizes of the images
 
 # Push image in Container Registry with a tag
@@ -193,6 +195,8 @@ steps:
   args: 
   - 'push'
   - 'gcr.io/$PROJECT_ID/${_DOCKERFILE}:${_TAG}'
+  env:
+    - 'DOCKER_DRIVER=overlay'
   id: Push the image in ContainerRegistry
 
 # Push image in Container Registry with the tag latest 
