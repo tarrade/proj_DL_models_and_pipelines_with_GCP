@@ -6,7 +6,7 @@ resources:
     tags:
         items:
         - deeplearning-vm
-    machineType: zones/{{ properties["zone"] }}/machineTypes/{{properties["machineTypes"]}}
+    machineType: zones/{{properties["zone"]}}/machineTypes/{{properties["machineTypes"]}}
     disks:
     - boot: true
       autoDelete: true
