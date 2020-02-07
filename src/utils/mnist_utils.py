@@ -91,13 +91,13 @@ def plot_mnist_testdata(filepath="data/mnist/json/ml_engine_testdatafile_N4.json
             plt.subplot(1, 5, i+1)
             plt.imshow(np.reshape(image, (28,28)), cmap=plt.cm.gray)
 
-import os
-def setwd():
-    WORKINGDIR = os.getcwd()
-    folders = WORKINGDIR.split('/')
-    if folders.pop() == 'notebook':  # or a list: in ['notebook', 'src', etc.]
-      WORKINGDIR = '/'.join(folders)
-      print("Changed to New working directory: /n {}".format(WORKINGDIR))
-    else:
-      print("Current Working direcotory is kept: /n {}".format(WORKINGDIR))
-    os.chdir(WORKINGDIR)
+#import os
+#def setwd():
+#    WORKINGDIR = os.getcwd()
+#    folders = WORKINGDIR.split('/')
+#    if folders.pop() == 'notebook':  # or a list: in ['notebook', 'src', etc.]
+#      WORKINGDIR = '/'.join(folders)
+#      print("Changed to New working directory: /n {}".format(WORKINGDIR))
+#    else:
+#      print("Current Working direcotory is kept: /n {}".format(WORKINGDIR))
+#    os.chdir(WORKINGDIR)
