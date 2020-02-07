@@ -50,3 +50,8 @@ ML-productive-pipeline-53122-64d3c31786e7.json
 config.yaml
 ML-productive-pipeline-53122-64d3c31786e7.json
 
+# private config and test
+config.txt
+build-docker-local/
+
+
